@@ -82,7 +82,7 @@
         }
         .booking-grid {
             display: grid;
-            grid-template-columns: 92px repeat(16, minmax(48px, 1fr));
+            grid-template-columns: 120px repeat(16, minmax(48px, 1fr));
             gap: 1px;
             background: #e2e8f0;
             border-bottom: 1px solid #e2e8f0;
@@ -122,6 +122,7 @@
             box-shadow: inset 0 0 0 2px #fff;
         }
         .slot.selected:hover { background: var(--tcf-red-dark); }
+        .booking-grid.loading .slot { opacity: 0.5; pointer-events: none; }
 
         /* Scroll-Hinweis Mobile */
         .scroll-hint {
@@ -222,7 +223,6 @@
             .modal-content { height: auto; }
         }
         .modal-overlay.open .modal-content { transform: translateY(0); }
-        /* Form/step containers must fill modal-content & allow inner scroll */
         .modal-step {
             flex: 1 1 auto;
             min-height: 0;
@@ -316,20 +316,23 @@
         .selection-bar.show { display: flex; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Hide scrollbar on date selector */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Hero */
         .hero-overlay {
             background: linear-gradient(135deg, rgba(15,23,42,0.85) 0%, rgba(163,29,17,0.55) 100%);
         }
 
-        /* Improved focus visibility */
         a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
             outline: 3px solid rgba(163,29,17,0.4);
             outline-offset: 2px;
         }
+
+        /* AGB Legal text */
+        .legal h4 { font-weight: 800; color: #0f172a; margin-top: 20px; margin-bottom: 6px; font-size: 1rem; }
+        .legal p, .legal li { color: #475569; font-size: 0.9rem; line-height: 1.6; }
+        .legal ul { list-style: disc; padding-left: 20px; margin: 6px 0; }
+        .legal .muted { color: #94a3b8; font-size: 0.8rem; }
     </style>
 </head>
 <body class="antialiased selection:bg-[#FDE047] selection:text-[#A31D11]">
@@ -345,7 +348,6 @@
                 </div>
             </div>
 
-            <!-- Desktop Nav -->
             <div class="hidden lg:flex gap-5 xl:gap-8 text-[13px] xl:text-[14px] font-bold text-slate-600 uppercase tracking-wider items-center">
                 <a href="#" onclick="switchPage('home'); return false;" id="nav-home" class="nav-link active-nav whitespace-nowrap hover:text-[#A31D11]">Startseite</a>
                 <a href="#" onclick="switchPage('tennis'); return false;" id="nav-tennis" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Tennis</a>
@@ -363,7 +365,6 @@
                 <button onclick="switchPage('padel')" class="btn-primary px-4 sm:px-6 md:px-8 py-2.5 md:py-3 rounded text-xs sm:text-sm font-bold uppercase tracking-wide shadow-md whitespace-nowrap">
                     <i class="fa-solid fa-calendar-check mr-1.5 sm:mr-2"></i>Platz buchen
                 </button>
-                <!-- Hamburger -->
                 <button onclick="toggleDrawer()" aria-label="Menü öffnen" class="lg:hidden w-11 h-11 rounded-lg flex items-center justify-center text-slate-700 hover:bg-slate-100 transition">
                     <i class="fa-solid fa-bars text-xl"></i>
                 </button>
@@ -445,7 +446,6 @@
             </div>
         </section>
 
-        <!-- Quick Cards -->
         <section class="max-w-7xl mx-auto px-4 -mt-10 sm:-mt-12 relative z-20 pb-12 sm:pb-16">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                 <div onclick="switchPage('tennis')" class="card card-hover cursor-pointer p-6 sm:p-8 flex items-center gap-5 border-b-4 border-orange-500">
@@ -459,7 +459,7 @@
                     <div class="text-4xl text-[#FDE047] flex-shrink-0"><i class="fa-solid fa-bolt"></i></div>
                     <div>
                         <h3 class="font-black text-lg sm:text-xl flex items-center gap-2">Padel-Courts <span class="bg-white/20 text-xs px-2 py-0.5 rounded">NEU</span></h3>
-                        <p class="text-red-100 text-sm">Jetzt online buchen</p>
+                        <p class="text-red-100 text-sm">Cupra Court & Frittlingen Court</p>
                     </div>
                 </div>
                 <div onclick="switchPage('tennis')" class="card card-hover cursor-pointer p-6 sm:p-8 flex items-center gap-5 border-b-4 border-blue-500">
@@ -472,7 +472,6 @@
             </div>
         </section>
 
-        <!-- Vereins-Pitch & News -->
         <section class="max-w-7xl mx-auto px-4 pb-16 sm:pb-20">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                 <div class="lg:col-span-2 card p-6 sm:p-10">
@@ -495,36 +494,28 @@
                                 <span class="block text-sm font-black leading-tight">27.06.</span>
                                 <span class="block text-[10px] text-red-200">2026</span>
                             </div>
-                            <div>
-                                <div class="font-bold">Cornholeturnier</div>
-                            </div>
+                            <div><div class="font-bold">Cornholeturnier</div></div>
                         </li>
                         <li class="flex items-start gap-3">
                             <div class="bg-[#A31D11] text-white text-center rounded-md min-w-[52px] py-1.5 flex-shrink-0">
                                 <span class="block text-sm font-black leading-tight">28.08.</span>
                                 <span class="block text-[10px] text-red-200">2026</span>
                             </div>
-                            <div>
-                                <div class="font-bold">Kinderferienprogramm</div>
-                            </div>
+                            <div><div class="font-bold">Kinderferienprogramm</div></div>
                         </li>
                         <li class="flex items-start gap-3">
                             <div class="bg-[#A31D11] text-white text-center rounded-md min-w-[52px] py-1.5 flex-shrink-0">
                                 <span class="block text-sm font-black leading-tight">05.09.</span>
                                 <span class="block text-[10px] text-red-200">2026</span>
                             </div>
-                            <div>
-                                <div class="font-bold">Laiendoppel</div>
-                            </div>
+                            <div><div class="font-bold">Laiendoppel</div></div>
                         </li>
                         <li class="flex items-start gap-3">
                             <div class="bg-[#A31D11] text-white text-center rounded-md min-w-[52px] py-1.5 flex-shrink-0">
                                 <span class="block text-sm font-black leading-tight">02.10.</span>
                                 <span class="block text-[10px] text-red-200">2026</span>
                             </div>
-                            <div>
-                                <div class="font-bold">Preisbinokel</div>
-                            </div>
+                            <div><div class="font-bold">Preisbinokel</div></div>
                         </li>
                     </ul>
                     <button onclick="switchPage('aktuell')" class="mt-6 text-[#FDE047] font-bold inline-flex items-center gap-2 hover:gap-3 transition-all">
@@ -539,7 +530,6 @@
     <main id="page-tennis" class="page-section bg-white min-h-screen py-12 sm:py-16">
         <div class="max-w-7xl mx-auto px-4">
             <h2 class="text-3xl sm:text-4xl section-title text-slate-900 mb-10 sm:mb-12">Unsere Anlage</h2>
-
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12 sm:mb-16">
                 <div>
                     <h3 class="text-xl sm:text-2xl font-bold mb-4">4 Sandplätze (Tennis)</h3>
@@ -562,7 +552,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                 <div class="bg-slate-200 h-64 rounded-xl overflow-hidden order-2 lg:order-1 shadow-md">
                     <img src="Beach.jpg" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" alt="Beachplätze">
@@ -584,30 +573,23 @@
     <main id="page-verein" class="page-section bg-slate-50 min-h-screen py-12 sm:py-16">
         <div class="max-w-7xl mx-auto px-4">
             <h2 class="text-3xl sm:text-4xl section-title alt text-slate-900 mb-10 sm:mb-12">Unser Verein</h2>
-
             <div class="card p-6 sm:p-8 mb-6 sm:mb-8">
                 <h3 class="text-xl sm:text-2xl font-bold mb-4 text-[#A31D11]">50 Jahre TCF</h3>
                 <p class="text-slate-600 leading-relaxed mb-4">Liebe Tennisfreunde, hier findet ihr alles, was man über unseren Verein wissen muss. Seit einem halben Jahrhundert steht der TC Frittlingen e.V. für sportlichen Zusammenhalt, spannende Turniere und ein aktives Vereinsleben in der Gemeinde.</p>
                 <p class="text-slate-600 leading-relaxed">Wir investieren stetig in unsere Anlage – von der Sanierung des Clubheims über die Flutlichtanlage der Beachplätze bis hin zum aktuellsten Projekt: unseren neuen Padel-Courts.</p>
             </div>
-
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                 <div class="card p-6 sm:p-8">
                     <h3 class="text-lg sm:text-xl font-bold mb-4 text-[#A31D11]"><i class="fa-regular fa-envelope mr-2"></i>Kontakt</h3>
                     <p class="text-slate-600 mb-4">Hast du Fragen an uns? Schreibe uns gerne eine E-Mail:</p>
                     <a href="mailto:vorstand@tc-frittlingen.de" class="text-blue-600 font-bold hover:underline break-all">vorstand@tc-frittlingen.de</a>
-
                     <div class="mt-8">
                         <h3 class="text-lg sm:text-xl font-bold mb-4 text-[#A31D11]"><i class="fa-solid fa-location-dot mr-2"></i>Anfahrt</h3>
                         <div class="rounded-lg overflow-hidden shadow-md mb-3 border border-slate-200">
                             <iframe
                                 src="https://www.google.com/maps?q=Tennisclub+Frittlingen+R%C3%B6merstra%C3%9Fe+Schildeckstra%C3%9Fe+78665+Frittlingen&output=embed"
-                                width="100%" height="280"
-                                style="border:0; display:block;"
-                                loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade"
-                                title="Anfahrt TC Frittlingen"
-                                allowfullscreen></iframe>
+                                width="100%" height="280" style="border:0; display:block;" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade" title="Anfahrt TC Frittlingen" allowfullscreen></iframe>
                         </div>
                         <div class="flex flex-col sm:flex-row gap-2 mb-3">
                             <a href="https://www.google.com/maps/dir/?api=1&destination=Tennisclub+Frittlingen+R%C3%B6merstra%C3%9Fe+78665+Frittlingen" target="_blank" class="flex-1 inline-flex items-center justify-center gap-2 bg-[#A31D11] hover:bg-[#8a180e] text-white font-bold text-sm px-4 py-2.5 rounded-lg transition shadow-sm">
@@ -619,8 +601,7 @@
                         </div>
                         <address class="not-italic text-sm text-slate-600 leading-relaxed">
                             <strong class="text-slate-900">Tennisclub Frittlingen e.V.</strong><br>
-                            Ecke Römerstraße / Schildeckstraße<br>
-                            78665 Frittlingen
+                            Ecke Römerstraße / Schildeckstraße<br>78665 Frittlingen
                         </address>
                     </div>
                 </div>
@@ -645,6 +626,12 @@
                                 <span class="font-medium">Cornholeturnier Regeln</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="#" onclick="openAgb(); return false;" class="text-slate-600 hover:text-[#A31D11] transition flex items-center p-3 rounded-lg hover:bg-slate-50">
+                                <i class="fa-regular fa-file-lines mr-3 text-2xl text-red-500"></i>
+                                <span class="font-medium">AGB & Platz-Nutzungsordnung (Padel)</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -655,7 +642,6 @@
     <main id="page-spielbetrieb" class="page-section bg-white min-h-screen py-12 sm:py-16">
         <div class="max-w-7xl mx-auto px-4">
             <h2 class="text-3xl sm:text-4xl section-title text-slate-900 mb-10 sm:mb-12">Spielbetrieb</h2>
-
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
                 <div class="lg:col-span-1 space-y-6">
                     <div class="card p-6">
@@ -669,7 +655,6 @@
                         </a>
                     </div>
                 </div>
-
                 <div class="lg:col-span-2">
                     <div class="card p-6 sm:p-8">
                         <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mb-4">Sommersaison 2026</h3>
@@ -677,7 +662,6 @@
                             Diesen Sommer gehen wie schon in der letzten Saison vier Teams für den TCF an den Start.
                             Gemeldet sind jeweils 4er-Mannschaften bei den KIDs U12, Herren und gleich zwei Mannschaften bei den Herren 40.
                         </p>
-
                         <div class="space-y-5">
                             <div class="bg-slate-50 p-5 rounded-lg border-l-4 border-[#A31D11]">
                                 <h4 class="font-bold text-lg text-slate-900 mb-1">KIDs-Cup U12</h4>
@@ -701,7 +685,6 @@
             <a href="https://www.wtb-tennis.de/spielbetrieb/vereine/verein/v/20499.html" target="_blank" class="inline-block text-[#A31D11] font-bold hover:text-red-700 transition mb-10 sm:mb-12">
                 &gt;&gt; Übersicht Mannschaften beim WTB &lt;&lt;
             </a>
-
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                 <div class="card card-hover overflow-hidden">
                     <img src="U12.jpeg" alt="KIDS-Cup U12" class="w-full h-56 sm:h-64 object-cover object-top">
@@ -716,7 +699,6 @@
                     <div class="p-6"><h3 class="text-xl font-bold">Herren 40</h3><p class="text-slate-500 font-medium mt-1">Sommersaison 2025</p></div>
                 </div>
             </div>
-
             <div class="mt-8 card p-5 sm:p-6 flex items-center gap-4">
                 <i class="fa-regular fa-clock text-3xl text-[#A31D11]"></i>
                 <div>
@@ -738,29 +720,25 @@
                 <ul class="space-y-3">
                     <li class="flex items-center gap-4 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition">
                         <div class="bg-[#A31D11] text-white text-center rounded-md w-20 py-1.5 flex-shrink-0">
-                            <span class="block text-sm font-bold leading-tight">27.06.</span>
-                            <span class="block text-[10px] text-red-200">2026</span>
+                            <span class="block text-sm font-bold leading-tight">27.06.</span><span class="block text-[10px] text-red-200">2026</span>
                         </div>
                         <div class="text-slate-900 font-bold">Cornholeturnier</div>
                     </li>
                     <li class="flex items-center gap-4 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition">
                         <div class="bg-[#A31D11] text-white text-center rounded-md w-20 py-1.5 flex-shrink-0">
-                            <span class="block text-sm font-bold leading-tight">28.08.</span>
-                            <span class="block text-[10px] text-red-200">2026</span>
+                            <span class="block text-sm font-bold leading-tight">28.08.</span><span class="block text-[10px] text-red-200">2026</span>
                         </div>
                         <div class="text-slate-900 font-bold">Kinderferienprogramm</div>
                     </li>
                     <li class="flex items-center gap-4 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition">
                         <div class="bg-[#A31D11] text-white text-center rounded-md w-20 py-1.5 flex-shrink-0">
-                            <span class="block text-sm font-bold leading-tight">05.09.</span>
-                            <span class="block text-[10px] text-red-200">2026</span>
+                            <span class="block text-sm font-bold leading-tight">05.09.</span><span class="block text-[10px] text-red-200">2026</span>
                         </div>
                         <div class="text-slate-900 font-bold">Laiendoppel</div>
                     </li>
                     <li class="flex items-center gap-4 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition">
                         <div class="bg-[#A31D11] text-white text-center rounded-md w-20 py-1.5 flex-shrink-0">
-                            <span class="block text-sm font-bold leading-tight">02.10.</span>
-                            <span class="block text-[10px] text-red-200">2026</span>
+                            <span class="block text-sm font-bold leading-tight">02.10.</span><span class="block text-[10px] text-red-200">2026</span>
                         </div>
                         <div class="text-slate-900 font-bold">Preisbinokel</div>
                     </li>
@@ -772,8 +750,6 @@
     <!-- ================= PADEL ================= -->
     <main id="page-padel" class="page-section bg-white min-h-screen py-8 sm:py-10">
         <div class="max-w-[1600px] mx-auto px-4">
-
-            <!-- Header -->
             <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6 sm:mb-8">
                 <div>
                     <span class="text-xs font-bold uppercase tracking-wider text-[#A31D11]">Padel-Buchung</span>
@@ -786,8 +762,6 @@
             </div>
 
             <div class="flex flex-col lg:flex-row gap-6 items-start w-full">
-
-                <!-- LEFT: Booking + Info -->
                 <div class="flex-grow lg:w-3/4 flex flex-col gap-5 sm:gap-6 w-full overflow-hidden">
 
                     <!-- Date selector -->
@@ -810,6 +784,7 @@
                                 <h4 class="font-bold text-slate-900 text-sm">Padel-Platz Übersicht <span class="text-slate-400 font-normal">(Stundentakt)</span></h4>
                                 <p class="text-[11px] sm:text-xs text-slate-500 truncate">Bequem buchen & verwalten, powered by <span class="font-bold">ThinkUp-AI</span></p>
                             </div>
+                            <div id="avail-status" class="text-[11px] text-slate-400 whitespace-nowrap hidden sm:block"></div>
                         </div>
 
                         <div class="scroll-hint">
@@ -818,9 +793,7 @@
                         </div>
 
                         <div class="overflow-x-auto relative w-full">
-                            <div class="booking-grid min-w-[880px]" id="booking-grid">
-                                <!-- Wird per JS gefüllt -->
-                            </div>
+                            <div class="booking-grid min-w-[900px]" id="booking-grid"></div>
                         </div>
 
                         <div class="bg-white p-4 sm:p-5 flex flex-col md:flex-row justify-between items-start md:items-center text-sm border-t border-slate-200 gap-4">
@@ -838,9 +811,7 @@
                                     <span class="text-slate-600 font-medium">Deine Auswahl</span>
                                 </div>
                             </div>
-                            <div class="text-xs text-slate-400 hidden md:block">
-                                Tippe Stunden an, um sie auszuwählen
-                            </div>
+                            <div class="text-xs text-slate-400 hidden md:block">Tippe Stunden an, um sie auszuwählen</div>
                         </div>
                     </div>
 
@@ -866,7 +837,7 @@
                             <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-circle-info text-[#A31D11]"></i> Was ist Padel?</h4>
                             <p class="text-sm text-slate-600 leading-relaxed mb-3">Padel ist die am schnellsten wachsende Sportart Europas: ein Mix aus Tennis und Squash, gespielt zu viert auf einem Court mit Glaswänden. Schnell erlernbar, riesiger Spaßfaktor.</p>
                             <ul class="text-sm text-slate-700 space-y-1.5 mt-3">
-                                <li><i class="fa-solid fa-check text-[#A31D11] mr-2"></i>2 brandneue Outdoor-Courts</li>
+                                <li><i class="fa-solid fa-check text-[#A31D11] mr-2"></i>Cupra Court &amp; Frittlingen Court</li>
                                 <li><i class="fa-solid fa-check text-[#A31D11] mr-2"></i>Flutlicht für Abend-Spiele</li>
                                 <li><i class="fa-solid fa-check text-[#A31D11] mr-2"></i>Schlägerverleih vor Ort</li>
                             </ul>
@@ -900,7 +871,7 @@
                     </div>
                 </div>
 
-                <!-- RIGHT: Chat (Desktop only sidebar) -->
+                <!-- RIGHT: Chat -->
                 <div class="hidden lg:block lg:w-1/4 w-full flex-shrink-0 lg:sticky lg:top-28 self-start">
                     <div class="chat-container h-[640px]">
                         <div class="chat-header p-4 sm:p-5 flex items-center gap-4">
@@ -913,12 +884,10 @@
                                 <p class="text-[11px] text-white/90 font-bold">KI-Assistent · Padel-Buchung</p>
                             </div>
                         </div>
-
                         <div class="flex-grow p-4 sm:p-5 flex flex-col overflow-y-auto bg-white" id="chat-box-desktop">
                             <div class="chat-bubble bot-msg">Willkommen beim TC Frittlingen! 👋 Ich helfe dir bei der Padel-Buchung. Frag mich nach freien Stunden, Preisen oder unserem Schlägerverleih.</div>
-                            <div class="chat-bubble bot-msg">Beispiele:<br>• „Wann ist Padel 1 morgen frei?"<br>• „Was kostet eine Stunde für 2 Mitglieder & 2 Gäste?"</div>
+                            <div class="chat-bubble bot-msg">Beispiele:<br>• „Wann ist der Cupra Court morgen frei?"<br>• „Was kostet eine Stunde für 2 Mitglieder & 2 Gäste?"</div>
                         </div>
-
                         <div class="chat-input-area">
                             <form id="chat-form-desktop" onsubmit="sendMessage(event, 'desktop')" class="chat-input-wrapper">
                                 <input type="text" id="chat-input-desktop" autocomplete="off" placeholder="Nachricht eingeben…" class="w-full bg-transparent border-none py-2 pl-4 pr-2 text-sm text-slate-700 focus:outline-none placeholder-slate-400">
@@ -933,13 +902,13 @@
         </div>
     </main>
 
-    <!-- ================= MOBILE FLOATING CHAT BUTTON ================= -->
+    <!-- MOBILE FLOATING CHAT BUTTON -->
     <button id="chat-fab" class="chat-fab" onclick="openChatSheet()" aria-label="Chat öffnen">
         <i class="fa-solid fa-comments"></i>
         <span class="fab-dot"></span>
     </button>
 
-    <!-- ================= MOBILE CHAT SHEET ================= -->
+    <!-- MOBILE CHAT SHEET -->
     <div id="chat-sheet" class="chat-sheet">
         <div class="chat-header p-4 flex items-center gap-4">
             <button onclick="closeChatSheet()" aria-label="Chat schließen" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition">
@@ -967,7 +936,7 @@
         </div>
     </div>
 
-    <!-- ================= MODAL ================= -->
+    <!-- ================= BOOKING MODAL ================= -->
     <div id="booking-modal" class="modal-overlay">
         <div class="modal-content">
             <button onclick="closeModal()" aria-label="Schließen" class="absolute top-4 right-4 text-slate-500 hover:text-slate-900 transition z-50 bg-white border border-slate-200 rounded-full w-9 h-9 flex items-center justify-center shadow-sm">
@@ -975,18 +944,16 @@
             </button>
 
             <!-- STEP 1: FORM -->
-            <form id="booking-form" onsubmit="goToPayment(event)" class="modal-step">
-
+            <form id="booking-form" onsubmit="submitBooking(event)" class="modal-step">
                 <div class="modal-body bg-white">
                     <h3 class="text-xl sm:text-2xl font-black text-slate-900 mb-2 mt-1 pr-10">Spieler eintragen</h3>
                     <p class="text-sm text-slate-500 mb-4">Padel wird zu viert gespielt. Gib an, wer Mitglied ist – jedes Mitglied senkt den Platzpreis um 4 € pro Stunde.</p>
 
-                    <!-- Booking summary in modal -->
                     <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-4 rounded-xl mb-5 shadow">
                         <div class="text-[11px] uppercase tracking-wider font-bold text-[#FDE047] mb-1">Deine Buchung</div>
                         <div class="flex items-center justify-between gap-3 flex-wrap">
                             <div>
-                                <div class="font-bold text-base sm:text-lg" id="modal-court-time">Padel · Heute</div>
+                                <div class="font-bold text-base sm:text-lg" id="modal-court-time">Heute</div>
                                 <div class="text-xs text-slate-300" id="modal-court-detail">–</div>
                             </div>
                             <div class="text-right">
@@ -999,10 +966,10 @@
                     <div class="bg-slate-50 p-4 sm:p-5 rounded-xl border border-slate-200 mb-4 shadow-sm">
                         <h4 class="font-bold text-[#A31D11] mb-3 border-b border-slate-200 pb-2"><i class="fa-solid fa-user-check mr-2"></i>Spieler 1 (Hauptbucher)</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-                            <input type="text" required placeholder="Vorname" class="field-input">
-                            <input type="text" required placeholder="Nachname" class="field-input">
+                            <input type="text" id="p1-first" required placeholder="Vorname" class="field-input">
+                            <input type="text" id="p1-last" required placeholder="Nachname" class="field-input">
                         </div>
-                        <input type="email" required placeholder="E-Mail-Adresse" class="field-input mb-3">
+                        <input type="email" id="p1-email" required placeholder="E-Mail-Adresse" class="field-input mb-3">
                         <select id="p1-status" onchange="calculatePrice()" class="field-input mb-3 font-medium">
                             <option value="guest">Gast</option>
                             <option value="member">Mitglied (−4 € Rabatt/Std.)</option>
@@ -1014,7 +981,7 @@
 
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
                         <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide">Spieler 2</h4>
-                        <input type="text" required placeholder="Vollständiger Name" class="field-input mb-3">
+                        <input type="text" id="p2-name" required placeholder="Vollständiger Name" class="field-input mb-3">
                         <select id="p2-status" onchange="calculatePrice()" class="field-input mb-3">
                             <option value="guest">Gast</option>
                             <option value="member">Mitglied (−4 € Rabatt/Std.)</option>
@@ -1024,7 +991,7 @@
 
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
                         <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide">Spieler 3</h4>
-                        <input type="text" required placeholder="Vollständiger Name" class="field-input mb-3">
+                        <input type="text" id="p3-name" required placeholder="Vollständiger Name" class="field-input mb-3">
                         <select id="p3-status" onchange="calculatePrice()" class="field-input mb-3">
                             <option value="guest">Gast</option>
                             <option value="member">Mitglied (−4 € Rabatt/Std.)</option>
@@ -1034,7 +1001,7 @@
 
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
                         <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide">Spieler 4</h4>
-                        <input type="text" required placeholder="Vollständiger Name" class="field-input mb-3">
+                        <input type="text" id="p4-name" required placeholder="Vollständiger Name" class="field-input mb-3">
                         <select id="p4-status" onchange="calculatePrice()" class="field-input mb-3">
                             <option value="guest">Gast</option>
                             <option value="member">Mitglied (−4 € Rabatt/Std.)</option>
@@ -1043,7 +1010,7 @@
                     </div>
 
                     <!-- Schlägerverleih -->
-                    <div class="bg-[#FDE047]/15 p-4 rounded-xl border border-[#FDE047]/60">
+                    <div class="bg-[#FDE047]/15 p-4 rounded-xl border border-[#FDE047]/60 mb-4">
                         <div class="flex items-start gap-3 mb-3">
                             <div class="w-10 h-10 bg-[#FDE047] rounded-lg flex items-center justify-center text-slate-900 text-lg flex-shrink-0">
                                 <i class="fa-solid fa-table-tennis-paddle-ball"></i>
@@ -1062,6 +1029,17 @@
                             <option value="4">4 Schläger (8,00 €)</option>
                         </select>
                     </div>
+
+                    <!-- AGB Pflicht-Checkbox -->
+                    <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 bg-white cursor-pointer">
+                        <input type="checkbox" id="agb-check" required class="mt-0.5 w-5 h-5 accent-[#A31D11] flex-shrink-0">
+                        <span class="text-sm text-slate-600 leading-snug">
+                            Ich habe die <a href="#" onclick="openAgb(); return false;" class="text-[#A31D11] font-bold underline">AGB &amp; Platz-Nutzungsordnung</a>
+                            sowie die <a href="#" onclick="openAgb(); return false;" class="text-[#A31D11] font-bold underline">Datenschutzhinweise</a> gelesen und akzeptiere sie. *
+                        </span>
+                    </label>
+
+                    <p id="booking-error" class="hidden mt-3 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2"></p>
                 </div>
 
                 <div class="modal-footer shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
@@ -1077,69 +1055,95 @@
                         <span class="text-base sm:text-lg font-bold text-slate-900">Gesamtbetrag:</span>
                         <span id="summary-price" class="text-2xl font-black text-[#A31D11]">0,00 €</span>
                     </div>
-                    <button type="submit" class="w-full bg-[#A31D11] hover:bg-[#8a180e] text-white py-3.5 rounded-xl font-bold text-base sm:text-lg transition shadow-md flex items-center justify-center gap-2">
-                        Weiter zur Zahlung <i class="fa-solid fa-arrow-right text-sm"></i>
+                    <button type="submit" id="pay-btn" class="w-full bg-[#A31D11] hover:bg-[#8a180e] text-white py-3.5 rounded-xl font-bold text-base sm:text-lg transition shadow-md flex items-center justify-center gap-2 disabled:opacity-60">
+                        <span id="pay-btn-label">Zur Zahlung (Mollie)</span> <i class="fa-solid fa-arrow-right text-sm"></i>
                     </button>
+                    <p class="text-[11px] text-slate-400 text-center mt-2"><i class="fa-solid fa-lock mr-1"></i> Sichere Zahlung über Mollie (PayPal, Karte, SEPA)</p>
                 </div>
             </form>
 
-            <!-- STEP 2: PAYMENT -->
-            <div id="modal-step-payment" class="modal-step hidden">
-                <div class="modal-body">
-                    <div class="flex items-center gap-3 mb-6 mt-1 pr-10">
-                        <button type="button" onclick="backToForm()" class="text-slate-400 hover:text-slate-700 transition"><i class="fa-solid fa-arrow-left text-xl"></i></button>
-                        <h3 class="text-xl sm:text-2xl font-black text-slate-900">Zahlung</h3>
-                    </div>
-
-                    <div class="space-y-3">
-                        <label class="flex items-center justify-between p-4 border-2 border-[#A31D11] bg-red-50/50 rounded-xl cursor-pointer transition shadow-sm">
-                            <div class="flex items-center gap-4">
-                                <input type="radio" name="payment" checked class="w-5 h-5 accent-[#A31D11]">
-                                <span class="font-bold text-slate-800 text-base sm:text-lg">PayPal</span>
-                            </div>
-                            <i class="fa-brands fa-paypal text-3xl text-[#00457C]"></i>
-                        </label>
-                        <label class="flex items-center justify-between p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
-                            <div class="flex items-center gap-4">
-                                <input type="radio" name="payment" class="w-5 h-5 accent-[#A31D11]">
-                                <span class="font-bold text-slate-800 text-base sm:text-lg">Kreditkarte</span>
-                            </div>
-                            <div class="flex gap-2">
-                                <i class="fa-brands fa-cc-visa text-3xl text-slate-600"></i>
-                                <i class="fa-brands fa-cc-mastercard text-3xl text-slate-600"></i>
-                            </div>
-                        </label>
-                        <label class="flex items-center justify-between p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
-                            <div class="flex items-center gap-4">
-                                <input type="radio" name="payment" class="w-5 h-5 accent-[#A31D11]">
-                                <span class="font-bold text-slate-800 text-base sm:text-lg">SEPA-Lastschrift</span>
-                            </div>
-                            <i class="fa-solid fa-building-columns text-3xl text-slate-500"></i>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" onclick="processPayment()" class="w-full bg-green-600 text-white py-3.5 rounded-xl font-bold text-base sm:text-lg hover:bg-green-700 transition shadow-md flex justify-center items-center gap-2">
-                        <i class="fa-solid fa-lock"></i> Verbindlich zahlen (<span id="pay-btn-amount">0,00 €</span>)
-                    </button>
-                </div>
-            </div>
-
-            <!-- STEP 3: SUCCESS -->
+            <!-- STEP 2: SUCCESS / RÜCKKEHR -->
             <div id="modal-step-success" class="modal-step hidden items-center justify-center text-center p-6 sm:p-8">
                 <div class="w-20 h-20 sm:w-24 sm:h-24 bg-green-100 rounded-full flex items-center justify-center mb-5 shadow-inner mt-4">
                     <i class="fa-solid fa-check text-4xl sm:text-5xl text-green-500"></i>
                 </div>
-                <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mb-3">Buchung erfolgreich!</h3>
+                <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mb-3">Vielen Dank!</h3>
                 <p class="text-slate-600 leading-relaxed mb-6 max-w-sm text-base sm:text-lg">
-                    Vielen Dank! Wir haben dir eine Bestätigungsmail mit allen Details und deinem <strong class="text-slate-900">persönlichen Zugangscode für die Anlage</strong> gesendet.
+                    Deine Zahlung wird geprüft. Sobald sie bestätigt ist, erhältst du eine <strong class="text-slate-900">Bestätigungsmail mit deinem persönlichen Zugangscode</strong> für das Schloss – gültig nur im gebuchten Zeitraum.
                 </p>
                 <button onclick="closeModal()" class="w-full sm:w-auto sm:px-12 bg-[#A31D11] text-white py-3.5 rounded-xl font-bold text-base sm:text-lg hover:bg-[#8a180e] transition shadow-md">
                     Zurück zur Übersicht
                 </button>
             </div>
+        </div>
+    </div>
 
+    <!-- ================= AGB MODAL ================= -->
+    <div id="agb-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button onclick="closeAgb()" aria-label="Schließen" class="absolute top-4 right-4 text-slate-500 hover:text-slate-900 transition z-50 bg-white border border-slate-200 rounded-full w-9 h-9 flex items-center justify-center shadow-sm">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-body legal">
+                <h3 class="text-xl sm:text-2xl font-black text-slate-900 mb-1 pr-10">AGB &amp; Platz-Nutzungsordnung</h3>
+                <p class="muted mb-4">Buchungs- und Nutzungsbedingungen für die Padel-Courts des TC Frittlingen e.V. · Stand: Saison 2026</p>
+
+                <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800 mb-4">
+                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> <strong>Entwurf</strong> – bitte vor Veröffentlichung rechtlich prüfen lassen (Anwalt/Verband). Platzhalter dienen nur als Vorlage.
+                </div>
+
+                <h4>1. Geltungsbereich</h4>
+                <p>Diese Bedingungen gelten für die Online-Buchung und Nutzung der Padel-Courts „Cupra Court" und „Frittlingen Court" des TC Frittlingen e.V. („Verein"). Mit Abschluss einer Buchung erkennt der Bucher diese Bedingungen als verbindlich an.</p>
+
+                <h4>2. Buchung &amp; Zahlung</h4>
+                <ul>
+                    <li>Buchungen erfolgen stundenweise online und werden erst mit vollständiger Zahlung über den Zahlungsdienstleister Mollie verbindlich.</li>
+                    <li>Der Preis beträgt 26,00 € pro Platz und Stunde. Für jedes mitspielende Vereinsmitglied reduziert sich der Stundenpreis um 4,00 €. Schlägerverleih kostet 2,00 € je Schläger.</li>
+                    <li>Bei Angabe einer Mitgliedschaft ist auf Verlangen die Mitgliedsnummer nachzuweisen. Unberechtigt in Anspruch genommene Rabatte werden nachberechnet.</li>
+                    <li>Der Bucher ist verpflichtet, wahrheitsgemäße Angaben (Name, E-Mail) zu machen.</li>
+                </ul>
+
+                <h4>3. Zugangscode &amp; Schließsystem</h4>
+                <ul>
+                    <li>Nach erfolgreicher Zahlung erhält der Bucher per E-Mail einen persönlichen Zugangscode für das elektronische Schloss der Anlage.</li>
+                    <li>Der Code ist ausschließlich für den gebuchten Zeitraum und den gebuchten Court gültig und darf nicht an Dritte weitergegeben werden.</li>
+                    <li>Eine missbräuchliche Nutzung oder Weitergabe des Codes berechtigt den Verein zur Sperrung sowie zur Geltendmachung von Schadensersatz.</li>
+                </ul>
+
+                <h4>4. Nutzungsregeln</h4>
+                <ul>
+                    <li>Die Courts dürfen nur mit geeignetem, sauberem Sportschuhwerk (Padel-/Hallenschuhe) betreten werden.</li>
+                    <li>Die gebuchte Zeit ist einzuhalten; der Platz ist rechtzeitig und in sauberem Zustand zu verlassen. Müll ist zu entsorgen, Netze und Ausstattung sind pfleglich zu behandeln.</li>
+                    <li>Es dürfen nur die im Buchungsprozess angegebenen Personen spielen. Untervermietung oder Weiterverkauf der Buchung ist untersagt.</li>
+                    <li>Die Nutzung erfolgt in eigener Verantwortung. Den Anweisungen der Platzwarte bzw. des Vorstands ist Folge zu leisten.</li>
+                    <li>Bei ungeeigneter Witterung (z. B. Nässe, Frost, Gewitter) kann der Verein die Nutzung aus Sicherheits- und Platzschutzgründen untersagen.</li>
+                </ul>
+
+                <h4>5. Stornierung &amp; Rückerstattung</h4>
+                <p>Eine kostenfreie Stornierung ist bis 24 Stunden vor Spielbeginn möglich; der gezahlte Betrag wird in diesem Fall erstattet. Bei späterer Stornierung oder Nichterscheinen besteht kein Anspruch auf Rückerstattung. Fällt eine Buchung aus vom Verein zu vertretenden Gründen aus, wird der Betrag vollständig erstattet.</p>
+
+                <h4>6. Haftung</h4>
+                <ul>
+                    <li>Die Nutzung der Anlage erfolgt auf eigene Gefahr. Der Verein haftet nicht für Personen-, Sach- oder Vermögensschäden, soweit diese nicht auf Vorsatz oder grober Fahrlässigkeit des Vereins beruhen.</li>
+                    <li>Der Nutzer haftet für von ihm oder seinen Mitspielern schuldhaft verursachte Schäden an Court, Ausstattung oder Anlage.</li>
+                </ul>
+
+                <h4>7. Fehlverhalten &amp; Konsequenzen</h4>
+                <p>Bei Verstößen gegen diese Bedingungen – insbesondere bei Beschädigung der Anlage, Weitergabe des Zugangscodes, Nutzung außerhalb der gebuchten Zeit oder unsportlichem Verhalten – ist der Verein berechtigt, den betreffenden Personen den weiteren Zutritt zu verweigern, sie von künftigen Buchungen auszuschließen (Sperre) und entstandene Schäden sowie Mehrkosten in Rechnung zu stellen. Diese AGB dienen dem Verein als Handlungsgrundlage für entsprechende Maßnahmen.</p>
+
+                <h4>8. Datenschutz</h4>
+                <p>Die im Rahmen der Buchung erhobenen personenbezogenen Daten (Name, E-Mail, ggf. Mitgliedsnummer) werden ausschließlich zur Abwicklung der Buchung, der Zahlung und der Zutrittsverwaltung verarbeitet und nicht an unbeteiligte Dritte weitergegeben. Details regelt die Datenschutzerklärung des Vereins. Es gelten die Vorgaben der DSGVO.</p>
+
+                <h4>9. Schlussbestimmungen</h4>
+                <p>Es gilt deutsches Recht. Sollte eine Bestimmung dieser Bedingungen unwirksam sein, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt. Änderungen bedürfen der Textform.</p>
+
+                <p class="muted mt-6">TC Frittlingen e.V. · Ecke Römerstraße / Schildeckstraße · 78665 Frittlingen · vorstand@tc-frittlingen.de</p>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeAgb()" class="w-full bg-[#A31D11] hover:bg-[#8a180e] text-white py-3.5 rounded-xl font-bold text-base sm:text-lg transition shadow-md">
+                    Verstanden
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1150,8 +1154,7 @@
                 <div class="lg:col-span-2">
                     <h4 class="font-black text-xl text-white tracking-tight mb-3">TC FRITTLINGEN E.V.</h4>
                     <p class="text-sm text-slate-400 leading-relaxed max-w-md">
-                        Seit 50 Jahren das Zuhause für Tennis, Beach und ab jetzt Padel in Frittlingen.
-                        Werde Teil unserer Vereinsfamilie.
+                        Seit 50 Jahren das Zuhause für Tennis, Beach und ab jetzt Padel in Frittlingen. Werde Teil unserer Vereinsfamilie.
                     </p>
                     <button onclick="switchPage('verein')" class="mt-4 inline-flex items-center gap-2 text-[#FDE047] font-bold text-sm hover:gap-3 transition-all">
                         Mitglied werden <i class="fa-solid fa-arrow-right text-xs"></i>
@@ -1163,7 +1166,7 @@
                         <li><a href="#" onclick="switchPage('padel'); return false;" class="hover:text-[#FDE047] transition">Padel buchen</a></li>
                         <li><a href="#" onclick="switchPage('tennis'); return false;" class="hover:text-[#FDE047] transition">Tennisplätze</a></li>
                         <li><a href="#" onclick="switchPage('mannschaften'); return false;" class="hover:text-[#FDE047] transition">Mannschaften</a></li>
-                        <li><a href="#" onclick="switchPage('aktuell'); return false;" class="hover:text-[#FDE047] transition">Termine</a></li>
+                        <li><a href="#" onclick="openAgb(); return false;" class="hover:text-[#FDE047] transition">AGB &amp; Nutzungsordnung</a></li>
                     </ul>
                 </div>
                 <div>
@@ -1175,13 +1178,33 @@
                 </div>
             </div>
             <div class="border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-slate-500">
-                <p>© <span id="footer-year">2026</span> TC Frittlingen e.V. – Alle Rechte vorbehalten.</p>
+                <p>© <span id="footer-year">2026</span> TC Frittlingen e.V. – Alle Rechte vorbehalten. · <a href="#" onclick="openAgb(); return false;" class="hover:text-[#FDE047]">AGB</a></p>
                 <p>Padel-Buchung powered by <span class="font-bold text-slate-300">ThinkUp-AI</span></p>
             </div>
         </div>
     </footer>
 
     <script>
+        // ============================================================
+        //  BACKEND-KONFIGURATION
+        //  n8n-Webhook-Basis. Bei anderer n8n-Instanz hier anpassen.
+        // ============================================================
+        const API_BASE = 'https://thinkupaiautomatisierung.de/webhook';
+
+        // Court-Definition: id -> Anzeigename (Backend nutzt weiterhin die id 1/2)
+        const COURTS = [
+            { id: '1', name: 'Cupra Court' },
+            { id: '2', name: 'Frittlingen Court' }
+        ];
+        function courtName(id){ const c = COURTS.find(c => c.id === String(id)); return c ? c.name : ('Platz ' + id); }
+
+        const HOURS = [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
+        const pad = (n) => String(n).padStart(2,'0');
+        const fmtEuro = (v) => v.toFixed(2).replace('.', ',') + ' €';
+
+        let selectedDateISO = null;   // 'YYYY-MM-DD' des gewählten Tages
+        let currentAmount = 0;        // aktueller Gesamtbetrag (Zahl)
+
         // ===== PAGE SWITCHING =====
         function switchPage(pageId) {
             document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
@@ -1203,7 +1226,7 @@
             document.body.style.overflow = d.classList.contains('open') ? 'hidden' : '';
         }
 
-        // ===== CHAT FAB (Mobile only, Padel page only) =====
+        // ===== CHAT FAB =====
         function updateChatFab() {
             const fab = document.getElementById('chat-fab');
             const isPadel = document.getElementById('page-padel').classList.contains('active');
@@ -1211,20 +1234,24 @@
             fab.style.display = (isPadel && isMobile) ? 'flex' : 'none';
         }
         window.addEventListener('resize', updateChatFab);
+        function openChatSheet() { document.getElementById('chat-sheet').classList.add('open'); document.body.style.overflow = 'hidden'; }
+        function closeChatSheet() { document.getElementById('chat-sheet').classList.remove('open'); document.body.style.overflow = ''; }
 
-        function openChatSheet() {
-            document.getElementById('chat-sheet').classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeChatSheet() {
-            document.getElementById('chat-sheet').classList.remove('open');
-            document.body.style.overflow = '';
+        // ===== ZEITZONEN-HELFER (Europe/Berlin Offset für ein Datum) =====
+        function berlinOffset(dateStr){
+            try {
+                const d = new Date(dateStr + 'T12:00:00Z');
+                const dtf = new Intl.DateTimeFormat('en-US', { timeZone:'Europe/Berlin', timeZoneName:'longOffset' });
+                const part = dtf.formatToParts(d).find(p => p.type === 'timeZoneName');
+                const m = /([+-]\d{2}:\d{2})/.exec(part ? part.value : '');
+                return m ? m[1] : '+02:00';
+            } catch(e){ return '+02:00'; }
         }
 
         // ===== DATE SELECTOR =====
         const WEEKDAYS = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
         const MONTHS = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
-        let selectedDateIndex = 0;
+        function isoDate(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
 
         function buildDateSelector() {
             const container = document.getElementById('date-selector');
@@ -1234,117 +1261,136 @@
                 const d = new Date(today);
                 d.setDate(today.getDate() + i);
                 const label = i === 0 ? 'Heute' : (i === 1 ? 'Morgen' : WEEKDAYS[d.getDay()]);
-                const sub = `${d.getDate()}. ${MONTHS[d.getMonth()]}`;
+                const sub = d.getDate() + '. ' + MONTHS[d.getMonth()];
+                const iso = isoDate(d);
                 const pill = document.createElement('button');
                 pill.type = 'button';
                 pill.className = 'date-pill' + (i === 0 ? ' active' : '');
-                pill.innerHTML = `<span>${label}</span><span class="date-sub">${sub}</span>`;
-                pill.onclick = () => selectDate(i, label, sub, pill);
+                pill.dataset.iso = iso;
+                pill.innerHTML = '<span>' + label + '</span><span class="date-sub">' + sub + '</span>';
+                pill.onclick = () => selectDate(iso, label, sub, pill);
                 container.appendChild(pill);
+                if (i === 0) { selectedDateISO = iso; document.getElementById('selected-date-label').innerText = label + ', ' + sub; }
             }
         }
 
-        function selectDate(idx, label, sub, pill) {
-            selectedDateIndex = idx;
+        function selectDate(iso, label, sub, pill) {
+            selectedDateISO = iso;
             document.querySelectorAll('.date-pill').forEach(p => p.classList.remove('active'));
             pill.classList.add('active');
-            document.getElementById('selected-date-label').innerText = `${label}, ${sub}`;
+            document.getElementById('selected-date-label').innerText = label + ', ' + sub;
             document.querySelectorAll('.slot.selected').forEach(s => s.classList.remove('selected'));
             updateSelectionBar();
-            randomizeOccupancy();
+            loadAvailability();
         }
 
-        // ===== BOOKING GRID (Stundentakt) =====
-        const HOURS = [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
-        const COURTS = ['Padel 1', 'Padel 2'];
-
+        // ===== BOOKING GRID =====
         function buildBookingGrid() {
             const grid = document.getElementById('booking-grid');
             grid.innerHTML = '';
-            // Kopfzeile: leere Ecke + eine Spalte je Stunde
             const emptyHeader = document.createElement('div');
             emptyHeader.className = 'grid-header-empty';
             grid.appendChild(emptyHeader);
             HOURS.forEach(h => {
                 const hd = document.createElement('div');
                 hd.className = 'grid-header';
-                hd.innerText = `${String(h).padStart(2,'0')}:00`;
+                hd.innerText = pad(h) + ':00';
                 grid.appendChild(hd);
             });
-            // Court-Reihen: ein Slot = eine volle Stunde
-            COURTS.forEach((court, courtIdx) => {
+            COURTS.forEach(court => {
                 const rowHeader = document.createElement('div');
                 rowHeader.className = 'grid-row-header';
-                rowHeader.innerHTML = `<span class="court-dot"></span>${court}`;
+                rowHeader.innerHTML = '<span class="court-dot"></span>' + court.name;
                 grid.appendChild(rowHeader);
                 HOURS.forEach(h => {
                     const slot = document.createElement('div');
                     slot.className = 'slot';
-                    slot.dataset.court = court;
+                    slot.dataset.court = court.id;
                     slot.dataset.hour = h;
-                    slot.dataset.courtIdx = courtIdx;
                     slot.addEventListener('click', () => toggleSlot(slot));
                     grid.appendChild(slot);
                 });
             });
-            randomizeOccupancy();
         }
 
-        function randomizeOccupancy() {
-            const slots = document.querySelectorAll('.slot');
-            slots.forEach(s => {
-                s.classList.remove('occupied', 'selected');
-                const h = parseInt(s.dataset.hour, 10);
-                const evening = h >= 17 ? 0.5 : 0.25;
-                if (Math.random() < evening) s.classList.add('occupied');
+        // Belegung live vom n8n-Backend laden
+        async function loadAvailability() {
+            const grid = document.getElementById('booking-grid');
+            const status = document.getElementById('avail-status');
+            grid.classList.add('loading');
+            status.innerText = 'Verfügbarkeit wird geladen…';
+            // alle Slots zurücksetzen
+            document.querySelectorAll('.slot').forEach(s => s.classList.remove('occupied', 'selected'));
+            try {
+                const res = await fetch(API_BASE + '/verfuegbarkeit?date=' + encodeURIComponent(selectedDateISO), { method: 'GET' });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                applyOccupancy((data && data.occupied) || []);
+                status.innerText = '';
+            } catch (e) {
+                // Fallback: nichts als belegt markieren, aber Hinweis zeigen
+                status.innerHTML = '<span class="text-amber-600"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Verfügbarkeit offline</span>';
+            } finally {
+                grid.classList.remove('loading');
+                updateSelectionBar();
+            }
+        }
+
+        function hourStart(iso){ const m = /T(\d{2}):/.exec(iso || ''); return m ? parseInt(m[1],10) : null; }
+        function hourEndCeil(iso){ const m = /T(\d{2}):(\d{2})/.exec(iso || ''); if(!m) return null; let h = parseInt(m[1],10); if(parseInt(m[2],10) > 0) h += 1; return h; }
+
+        function applyOccupancy(occupied) {
+            document.querySelectorAll('.slot').forEach(slot => {
+                const court = slot.dataset.court;
+                const h = parseInt(slot.dataset.hour, 10);
+                const busy = occupied.some(o => {
+                    if (String(o.court) !== court) return false;
+                    const s = hourStart(o.start), e = hourEndCeil(o.end);
+                    if (s === null || e === null) return false;
+                    return s <= h && h < e;
+                });
+                if (busy) slot.classList.add('occupied');
             });
         }
 
         function toggleSlot(slot) {
             if (slot.classList.contains('occupied')) return;
+            const court = slot.dataset.court;
+            // Nur ein Court pro Buchung: Auswahl auf anderem Court verwerfen
+            document.querySelectorAll('.slot.selected').forEach(s => { if (s.dataset.court !== court) s.classList.remove('selected'); });
             slot.classList.toggle('selected');
             updateSelectionBar();
         }
 
-        function updateSelectionBar() {
-            const selected = Array.from(document.querySelectorAll('.slot.selected'));
-            const bar = document.getElementById('selection-bar');
-            if (selected.length === 0) {
-                bar.classList.remove('show');
-                return;
-            }
-            bar.classList.add('show');
+        function getSelection() {
+            const selected = [...document.querySelectorAll('.slot.selected')];
+            if (!selected.length) return null;
+            const court = selected[0].dataset.court;
+            const hrs = selected.map(s => parseInt(s.dataset.hour,10)).sort((a,b)=>a-b);
+            return { court, hours: hrs, startH: hrs[0], endH: hrs[hrs.length-1] + 1, count: hrs.length };
+        }
 
-            const byCourt = {};
-            selected.forEach(s => {
-                const c = s.dataset.court;
-                if (!byCourt[c]) byCourt[c] = [];
-                byCourt[c].push(s);
-            });
-            const summaries = [];
-            Object.entries(byCourt).forEach(([court, list]) => {
-                list.sort((a, b) => (a.dataset.hour - b.dataset.hour));
-                const first = list[0];
-                const last = list[list.length - 1];
-                const startH = String(first.dataset.hour).padStart(2,'0');
-                const endH = parseInt(last.dataset.hour, 10) + 1; // 1 Slot = 1 Stunde
-                summaries.push(`${court}: ${startH}:00–${String(endH).padStart(2,'0')}:00`);
-            });
-            document.getElementById('selection-summary-text').innerText = summaries.join(' · ');
+        function updateSelectionBar() {
+            const bar = document.getElementById('selection-bar');
+            const sel = getSelection();
+            if (!sel) { bar.classList.remove('show'); return; }
+            bar.classList.add('show');
+            document.getElementById('selection-summary-text').innerText =
+                courtName(sel.court) + ': ' + pad(sel.startH) + ':00–' + pad(sel.endH) + ':00';
         }
 
         // ===== MODAL =====
         function openModal() {
-            const selected = document.querySelectorAll('.slot.selected');
+            const sel = getSelection();
+            if (!sel) return;
             const dateLabel = document.getElementById('selected-date-label').innerText;
-            const selectionText = document.getElementById('selection-summary-text').innerText;
-            document.getElementById('modal-court-time').innerText = dateLabel;
-            document.getElementById('modal-court-detail').innerText = selectionText;
-            document.getElementById('modal-duration').innerText = `${selected.length} h`;
+            document.getElementById('modal-court-time').innerText = courtName(sel.court) + ' · ' + dateLabel;
+            document.getElementById('modal-court-detail').innerText = pad(sel.startH) + ':00–' + pad(sel.endH) + ':00 Uhr';
+            document.getElementById('modal-duration').innerText = sel.count + ' h';
+            document.getElementById('booking-error').classList.add('hidden');
 
             document.getElementById('booking-modal').classList.add('open');
             document.getElementById('booking-form').classList.remove('hidden');
-            document.getElementById('modal-step-payment').classList.add('hidden');
             document.getElementById('modal-step-success').classList.add('hidden');
             document.body.style.overflow = 'hidden';
             calculatePrice();
@@ -1357,18 +1403,25 @@
                 document.querySelectorAll('.slot.selected').forEach(s => s.classList.remove('selected'));
                 updateSelectionBar();
                 document.getElementById('booking-form').reset();
+                loadAvailability();
             }
         }
 
-        function calculatePrice() {
-            // 1 ausgewählter Slot = 1 volle Stunde
-            const hours = document.querySelectorAll('.slot.selected').length;
-            let membersCount = 0, guestsCount = 0;
+        function showSuccess() {
+            document.getElementById('booking-form').classList.add('hidden');
+            document.getElementById('modal-step-success').classList.remove('hidden');
+            document.getElementById('booking-modal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
 
+        function calculatePrice() {
+            const sel = getSelection();
+            const hours = sel ? sel.count : 0;
+            let membersCount = 0, guestsCount = 0;
             for (let i = 1; i <= 4; i++) {
-                const status = document.getElementById(`p${i}-status`).value;
-                const idField = document.getElementById(`p${i}-id-field`);
-                const idInput = document.getElementById(`p${i}-id`);
+                const status = document.getElementById('p' + i + '-status').value;
+                const idField = document.getElementById('p' + i + '-id-field');
+                const idInput = document.getElementById('p' + i + '-id');
                 if (status === 'member') {
                     membersCount++;
                     idField.classList.remove('hidden');
@@ -1379,46 +1432,95 @@
                     idInput.removeAttribute('required');
                 }
             }
-
-            // Preis pro Platz & Stunde: 26 € Basis, minus 4 € je Mitglied (min. 10 € bei 4 Mitgliedern)
             const pricePerHour = 26 - (4 * membersCount);
             const courtTotal = pricePerHour * hours;
-
-            // Schlägerverleih: 2,00 € pauschal je Schläger
             const racketCount = parseInt(document.getElementById('racket-count').value, 10) || 0;
             const racketTotal = racketCount * 2.00;
-
             const finalTotal = courtTotal + racketTotal;
+            currentAmount = finalTotal;
 
-            const fmt = (v) => v.toFixed(2).replace('.', ',') + ' €';
             document.getElementById('summary-time').innerText = hours + ' h';
-            document.getElementById('summary-rate').innerText = fmt(pricePerHour);
-            document.getElementById('summary-court').innerText = fmt(courtTotal);
-            document.getElementById('summary-rackets').innerText = fmt(racketTotal);
-            document.getElementById('summary-price').innerText = fmt(finalTotal);
-            document.getElementById('pay-btn-amount').innerText = fmt(finalTotal);
+            document.getElementById('summary-rate').innerText = fmtEuro(pricePerHour);
+            document.getElementById('summary-court').innerText = fmtEuro(courtTotal);
+            document.getElementById('summary-rackets').innerText = fmtEuro(racketTotal);
+            document.getElementById('summary-price').innerText = fmtEuro(finalTotal);
         }
 
-        function goToPayment(e) {
+        function collectPlayers() {
+            const v = (id) => (document.getElementById(id).value || '').trim();
+            const players = [];
+            players.push({ name: (v('p1-first') + ' ' + v('p1-last')).trim(), status: v('p1-status'), member_id: v('p1-id') });
+            for (let i = 2; i <= 4; i++) players.push({ name: v('p' + i + '-name'), status: v('p' + i + '-status'), member_id: v('p' + i + '-id') });
+            return players;
+        }
+
+        // ===== BUCHUNG ABSENDEN -> n8n /checkout-start -> Mollie =====
+        async function submitBooking(e) {
             e.preventDefault();
-            document.getElementById('booking-form').classList.add('hidden');
-            document.getElementById('modal-step-payment').classList.remove('hidden');
-        }
+            const sel = getSelection();
+            const errEl = document.getElementById('booking-error');
+            errEl.classList.add('hidden');
+            if (!sel) { showError('Bitte wähle mindestens eine Stunde aus.'); return; }
 
-        function backToForm() {
-            document.getElementById('modal-step-payment').classList.add('hidden');
-            document.getElementById('booking-form').classList.remove('hidden');
-        }
+            const off = berlinOffset(selectedDateISO);
+            const payload = {
+                court: sel.court,
+                start: selectedDateISO + 'T' + pad(sel.startH) + ':00:00' + off,
+                end:   selectedDateISO + 'T' + pad(sel.endH) + ':00:00' + off,
+                amount: currentAmount,
+                email: document.getElementById('p1-email').value.trim(),
+                players: collectPlayers(),
+                method: 'mollie'
+            };
 
-        function processPayment() {
-            document.getElementById('modal-step-payment').classList.add('hidden');
-            document.getElementById('modal-step-success').classList.remove('hidden');
+            const btn = document.getElementById('pay-btn');
+            const label = document.getElementById('pay-btn-label');
+            const oldLabel = label.innerText;
+            btn.disabled = true; label.innerText = 'Weiterleitung zu Mollie…';
+
+            try {
+                const res = await fetch(API_BASE + '/checkout-start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json().catch(() => ({}));
+                if (data && data.ok && data.redirectUrl) {
+                    window.location.href = data.redirectUrl;   // zur Mollie-Bezahlseite
+                    return;
+                }
+                if (data && data.reason === 'belegt') {
+                    showError('Dieser Zeitraum wurde soeben vergeben. Bitte wähle einen anderen Slot.');
+                    closeModal(); loadAvailability();
+                } else {
+                    showError('Die Buchung konnte nicht gestartet werden. Bitte versuche es erneut.');
+                }
+            } catch (err) {
+                showError('Verbindung zum Buchungssystem fehlgeschlagen. Bitte später erneut versuchen.');
+            } finally {
+                btn.disabled = false; label.innerText = oldLabel;
+            }
+
+            function showError(msg){ errEl.innerText = msg; errEl.classList.remove('hidden'); }
+        }
+        function showError(msg){ const e = document.getElementById('booking-error'); e.innerText = msg; e.classList.remove('hidden'); }
+
+        // ===== AGB MODAL =====
+        function openAgb() {
+            document.getElementById('agb-modal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeAgb() {
+            document.getElementById('agb-modal').classList.remove('open');
+            // Body-Scroll nur freigeben, wenn kein anderes Modal offen ist
+            const bookingOpen = document.getElementById('booking-modal').classList.contains('open');
+            if (!bookingOpen) document.body.style.overflow = '';
         }
 
         // ===== CHAT (Demo) =====
         const BOT_REPLIES = [
             "Klar! Welcher Tag passt dir denn?",
-            "Padel 1 ist morgen ab 18:00 Uhr noch frei. Soll ich für dich reservieren?",
+            "Der Cupra Court ist morgen ab 18:00 Uhr noch frei. Soll ich für dich reservieren?",
             "Eine Stunde für 2 Mitglieder & 2 Gäste kostet 18,00 € pro Platz.",
             "Schlägerverleih kostet 2,00 € pro Schläger. Soll ich welche zur Buchung hinzufügen?",
             "Alles klar – du bekommst gleich die Bestätigung per E-Mail."
@@ -1450,7 +1552,19 @@
         document.getElementById('footer-year').innerText = new Date().getFullYear();
         buildDateSelector();
         buildBookingGrid();
+        loadAvailability();
         updateChatFab();
+
+        // Rückkehr von Mollie: ?bezahlt=1 -> Erfolgsansicht zeigen
+        (function handleReturn(){
+            const params = new URLSearchParams(location.search);
+            if (params.get('bezahlt') === '1' || params.get('mollie') === 'return') {
+                switchPage('padel');
+                showSuccess();
+                // URL aufräumen
+                if (window.history && history.replaceState) history.replaceState({}, '', location.pathname);
+            }
+        })();
     </script>
 </body>
 </html>
