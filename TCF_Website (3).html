@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TC Frittlingen e.V. - Padel & Tennis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,500;0,600;0,700;0,800;0,900;1,700;1,800;1,900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://www.paypal.com/sdk/js?client-id=DEINE_PAYPAL_CLIENT_ID_HIER_EINTRAGEN&currency=EUR"></script>
+    <script src="https://gateway.sumup.com/gateway/ecom/card/v2/sdk.js"></script>
+    
+    <style>
+        :root {
+            --tcf-red: #A31D11;
+            --tcf-red-dark: #7e150c;
+            --tcf-yellow: #FDE047;
+            --tcf-grey: #6B7280;
+            --ink: #1b1512;          /* warmes Fast-Schwarz */
+            --paper: #f6f4f0;        /* warmes Off-White */
+            --line: #e8e2d9;
+            --shadow-soft: 0 1px 2px rgba(27,21,18,.05), 0 14px 32px -18px rgba(27,21,18,.22);
+            --shadow-lift: 0 22px 50px -22px rgba(27,21,18,.35);
+        }
+
+        * { -webkit-tap-highlight-color: transparent; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--paper);
+            color: var(--ink);
+            overflow-y: scroll;
+            background-image:
+                radial-gradient(1000px 520px at 100% -8%, rgba(253,224,71,.14), transparent 60%),
+                radial-gradient(900px 620px at -12% 8%, rgba(163,29,17,.08), transparent 55%),
+                radial-gradient(700px 700px at 50% 120%, rgba(200,99,46,.06), transparent 60%);
+            background-size: 180% 180%;
+            background-position: 0% 0%;
+            animation: aurora 30s ease-in-out infinite alternate;
+        }
+        @keyframes aurora { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
+
+        h1, h2, h3, h4, h5, h6, .font-display {
+            font-family: 'Archivo', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        /* feiner Film-Grain über dem Inhalt (unter Nav/Chat/Modal) */
+        body::after {
+            content: ""; position: fixed; inset: 0; z-index: 3; pointer-events: none; opacity: .04;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        ::selection { background: var(--tcf-yellow); color: var(--tcf-red); }
+
+        a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+            outline: 2px solid var(--tcf-red); outline-offset: 2px; border-radius: 6px;
+        }
+
+        /* Seitenwechsel-Animation */
+        .page-section { display: none; }
+        .page-section.active { display: block; animation: pageIn 0.55s cubic-bezier(.2,.7,.2,1) both; }
+        @keyframes pageIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Hero: gestaffelter Auftritt */
+        .hero-stagger > * { opacity: 0; animation: heroUp 0.8s cubic-bezier(.2,.7,.2,1) forwards; }
+        .hero-stagger > *:nth-child(1) { animation-delay: 0.10s; }
+        .hero-stagger > *:nth-child(2) { animation-delay: 0.20s; }
+        .hero-stagger > *:nth-child(3) { animation-delay: 0.30s; }
+        .hero-stagger > *:nth-child(4) { animation-delay: 0.42s; }
+        @keyframes heroUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
+        @keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.09); } }
+        .hero-img { animation: heroZoom 22s ease-in-out infinite alternate; }
+        .hero-grad { background: linear-gradient(to bottom, rgba(20,15,12,.74) 0%, rgba(20,15,12,.30) 42%, rgba(20,15,12,.50) 74%, rgba(246,244,240,.97) 100%); }
+
+        @keyframes scrollBounce { 0%,100% { transform: translateY(0); opacity:.65; } 50% { transform: translateY(8px); opacity:1; } }
+        .scroll-hint { animation: scrollBounce 2s ease-in-out infinite; }
+
+        /* Navigation */
+        .nav-link { position: relative; transition: color 0.2s; }
+        .nav-link::after { content: ''; position: absolute; width: 0; height: 3px; bottom: -6px; left: 0; background-color: var(--tcf-red); border-radius: 2px; transition: width 0.3s cubic-bezier(.2,.7,.2,1); }
+        .nav-link:hover::after, .nav-link.active-nav::after { width: 100%; }
+        .nav-link.active-nav { color: var(--tcf-red); }
+
+        /* Buttons */
+        .btn-primary { background: var(--tcf-red); color: white; transition: all 0.25s cubic-bezier(.2,.7,.2,1); position: relative; overflow: hidden; }
+        .btn-primary:hover { background: var(--tcf-red-dark); transform: translateY(-2px); box-shadow: 0 12px 26px -8px rgba(163,29,17,.48); }
+        .btn-primary:active { transform: translateY(0); }
+        .btn-primary::after { content:''; position:absolute; top:0; left:-130%; width:55%; height:100%; background:linear-gradient(120deg, transparent, rgba(255,255,255,.4), transparent); transform:skewX(-20deg); transition:left .65s cubic-bezier(.2,.7,.2,1); pointer-events:none; }
+        .btn-primary:hover::after { left:150%; }
+
+        /* sanfte Karten-Anhebung + Cursor-Spotlight */
+        .tcf-card { position: relative; overflow: hidden; transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s cubic-bezier(.2,.7,.2,1); will-change: transform; }
+        .tcf-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lift); }
+        .tcf-card::before { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; opacity:0; transition:opacity .35s ease; background: radial-gradient(260px circle at var(--mx,50%) var(--my,50%), rgba(163,29,17,.14), transparent 62%); }
+        .tcf-card:hover::before { opacity:1; }
+        .tcf-card > * { position: relative; z-index: 2; }
+
+        /* Nav: Scroll-Status */
+        nav { transition: box-shadow .3s ease, background-color .3s ease; }
+        nav.scrolled { box-shadow: 0 12px 30px -14px rgba(27,21,18,.28); }
+        .nav-inner { transition: height .3s cubic-bezier(.2,.7,.2,1); }
+        nav.scrolled .nav-inner { height: 4rem; }
+        .nav-logo { transition: height .3s cubic-bezier(.2,.7,.2,1); }
+        nav.scrolled .nav-logo { height: 2.5rem; }
+
+        /* Scroll-Reveal (nur aktiv wenn JS bereit) — nutzt translate, damit Hover-transform frei bleibt */
+        .reveal-ready .reveal { opacity: 0; translate: 0 26px; transition: opacity .7s cubic-bezier(.2,.7,.2,1), translate .7s cubic-bezier(.2,.7,.2,1); }
+        .reveal-ready .reveal.in { opacity: 1; translate: 0 0; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+            .reveal-ready .reveal { opacity: 1 !important; translate: none !important; }
+        }
+
+        /* Bildrahmen mit Zoom */
+        .img-frame { position: relative; overflow: hidden; }
+        .img-frame img { transition: transform 0.7s cubic-bezier(.2,.7,.2,1); }
+        .img-frame:hover img { transform: scale(1.07); }
+        .img-fade::after { content:''; position:absolute; inset:auto 0 0 0; height:48%; background:linear-gradient(to top, rgba(20,15,12,.82), transparent); pointer-events:none; }
+        .season-ribbon { position:absolute; top:14px; right:14px; background:rgba(255,255,255,.95); color:var(--tcf-red); font-family:'Archivo',sans-serif; font-weight:800; font-size:11px; letter-spacing:.05em; padding:5px 12px; border-radius:999px; box-shadow:0 4px 12px rgba(0,0,0,.15); text-transform:uppercase; }
+
+        /* === BUCHUNGSSYSTEM === */
+        .booking-widget { background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow-soft); }
+        .booking-grid { display: grid; grid-template-columns: 100px repeat(30, minmax(35px, 1fr)); gap: 1px; background: var(--line); border-bottom: 1px solid var(--line); }
+        .grid-header { background: #fff; padding: 10px 5px; text-align: center; font-size: 11px; font-weight: 700; color: #8a8178; border-left: 1px solid var(--line); font-family:'Archivo',sans-serif; }
+        .grid-header-empty { background: #fff; }
+        .grid-row-header { background: #fff; padding: 10px 12px; font-size: 13px; font-weight: 800; display: flex; align-items: center; border-top: 1px solid var(--line); color: var(--ink); font-family:'Archivo',sans-serif; }
+        .slot { background: #fff; height: 45px; cursor: pointer; transition: background 0.15s, box-shadow 0.15s; border-top: 1px solid var(--line); }
+        .slot:hover:not(.occupied):not(.selected) { background: #fffbe6; box-shadow: inset 0 0 0 2px var(--tcf-yellow); }
+        .slot.occupied { background: repeating-linear-gradient(45deg, #e6e3dd, #e6e3dd 6px, #d9d5cd 6px, #d9d5cd 12px); cursor: not-allowed; }
+        .slot.selected { background: #2563eb; box-shadow: inset 0 0 0 2px rgba(255,255,255,.65); }
+
+        /* === CHATBOT === */
+        .chat-container { background: #ffffff; border-radius: 22px; box-shadow: 0 24px 60px -16px rgba(27,21,18,.32); border: 1px solid var(--line); display: flex; flex-direction: column; overflow: hidden; }
+        .chat-header { background: var(--tcf-red); color: white; }
+        .chat-bubble { padding: 12px 16px; border-radius: 16px; font-size: 0.9rem; line-height: 1.5; max-width: 88%; margin-bottom: 10px; }
+        .bot-msg { background: #f2efe9; color: #3a342e; border-bottom-left-radius: 4px; }
+        .user-msg { background: var(--tcf-red); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+        .chat-input-area { background: var(--tcf-red); padding: 14px; border-top: 1px solid var(--tcf-red-dark); }
+        .chat-input-wrapper { background: #ffffff; border: 1px solid var(--line); border-radius: 100px; padding: 4px; display: flex; align-items: center; }
+
+        /* === MODAL === */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(20,15,12,0.72); backdrop-filter: blur(5px); z-index: 9999; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; padding: 16px; }
+        .modal-overlay.open { display: flex; opacity: 1; }
+        .modal-content { background: white; border-radius: 22px; width: 100%; max-width: 600px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 30px 60px -12px rgba(20,15,12,0.45); transform: translateY(20px); transition: transform 0.3s ease; overflow: hidden; }
+        .modal-overlay.open .modal-content { transform: translateY(0); }
+        .modal-body { overflow-y: auto; padding: 24px; flex-grow: 1; -webkit-overflow-scrolling: touch; }
+        .modal-footer { padding: 20px 24px; background: var(--paper); border-top: 1px solid var(--line); flex-shrink: 0; }
+        input, select { font-size: 16px !important; }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#FDE047] selection:text-[#A31D11]">
+
+    <nav class="bg-white/95 backdrop-blur-md border-b-[6px] border-[#FDE047] sticky top-0 z-50 shadow-sm">
+        <div class="nav-inner max-w-[1600px] mx-auto px-4 h-20 md:h-24 flex justify-between items-center">
+            <div class="flex items-center cursor-pointer flex-shrink-0" onclick="switchPage('home')">
+                <img src="logo tcf.jpg" alt="Logo TC Frittlingen" class="nav-logo h-12 md:h-16 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="hidden flex-col justify-center border-l-4 border-[#FDE047] pl-3">
+                    <span class="font-black text-lg md:text-xl text-[#A31D11] leading-none">TENNISCLUB</span>
+                    <span class="text-xs md:text-sm font-bold text-gray-500 mt-1">FRITTLINGEN E.V.</span>
+                </div>
+            </div>
+            
+            <div class="hidden lg:flex gap-5 xl:gap-8 text-[13px] xl:text-[14px] font-bold text-slate-600 uppercase tracking-wider items-center">
+                <a href="#" onclick="switchPage('home')" id="nav-home" class="nav-link active-nav whitespace-nowrap hover:text-[#A31D11]">Startseite</a>
+                <a href="#" onclick="switchPage('tennis')" id="nav-tennis" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Tennis</a>
+                <a href="#" onclick="switchPage('verein')" id="nav-verein" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Unser Verein</a>
+                <a href="#" onclick="switchPage('spielbetrieb')" id="nav-spielbetrieb" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Spielbetrieb</a>
+                <a href="#" onclick="switchPage('mannschaften')" id="nav-mannschaften" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Mannschaften</a>
+                <a href="#" onclick="switchPage('aktuell')" id="nav-aktuell" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Aktuell</a>
+                <a href="#" onclick="switchPage('padel')" id="nav-padel" class="nav-link text-[#A31D11] relative whitespace-nowrap">
+                    Padel
+                    <span class="absolute -top-3 -right-6 bg-red-600 text-white text-[9px] px-1.5 py-0.5 rounded-full animate-pulse">NEU</span>
+                </a>
+            </div>
+
+            <button onclick="switchPage('padel')" class="hidden lg:flex btn-primary px-6 md:px-8 py-3 rounded text-sm font-bold uppercase tracking-wide shadow-md flex-shrink-0 items-center">
+                Platz Buchen
+            </button>
+
+            <!-- Hamburger (Handy/Tablet) -->
+            <button onclick="toggleMobileMenu()" class="lg:hidden text-[#A31D11] text-2xl w-12 h-12 flex items-center justify-center rounded-lg hover:bg-slate-100 transition flex-shrink-0" aria-label="Menü öffnen">
+                <i id="mobile-menu-icon" class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Aufklappbares Menü (Handy/Tablet) -->
+        <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-200 bg-white shadow-lg">
+            <div class="px-4 py-4 flex flex-col gap-1 text-sm font-bold text-slate-700 uppercase tracking-wider">
+                <a href="#" onclick="switchPage('home')" class="py-3 px-3 rounded-lg hover:bg-slate-100 hover:text-[#A31D11] transition">Startseite</a>
+                <a href="#" onclick="switchPage('tennis')" class="py-3 px-3 rounded-lg hover:bg-slate-100 hover:text-[#A31D11] transition">Tennis</a>
+                <a href="#" onclick="switchPage('verein')" class="py-3 px-3 rounded-lg hover:bg-slate-100 hover:text-[#A31D11] transition">Unser Verein</a>
+                <a href="#" onclick="switchPage('spielbetrieb')" class="py-3 px-3 rounded-lg hover:bg-slate-100 hover:text-[#A31D11] transition">Spielbetrieb</a>
+                <a href="#" onclick="switchPage('mannschaften')" class="py-3 px-3 rounded-lg hover:bg-slate-100 hover:text-[#A31D11] transition">Mannschaften</a>
+                <a href="#" onclick="switchPage('aktuell')" class="py-3 px-3 rounded-lg hover:bg-slate-100 hover:text-[#A31D11] transition">Aktuell</a>
+                <a href="#" onclick="switchPage('padel')" class="py-3 px-3 rounded-lg hover:bg-slate-100 text-[#A31D11] transition flex items-center gap-2">
+                    Padel <span class="bg-red-600 text-white text-[9px] px-1.5 py-0.5 rounded-full">NEU</span>
+                </a>
+                <button onclick="switchPage('padel')" class="btn-primary mt-3 px-6 py-3.5 rounded text-sm font-bold uppercase tracking-wide shadow-md w-full">
+                    Platz Buchen
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main id="page-home" class="page-section active"><section class="relative h-[78vh] min-h-[520px] flex items-center overflow-hidden"><img src="Tennisheim.jpg" class="hero-img absolute inset-0 w-full h-full object-cover" alt="Anlage TC Frittlingen" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80';"><div class="absolute inset-0 hero-grad"></div><div class="hero-stagger relative z-10 px-4 max-w-7xl mx-auto w-full"><span class="inline-block bg-[#FDE047] text-[#A31D11] text-xs sm:text-sm font-black uppercase tracking-[0.18em] px-4 py-1.5 rounded-full mb-6 shadow-md">TC Frittlingen e.V. · seit 1975</span><h1 class="text-5xl md:text-7xl xl:text-8xl font-black text-white mb-5 tracking-tight uppercase italic drop-shadow-[0_2px_20px_rgba(0,0,0,0.35)]">Mehr als nur <span class="text-[#FDE047]">Tennis.</span></h1><p class="text-lg sm:text-xl text-slate-100 mb-10 max-w-2xl leading-relaxed drop-shadow">Herzlich willkommen beim TC Frittlingen e.V.! Entdecke unsere Sandplätze, die Beachanlage und ab sofort unsere brandneuen Padel-Courts.</p><div class="flex flex-col sm:flex-row gap-4"><button onclick="switchPage('padel')" class="btn-primary px-8 py-4 rounded-lg text-base sm:text-lg font-bold uppercase tracking-wide shadow-xl text-center">Padel Court buchen</button><button onclick="switchPage('verein')" class="bg-white/10 backdrop-blur-md border border-white/50 text-white px-8 py-4 rounded-lg text-base sm:text-lg font-bold uppercase tracking-wide hover:bg-white/20 transition-all text-center">Verein entdecken</button></div></div><div class="scroll-hint hidden md:flex absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex-col items-center text-white/80 text-[11px] font-bold uppercase tracking-[0.2em]"><span class="mb-2">Mehr entdecken</span><i class="fa-solid fa-chevron-down"></i></div></section><section class="max-w-7xl mx-auto px-4 -mt-14 relative z-20 pb-20"><div class="grid grid-cols-1 md:grid-cols-3 gap-6"><div onclick="switchPage('tennis')" class="tcf-card cursor-pointer bg-white p-8 rounded-2xl shadow-xl flex items-center gap-6 border-b-4 border-orange-500"><div class="text-4xl text-orange-500"><i class="fa-solid fa-fire"></i></div><div><h3 class="font-black text-xl">4 Sandplätze</h3><p class="text-slate-500 text-sm">Für Training & Spielbetrieb</p></div></div><div onclick="switchPage('padel')" class="tcf-card cursor-pointer bg-[#A31D11] p-8 rounded-2xl shadow-xl flex items-center gap-6 text-white border-b-4 border-[#FDE047]"><div class="text-4xl text-[#FDE047]"><i class="fa-solid fa-bolt"></i></div><div><h3 class="font-black text-xl">Padel-Courts <span class="bg-red-500 text-xs px-2 py-0.5 rounded-full ml-2 align-middle">NEU</span></h3><p class="text-red-200 text-sm">Jetzt online buchen</p></div></div><div onclick="switchPage('tennis')" class="tcf-card cursor-pointer bg-white p-8 rounded-2xl shadow-xl flex items-center gap-6 border-b-4 border-blue-500"><div class="text-4xl text-blue-500"><i class="fa-solid fa-moon"></i></div><div><h3 class="font-black text-xl">2 Beachplätze</h3><p class="text-slate-500 text-sm">Inklusive Flutlichtanlage</p></div></div></div></section></main>
+    <main id="page-tennis" class="page-section bg-white min-h-screen py-16"><div class="max-w-7xl mx-auto px-4"><h2 class="text-4xl font-black text-slate-900 mb-12 uppercase border-l-8 border-[#A31D11] pl-4">Unsere Anlage</h2><div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16"><div><h3 class="text-2xl font-bold mb-4">4 Sandplätze (Tennis)</h3><p class="text-slate-600 mb-6">Das Herzstück unseres Vereins. Unsere Plätze sind bestens gepflegt und stehen unseren Mitgliedern für Training, den aktiven Spielbetrieb der Mannschaften und das freie Spielen zur Verfügung.</p><ul class="space-y-3 font-medium text-slate-700"><li class="flex items-center gap-3"><i class="fa-solid fa-check text-[#A31D11]"></i> Herren- und Damenmannschaften</li><li class="flex items-center gap-3"><i class="fa-solid fa-check text-[#A31D11]"></i> Aktive Jugendförderung</li><li class="flex items-center gap-3"><i class="fa-solid fa-check text-[#A31D11]"></i> Professionelles Training</li></ul></div><div class="grid grid-cols-2 gap-4 h-auto lg:h-[400px]"><div class="col-span-2 bg-slate-200 rounded-xl overflow-hidden shadow-md h-48 lg:h-auto"><img src="Platz 1 & 2.jpg" alt="Platz 1 und 2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"></div><div class="bg-slate-200 rounded-xl overflow-hidden shadow-md h-32 lg:h-auto"><img src="Platz 3 & 4.jpg" alt="Platz 3 und 4" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"></div><div class="bg-slate-200 rounded-xl overflow-hidden shadow-md h-32 lg:h-auto"><img src="Tennisheim.jpg" alt="Tennisheim" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"></div></div></div><div class="grid grid-cols-1 lg:grid-cols-2 gap-12"><div class="bg-slate-200 h-64 rounded-xl overflow-hidden order-2 lg:order-1 shadow-md"><img src="Beach.jpg" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" alt="Beachplätze"></div><div class="order-1 lg:order-2"><h3 class="text-2xl font-bold mb-4">2 Beachplätze mit Flutlicht</h3><p class="text-slate-600 mb-6">Direkt neben dem Clubheim befinden sich unsere modernen Beachplätze. Dank der integrierten Flutlichtanlage kann hier auch abends problemlos gespielt werden.</p><div class="flex flex-wrap gap-3"><span class="bg-slate-100 px-4 py-2 rounded text-sm font-bold border border-slate-200">Volleyball</span><span class="bg-slate-100 px-4 py-2 rounded text-sm font-bold border border-slate-200">Handball</span><span class="bg-slate-100 px-4 py-2 rounded text-sm font-bold border border-slate-200">Beachtennis</span></div></div></div></div></main>
+    <main id="page-verein" class="page-section bg-slate-50 min-h-screen py-16"><div class="max-w-7xl mx-auto px-4"><h2 class="text-4xl font-black text-slate-900 mb-12 border-l-8 border-[#FDE047] pl-4 uppercase">Unser Verein</h2><div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200 mb-8"><h3 class="text-2xl font-bold mb-4 text-[#A31D11]">50 Jahre TCF</h3><p class="text-slate-600 leading-relaxed mb-4">Liebe Tennisfreunde, hier findet Ihr alles, was man über unseren Verein wissen muss. Seit einem halben Jahrhundert steht der TC Frittlingen e.V. für sportlichen Zusammenhalt, spannende Turniere und ein aktives Vereinsleben in der Gemeinde.</p><p class="text-slate-600 leading-relaxed">Wir investieren stetig in unsere Anlage – von der Sanierung des Clubheims über die Flutlichtanlage der Beachplätze bis hin zum aktuellsten Projekt: unseren neuen Padel-Courts.</p></div><div class="grid grid-cols-1 md:grid-cols-2 gap-8"><div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200"><h3 class="text-xl font-bold mb-4 text-[#A31D11]">Kontakt</h3><p class="text-slate-600 mb-4">Hast du Fragen an uns? Schreibe uns gerne eine E-Mail:</p><a href="mailto:vorstand@tc-frittlingen.de" class="text-blue-600 font-bold hover:underline">Kontakt: vorstand@tc-frittlingen.de</a><div class="mt-8"><h3 class="text-xl font-bold mb-4 text-[#A31D11]">Anfahrt</h3><div class="rounded-xl overflow-hidden shadow-md mb-3 border border-slate-200 aspect-[4/3]"><iframe src="https://maps.google.com/maps?q=Tennisclub%20Frittlingen%2C%2078665%20Frittlingen&z=16&output=embed" class="w-full h-full" style="border:0;" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Karte: Tennisclub Frittlingen" allowfullscreen></iframe></div><p class="text-sm text-slate-500 mb-3">Die Anlage befindet sich am Ende der Schildeckstraße beim Sportgelände. Folge der Beschilderung.</p><a href="https://www.google.com/maps/dir/?api=1&destination=Tennisclub+Frittlingen,+78665+Frittlingen" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-blue-600 font-bold hover:underline text-sm"><i class="fa-solid fa-diamond-turn-right"></i> Route in Google Maps öffnen</a></div></div><div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200"><h3 class="text-xl font-bold mb-4 text-[#A31D11]">Downloads</h3><ul class="space-y-4 mt-6"><li><a href="Beitrittserklärung ab 2018.pdf" target="_blank" class="text-slate-600 hover:text-[#A31D11] transition flex items-center"><i class="fa-regular fa-file-pdf mr-3 text-2xl text-red-500"></i> Mitgliedsantrag (Beitrittserklärung)</a></li><li><a href="Nutzungsvereinbarung Beach-Platz.pdf" target="_blank" class="text-slate-600 hover:text-[#A31D11] transition flex items-center"><i class="fa-regular fa-file-pdf mr-3 text-2xl text-red-500"></i> Nutzungsvereinbarung Beach-Platz</a></li><li><a href="Cornholeturnier Regeln.pdf" target="_blank" class="text-slate-600 hover:text-[#A31D11] transition flex items-center"><i class="fa-regular fa-file-pdf mr-3 text-2xl text-red-500"></i> Cornholeturnier Regeln</a></li></ul></div></div></div></main>
+    <main id="page-spielbetrieb" class="page-section bg-white min-h-screen py-16"><div class="max-w-7xl mx-auto px-4"><h2 class="text-4xl font-black text-slate-900 mb-12 uppercase border-l-8 border-[#A31D11] pl-4">Spielbetrieb</h2><div class="grid grid-cols-1 lg:grid-cols-3 gap-8"><div class="lg:col-span-1 space-y-6"><div class="bg-slate-50 border border-slate-200 rounded-xl p-6 shadow-sm"><h3 class="text-xl font-bold text-slate-800 mb-4 border-b border-slate-200 pb-2">WTB Portal</h3><a href="https://www.wtb-tennis.de/spielbetrieb/vereine/verein/v/20499.html" target="_blank" class="block text-[#A31D11] font-bold hover:text-red-700 transition mb-2">&gt;&gt; TC Frittlingen beim WTB &lt;&lt;</a><p class="text-sm text-slate-600 mb-6 leading-relaxed">Verein 20499<br>TC Frittlingen WTB Bezirk E</p><a href="https://www.wtb-tennis.de/spielbetrieb/vereine/verein/begegnungen/v/20499.html" target="_blank" class="block text-[#A31D11] font-bold hover:text-red-700 transition">&gt;&gt; Liste aller Begegnungen &lt;&lt;</a></div></div><div class="lg:col-span-2"><div class="bg-white border border-slate-200 rounded-xl p-6 lg:p-8 shadow-sm"><h3 class="text-2xl font-bold text-slate-900 mb-4">Sommersaison 2026</h3><p class="text-slate-600 mb-8 leading-relaxed">Diesen Sommer gehen wie schon in der letzten Saison vier Teams für den TCF an den Start. Gemeldet sind jeweils 4er-Mannschaften bei den KID's U12, Herren und gleich zwei Mannschaften bei den Herren 40.</p><div class="space-y-6"><div class="bg-slate-50 p-5 rounded-lg border-l-4 border-[#A31D11]"><h4 class="font-bold text-lg text-slate-900 mb-1">KIDs-Cup U12</h4><p class="text-sm text-slate-700 leading-relaxed">Die Kids starten in der Bezirksstaffel 1, Gruppe 120 und treffen auf den TC RW Spaichingen 1, TC RW Tuttlingen 2, TC Trossingen 1, TC Heuberg 1 und die TA TV Wurmlingen 1.</p></div><div class="bg-slate-50 p-5 rounded-lg border-l-4 border-[#A31D11]"><h4 class="font-bold text-lg text-slate-900 mb-1">Herren 1</h4><p class="text-sm text-slate-700 leading-relaxed">Die erste Mannschaft des TCF trifft in der Kreisstaffel 1, Gruppe 015 auf den TC Schwenningen 1, TC Lossburg 1, TC Hopfau 1, TC Schömberg 1, TC Dunningen 3 und die TA TG Schura-Trossingen 1.</p></div></div></div></div></div></div></main>
+    <main id="page-mannschaften" class="page-section bg-slate-50 min-h-screen py-16"><div class="max-w-7xl mx-auto px-4"><h2 class="text-4xl font-black text-slate-900 mb-12 border-l-8 border-[#A31D11] pl-4 uppercase">Mannschaften</h2><a href="https://www.wtb-tennis.de/spielbetrieb/vereine/verein/v/20499.html" target="_blank" class="inline-block text-[#A31D11] font-bold hover:text-red-700 transition mb-12">&gt;&gt; Übersicht Mannschaften beim WTB &lt;&lt;</a><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-12"><div class="tcf-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"><div class="img-frame img-fade h-64"><img src="U12.jpeg" alt="KIDS-Cup U12" class="w-full h-full object-cover object-top" onerror="this.src='https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=600&q=80'"><span class="season-ribbon">Saison 2025</span></div><div class="p-6"><h3 class="text-xl font-bold">KIDS-Cup U12</h3><p class="text-slate-500 font-medium mt-1">Bezirksstaffel 1, Gruppe 120</p></div></div><div class="tcf-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"><div class="img-frame img-fade h-64"><img src="Herren 30.jpeg" alt="Herren 30" class="w-full h-full object-cover object-top" onerror="this.src='https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=600&q=80'"><span class="season-ribbon">Saison 2025</span></div><div class="p-6"><h3 class="text-xl font-bold">Herren 30</h3><p class="text-slate-500 font-medium mt-1">Mannschaftsfoto</p></div></div><div class="tcf-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"><div class="img-frame img-fade h-64"><img src="Herren 40.jpeg" alt="Herren 40" class="w-full h-full object-cover object-top" onerror="this.src='https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=600&q=80'"><span class="season-ribbon">Saison 2025</span></div><div class="p-6"><h3 class="text-xl font-bold">Herren 40</h3><p class="text-slate-500 font-medium mt-1">Staffelliga, Gruppe 049</p></div></div></div><div class="mt-8 bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4"><i class="fa-regular fa-clock text-3xl text-[#A31D11]"></i><div><h3 class="font-bold text-lg text-slate-900">Trainingszeiten Herren</h3><p class="text-slate-600">Mittwoch und Freitag, 18:00 - 20:30 Uhr</p></div></div></div></main>
+    <main id="page-aktuell" class="page-section bg-white min-h-screen py-16"><div class="max-w-7xl mx-auto px-4"><h2 class="text-4xl font-black text-slate-900 mb-12 uppercase border-l-8 border-orange-500 pl-4">Vorschau & Termine</h2><div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mt-6"><h3 class="text-xl font-bold text-slate-900 mb-4 border-b pb-2">Vorschau 2026</h3><ul class="space-y-3"><li class="flex items-center gap-4 p-3 bg-slate-50 rounded-lg"><div class="bg-[#A31D11] text-white text-center rounded-md w-16 py-1 flex-shrink-0"><span class="block text-sm font-bold">27.06.</span></div><div class="text-slate-800 font-medium">Cornholeturnier</div></li><li class="flex items-center gap-4 p-3 bg-slate-50 rounded-lg"><div class="bg-[#A31D11] text-white text-center rounded-md w-16 py-1 flex-shrink-0"><span class="block text-sm font-bold">28.08.</span></div><div class="text-slate-800 font-medium">Kinderferienprogramm</div></li></ul></div></div></main>
+
+    <main id="page-padel" class="page-section bg-white min-h-screen py-10">
+        <div class="max-w-[1600px] mx-auto px-4">
+            <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mb-8 uppercase border-l-8 border-[#A31D11] pl-4">Padel · Verfügbare Plätze</h2>
+            <div class="flex flex-col gap-6 items-start w-full">
+                
+                <div class="w-full flex flex-col gap-6 overflow-hidden">
+                    <div class="booking-widget">
+                        <div class="flex items-center p-4 bg-slate-50 border-b border-slate-200 gap-4">
+                            <div class="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center p-1.5 shadow-sm flex-shrink-0"><img src="Logo NEU.png" alt="ThinkUp-AI" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display:none;" class="text-white text-[10px] font-bold">TU</span></div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">Padel-Platz Übersicht (30 Min. Takt)</h4>
+                                <p class="text-xs text-slate-500">Bequem buchen & verwalten, powered by <span class="font-bold">ThinkUp-AI</span></p>
+                            </div>
+                            <div class="ml-auto flex items-center gap-2">
+                                <label for="booking-date" class="text-xs font-bold text-slate-600 hidden sm:block">Tag wählen</label>
+                                <input type="date" id="booking-date" class="border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium text-slate-800 focus:border-[#A31D11] focus:ring-1 focus:ring-[#A31D11]">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center p-0 bg-white border-b border-gray-200 gap-4">
+                            <div class="overflow-x-auto relative w-full pb-4">
+                                <p class="lg:hidden text-[11px] text-slate-400 px-4 pt-3 pb-1 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-arrows-left-right"></i> Zur Seite wischen für weitere Uhrzeiten
+                                </p>
+                                <div class="booking-grid min-w-[1150px]">
+                                    <div class="grid-header-empty bg-white"></div>
+                                    <div class="grid-header bg-white" style="grid-column: span 2">08:00</div>
+                                    <div class="grid-header bg-white" style="grid-column: span 2">09:00</div>
+                                    <div class="grid-header bg-white" style="grid-column: span 2">10:00</div>
+                                    <div class="grid-header bg-white" style="grid-column: span 2">11:00</div>
+                                    <div class="grid-header bg-white" style="grid-column: span 2">12:00</div>
+                                    <div class="grid-header bg-white" style="grid-column: span 2">13:00</div>
+                                    <div class="grid-header bg-white" style="grid-column: span 2">14:00</div>
+                                    <div class="grid-header bg-white" style="grid-column: span 2">15:00</div>
+                                    <div class="grid-header bg-white" style="grid-column: span 2">16:00</div>
+                                    <div class="grid-header bg-white" style="grid-column: span 2">17:00</div>
+                                    <div class="grid-header bg-white" style="grid-column: span 2">18:00</div>
+                                    <div class="grid-header bg-white" style="grid-column: span 2">19:00</div>
+                                    <div class="grid-header bg-white" style="grid-column: span 2">20:00</div>
+                                    <div class="grid-header bg-white" style="grid-column: span 2">21:00</div>
+                                    <div class="grid-header bg-white" style="grid-column: span 2">22:00</div>
+
+                                    <div class="grid-row-header">Padel 1</div>
+                                    <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div>
+                                    <div class="grid-row-header">Padel 2</div>
+                                    <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div> <div class="slot"></div><div class="slot"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-5 flex flex-col md:flex-row justify-between items-start md:items-center text-sm border-t border-slate-200 gap-4">
+                            <div class="flex flex-wrap gap-4 md:gap-6">
+                                <div class="flex items-center gap-2"><div class="w-4 h-4 rounded-full border-2 border-slate-300 bg-white shadow-sm"></div><span class="text-slate-600 font-medium">Verfügbar</span></div>
+                                <div class="flex items-center gap-2"><div class="w-4 h-4 rounded-full bg-slate-400 shadow-sm"></div><span class="text-slate-600 font-medium">Belegt</span></div>
+                                <div class="flex items-center gap-2"><div class="w-4 h-4 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div><span class="text-slate-600 font-medium">Deine Auswahl</span></div>
+                            </div>
+                            <button class="bg-blue-600 text-white px-8 py-3 rounded-full font-bold hover:bg-blue-700 transition hidden shadow-md items-center gap-2 w-full md:w-auto justify-center" id="checkout-btn" onclick="openModal()">
+                                Platz buchen <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Schwebender Chat-Bot (unten rechts) -->
+    <div id="chat-fab-wrapper" class="fixed bottom-5 right-5 z-[60] flex flex-col items-end">
+        <div id="chat-panel" class="chat-container mb-3 w-[min(360px,calc(100vw-2.5rem))] h-[min(520px,70vh)] scale-95 opacity-0 pointer-events-none transition-all duration-200" style="display:none; transform-origin: bottom right;">
+            <div class="chat-header p-4 flex items-center gap-3">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md overflow-hidden p-1 flex-shrink-0">
+                    <img src="logo tcf.jpg" alt="TCF Bot" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <i style="display:none;" class="fa-solid fa-robot text-[#A31D11] text-lg"></i>
+                </div>
+                <div class="flex-grow min-w-0">
+                    <h3 class="font-bold text-sm text-white leading-tight">TC Frittlingen</h3>
+                    <p class="text-[11px] text-white/90 font-medium">Fragen & Padel-Buchung</p>
+                </div>
+                <button onclick="toggleChat()" class="text-white/80 hover:text-white w-8 h-8 flex items-center justify-center flex-shrink-0" aria-label="Chat schließen"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="flex-grow p-4 flex flex-col overflow-y-auto bg-white" id="chat-box">
+                <div class="chat-bubble bot-msg">Hallo! 👋 Ich beantworte Fragen rund um den TC Frittlingen und helfe dir bei der Padel-Buchung. Wie kann ich helfen?</div>
+            </div>
+            <div class="chat-input-area">
+                <form id="chat-form" onsubmit="sendMessage(event)" class="chat-input-wrapper">
+                    <input type="text" id="chat-input" autocomplete="off" placeholder="Nachricht eingeben..." class="w-full bg-transparent border-none py-2 pl-4 pr-2 text-sm text-slate-700 focus:outline-none placeholder-slate-400">
+                    <button type="submit" class="w-9 h-9 bg-[#FDE047] rounded-full flex items-center justify-center hover:bg-yellow-400 transition ml-2 shadow-sm flex-shrink-0"><i class="fa-regular fa-paper-plane text-slate-900"></i></button>
+                </form>
+            </div>
+            <div class="bg-white text-center pb-2 text-[10px] text-slate-400">Powered by <span class="font-bold text-slate-500">ThinkUp-AI</span></div>
+        </div>
+
+        <button id="chat-fab" onclick="toggleChat()" class="w-16 h-16 rounded-full bg-[#A31D11] text-white text-2xl shadow-lg hover:bg-[#8a180e] hover:scale-105 transition flex items-center justify-center relative" aria-label="Chat öffnen">
+            <i id="chat-fab-icon" class="fa-solid fa-comment-dots"></i>
+            <span class="absolute top-0.5 right-0.5 w-3.5 h-3.5 bg-green-400 border-2 border-white rounded-full"></span>
+        </button>
+    </div>
+
+    <div id="booking-modal" class="modal-overlay">
+        <div class="modal-content relative bg-white flex flex-col h-full max-h-[90vh] rounded-2xl overflow-hidden shadow-2xl">
+            
+            <button onclick="closeModal()" class="absolute top-4 right-5 text-slate-400 hover:text-slate-700 transition z-50 bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-sm">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            
+            <form id="booking-form" onsubmit="submitBooking(event)" class="flex flex-col h-full hidden">
+                <div class="modal-body bg-white relative">
+                    <h3 class="text-2xl font-black text-slate-900 mb-2 mt-2">Spieler eintragen</h3>
+                    <p class="text-sm text-slate-500 mb-6">Padel wird zu viert gespielt. Bitte gib an, wer Mitglied ist, um den anteiligen Rabatt zu erhalten.</p>
+
+                    <div class="bg-slate-50 p-4 md:p-5 rounded-xl border border-slate-200 mb-4 shadow-sm">
+                        <h4 class="font-bold text-[#A31D11] mb-3 border-b border-slate-200 pb-2"><i class="fa-solid fa-user-check mr-2"></i> Spieler 1 (Hauptbucher)</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                            <div><input type="text" required id="p1-vorname" placeholder="Vorname" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:border-[#A31D11] focus:ring-1 focus:ring-[#A31D11] transition"></div>
+                            <div><input type="text" required id="p1-nachname" placeholder="Nachname" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:border-[#A31D11] focus:ring-1 focus:ring-[#A31D11] transition"></div>
+                        </div>
+                        <input type="email" required id="p1-email" placeholder="E-Mail-Adresse" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 mb-3 focus:border-[#A31D11] focus:ring-1 focus:ring-[#A31D11] transition">
+                        <select id="p1-status" onchange="calculatePrice()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 mb-3 bg-white font-medium focus:border-[#A31D11]">
+                            <option value="guest">Gast (7,50€/h Anteil)</option>
+                            <option value="member">Mitglied (3,75€/h Anteil)</option>
+                        </select>
+                        <div id="p1-id-field" class="hidden">
+                            <input type="text" id="p1-id" placeholder="Mitgliedsnummer *" class="w-full border border-red-300 rounded-lg px-3 py-2.5 bg-red-50 focus:border-[#A31D11] focus:bg-white transition placeholder-red-400">
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
+                        <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide">Spieler 2</h4>
+                        <input type="text" required id="p2-name" placeholder="Vollständiger Name" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 mb-3 focus:border-[#A31D11]">
+                        <select id="p2-status" onchange="calculatePrice()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 mb-3 bg-white focus:border-[#A31D11]">
+                            <option value="guest">Gast (7,50€/h Anteil)</option>
+                            <option value="member">Mitglied (3,75€/h Anteil)</option>
+                        </select>
+                        <div id="p2-id-field" class="hidden"><input type="text" id="p2-id" placeholder="Mitgliedsnummer *" class="w-full border border-red-300 rounded-lg px-3 py-2.5 bg-red-50"></div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
+                        <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide">Spieler 3</h4>
+                        <input type="text" required id="p3-name" placeholder="Vollständiger Name" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 mb-3 focus:border-[#A31D11]">
+                        <select id="p3-status" onchange="calculatePrice()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 mb-3 bg-white focus:border-[#A31D11]">
+                            <option value="guest">Gast (7,50€/h Anteil)</option>
+                            <option value="member">Mitglied (3,75€/h Anteil)</option>
+                        </select>
+                        <div id="p3-id-field" class="hidden"><input type="text" id="p3-id" placeholder="Mitgliedsnummer *" class="w-full border border-red-300 rounded-lg px-3 py-2.5 bg-red-50"></div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide">Spieler 4</h4>
+                        <input type="text" required id="p4-name" placeholder="Vollständiger Name" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 mb-3 focus:border-[#A31D11]">
+                        <select id="p4-status" onchange="calculatePrice()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 mb-3 bg-white focus:border-[#A31D11]">
+                            <option value="guest">Gast (7,50€/h Anteil)</option>
+                            <option value="member">Mitglied (3,75€/h Anteil)</option>
+                        </select>
+                        <div id="p4-id-field" class="hidden"><input type="text" id="p4-id" placeholder="Mitgliedsnummer *" class="w-full border border-red-300 rounded-lg px-3 py-2.5 bg-red-50"></div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                    <div class="flex justify-between items-center mb-3 text-sm">
+                        <span class="text-slate-600 font-medium">Spielzeit: <span id="summary-time" class="font-bold text-slate-900">0.0h</span></span>
+                        <span class="text-slate-600 font-medium" id="summary-players">4 Gäste, 0 Mitglieder</span>
+                    </div>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-lg font-bold text-slate-900">Gesamtbetrag:</span>
+                        <span id="summary-price" class="text-2xl font-black text-[#A31D11]">30,00 €</span>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-3.5 rounded-xl font-bold text-lg hover:bg-blue-700 transition shadow-md">Verbindlich buchen</button>
+                </div>
+            </form>
+
+            <div id="modal-step-payment" class="flex flex-col h-full hidden p-6">
+                <div class="flex items-center gap-3 mb-6 mt-2">
+                    <button onclick="backToForm()" class="text-slate-400 hover:text-slate-700 transition"><i class="fa-solid fa-arrow-left text-xl"></i></button>
+                    <h3 class="text-2xl font-black text-slate-900">Zahlung</h3>
+                </div>
+                
+                <div class="space-y-4 mb-8 flex-grow">
+                    <label class="flex items-center justify-between p-4 border-2 border-blue-500 bg-blue-50 rounded-xl cursor-pointer transition shadow-sm">
+                        <div class="flex items-center gap-4">
+                            <input type="radio" name="payment" value="paypal" id="pay-paypal" checked class="w-5 h-5 text-blue-600 focus:ring-blue-500">
+                            <span class="font-bold text-slate-800 text-lg">PayPal</span>
+                        </div>
+                        <i class="fa-brands fa-paypal text-3xl text-[#00457C]"></i>
+                    </label>
+                    <label class="flex items-center justify-between p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-sm">
+                        <div class="flex items-center gap-4">
+                            <input type="radio" name="payment" value="sumup" id="pay-sumup" class="w-5 h-5 text-blue-600 focus:ring-blue-500">
+                            <span class="font-bold text-slate-800 text-lg">Kreditkarte</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <i class="fa-brands fa-cc-visa text-3xl text-slate-600"></i>
+                            <i class="fa-brands fa-cc-mastercard text-3xl text-slate-600"></i>
+                        </div>
+                    </label>
+                </div>
+
+                <div id="payment-buttons-container" class="w-full mt-auto">
+                    <button type="button" onclick="processBooking()" class="w-full bg-green-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-green-700 transition shadow-md flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-lock"></i> Verbindlich zahlen (<span id="pay-btn-amount">30,00 €</span>)
+                    </button>
+                </div>
+            </div>
+
+            <div id="modal-step-success" class="hidden flex-col items-center justify-center text-center p-8 h-full">
+                <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-6 shadow-inner mt-4">
+                    <i class="fa-solid fa-check text-5xl text-green-500"></i>
+                </div>
+                <h3 class="text-3xl font-black text-slate-900 mb-4">Buchung erfolgreich!</h3>
+                <p class="text-slate-600 leading-relaxed mb-8 max-w-sm text-lg">
+                    Vielen Dank für deine Zahlung. Wir haben dir soeben eine Bestätigungsmail mit allen Details und deinem <strong class="text-slate-900">persönlichen Zugangscode für die Anlage</strong> gesendet.
+                </p>
+                <button onclick="closeModal()" class="w-full bg-[#A31D11] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#8a180e] transition shadow-md">
+                    Zurück zum Kalender
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-[#1b1512] text-slate-300 pt-14 pb-8 mt-auto border-t-[6px] border-[#A31D11] relative z-[2]">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+            <div>
+                <h4 class="font-black text-2xl text-white tracking-tight uppercase">TC Frittlingen <span class="text-[#FDE047]">e.V.</span></h4>
+                <p class="text-sm mt-3 leading-relaxed text-slate-400">Sportgelände am Ende der Schildeckstraße<br>78665 Frittlingen</p>
+                <p class="text-xs mt-4 text-slate-500">Tennis · Beach · Padel — seit 1975</p>
+            </div>
+            <div>
+                <h5 class="text-white font-bold text-sm uppercase tracking-[0.15em] mb-4">Kontakt</h5>
+                <a href="mailto:vorstand@tc-frittlingen.de" class="text-sm hover:text-[#FDE047] transition flex items-center gap-2 mb-2"><i class="fa-regular fa-envelope w-4"></i> vorstand@tc-frittlingen.de</a>
+            </div>
+            <div>
+                <h5 class="text-white font-bold text-sm uppercase tracking-[0.15em] mb-4">Schnellzugriff</h5>
+                <div class="flex flex-col gap-2 text-sm">
+                    <a href="#" onclick="switchPage('padel')" class="hover:text-[#FDE047] transition">Padel-Court buchen</a>
+                    <a href="#" onclick="switchPage('verein')" class="hover:text-[#FDE047] transition">Mitglied werden</a>
+                    <a href="#" onclick="switchPage('aktuell')" class="hover:text-[#FDE047] transition">Termine & News</a>
+                    <a href="#" onclick="switchPage('mannschaften')" class="hover:text-[#FDE047] transition">Mannschaften</a>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-slate-500">
+            <p>© <span id="footer-year">2026</span> TC Frittlingen e.V. – Alle Rechte vorbehalten</p>
+            <div class="flex gap-5 font-medium">
+                <a href="#" class="hover:text-white transition">Impressum</a>
+                <a href="#" class="hover:text-white transition">Datenschutz</a>
+                <span class="text-slate-600">Buchung powered by ThinkUp-AI</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Pages Switchen
+        function switchPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active-nav'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            const navLink = document.getElementById('nav-' + pageId);
+            if(navLink) navLink.classList.add('active-nav');
+            closeMobileMenu();
+            window.scrollTo(0, 0);
+            const active = document.getElementById('page-' + pageId);
+            if (active) {
+                active.querySelectorAll('.reveal').forEach(el => el.classList.remove('in'));
+                requestAnimationFrame(() => observeReveals(active));
+            }
+        }
+
+        // --- Mobiles Menü (Hamburger) --- //
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('mobile-menu-icon');
+            menu.classList.toggle('hidden');
+            icon.className = menu.classList.contains('hidden') ? 'fa-solid fa-bars' : 'fa-solid fa-xmark';
+        }
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu && !menu.classList.contains('hidden')) {
+                menu.classList.add('hidden');
+                document.getElementById('mobile-menu-icon').className = 'fa-solid fa-bars';
+            }
+        }
+
+        // --- Schwebender Chat-Bot --- //
+        let chatOpen = false;
+        function toggleChat() {
+            const panel = document.getElementById('chat-panel');
+            const icon = document.getElementById('chat-fab-icon');
+            chatOpen = !chatOpen;
+            if (chatOpen) {
+                panel.style.display = 'flex';
+                requestAnimationFrame(() => {
+                    panel.classList.remove('scale-95', 'opacity-0', 'pointer-events-none');
+                    panel.classList.add('scale-100', 'opacity-100');
+                });
+                icon.className = 'fa-solid fa-xmark';
+                setTimeout(() => { const i = document.getElementById('chat-input'); if (i && window.innerWidth >= 1024) i.focus(); }, 220);
+            } else {
+                panel.classList.add('scale-95', 'opacity-0', 'pointer-events-none');
+                panel.classList.remove('scale-100', 'opacity-100');
+                icon.className = 'fa-solid fa-comment-dots';
+                setTimeout(() => { if (!chatOpen) panel.style.display = 'none'; }, 200);
+            }
+        }
+
+        function escapeHtml(str) {
+            const d = document.createElement('div');
+            d.textContent = str;
+            return d.innerHTML;
+        }
+
+        function sendMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+            const chatBox = document.getElementById('chat-box');
+            chatBox.insertAdjacentHTML('beforeend', `<div class="chat-bubble user-msg mt-2">${escapeHtml(message)}</div>`);
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+            setTimeout(() => {
+                const botReply = "Gerne! Unser KI-Agent kann deine Anfrage direkt verarbeiten – z.B. einen freien Padel-Platz finden und die Buchung vorbereiten.";
+                chatBox.insertAdjacentHTML('beforeend', `<div class="chat-bubble bot-msg mt-2">${botReply}</div>`);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 900);
+        }
+
+        // Footer-Jahr aktuell halten
+        const fy = document.getElementById('footer-year');
+        if (fy) fy.textContent = new Date().getFullYear();
+
+        // === Technische Effekte: Scroll-Reveal, Nav-Scroll, Karten-Spotlight ===
+        let revealObserver = null;
+        function observeReveals(root) {
+            if (!revealObserver) return;
+            root.querySelectorAll('.reveal:not(.in)').forEach(el => revealObserver.observe(el));
+        }
+        function tagReveals() {
+            const groups = [
+                document.querySelectorAll('#page-home > section:nth-of-type(2) .grid > div'),
+                document.querySelectorAll('#page-tennis .grid > div'),
+                document.querySelectorAll('#page-verein .grid > div'),
+                document.querySelectorAll('#page-mannschaften .grid > div'),
+                document.querySelectorAll('#page-spielbetrieb .grid > div'),
+                document.querySelectorAll('#page-aktuell li')
+            ];
+            groups.forEach(list => {
+                list.forEach((el, i) => {
+                    el.classList.add('reveal');
+                    el.style.transitionDelay = Math.min(i * 0.08, 0.5) + 's';
+                });
+            });
+            document.querySelectorAll('.page-section h2').forEach(el => el.classList.add('reveal'));
+        }
+        function initEffects() {
+            document.body.classList.add('reveal-ready');
+            tagReveals();
+            if ('IntersectionObserver' in window) {
+                revealObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); revealObserver.unobserve(e.target); } });
+                }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+                observeReveals(document);
+            } else {
+                document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+            }
+            // Navigation schrumpft beim Scrollen
+            const navEl = document.querySelector('nav');
+            if (navEl) {
+                const onScroll = () => navEl.classList.toggle('scrolled', window.scrollY > 16);
+                window.addEventListener('scroll', onScroll, { passive: true });
+                onScroll();
+            }
+            // Cursor-Spotlight auf Karten
+            document.querySelectorAll('.tcf-card').forEach(card => {
+                card.addEventListener('pointermove', (ev) => {
+                    const r = card.getBoundingClientRect();
+                    card.style.setProperty('--mx', ((ev.clientX - r.left) / r.width * 100) + '%');
+                    card.style.setProperty('--my', ((ev.clientY - r.top) / r.height * 100) + '%');
+                });
+            });
+        }
+        initEffects();
+
+        // --- Buchungs-Logik (Slots, Verfügbarkeit, Buchung) --- //
+        const READ_URL  = 'https://thinkupaiautomatisierung.de/webhook/verfuegbarkeit';
+        const WRITE_URL = 'https://thinkupaiautomatisierung.de/webhook/buchung';
+
+        const OPEN_MIN = 8 * 60;   // 08:00
+        const SLOT_MIN = 30;       // 30-Min-Takt
+        let selectedSlotsCount = 0;
+
+        const dateInput = document.getElementById('booking-date');
+        function todayISO(){ const d=new Date(); const off=d.getTimezoneOffset(); const l=new Date(d.getTime()-off*60000); return l.toISOString().slice(0,10); }
+        if (dateInput) {
+            dateInput.min = todayISO();
+            if (!dateInput.value) dateInput.value = todayISO();
+            dateInput.addEventListener('change', loadAvailability);
+        }
+
+        function indexToTime(i){ const m = OPEN_MIN + i*SLOT_MIN; const h=Math.floor(m/60), mm=m%60; return String(h).padStart(2,'0')+':'+String(mm).padStart(2,'0'); }
+        function tagSlots(){
+            document.querySelectorAll('.booking-grid .grid-row-header').forEach((header, row) => {
+                const court = String(row + 1);
+                let el = header.nextElementSibling, i = 0;
+                while (el && el.classList.contains('slot')) {
+                    el.dataset.court = court;
+                    el.dataset.index = String(i);
+                    el.dataset.start = indexToTime(i);
+                    el.dataset.end   = indexToTime(i+1);
+                    el = el.nextElementSibling; i++;
+                }
+            });
+        }
+        tagSlots();
+
+        function clearSelection(){
+            document.querySelectorAll('.slot.selected').forEach(s => s.classList.remove('selected'));
+            selectedSlotsCount = 0;
+            document.getElementById('checkout-btn').style.display = 'none';
+        }
+
+        function timeToIndex(iso){
+            if (!iso || iso.indexOf('T') < 0) return null;
+            const hm = iso.split('T')[1].slice(0,5).split(':');
+            const m = parseInt(hm[0],10)*60 + parseInt(hm[1],10);
+            return Math.round((m - OPEN_MIN) / SLOT_MIN);
+        }
+
+        async function loadAvailability(){
+            clearSelection();
+            document.querySelectorAll('.slot').forEach(s => s.classList.remove('occupied'));
+            const date = dateInput ? dateInput.value : todayISO();
+            if (!date) return;
+            try {
+                const res = await fetch(READ_URL + '?date=' + encodeURIComponent(date));
+                if (!res.ok) return; // fail-open
+                const data = await res.json();
+                (data.occupied || []).forEach(o => {
+                    const court = String(o.court);
+                    const sIdx = timeToIndex(o.start);
+                    const eIdx = timeToIndex(o.end);
+                    if (sIdx == null || eIdx == null) return;
+                    document.querySelectorAll('.slot[data-court="'+court+'"]').forEach(slot => {
+                        const idx = parseInt(slot.dataset.index, 10);
+                        if (idx >= sIdx && idx < eIdx) slot.classList.add('occupied');
+                    });
+                });
+            } catch(e) { /* fail-open: Seite bleibt nutzbar */ }
+        }
+
+        document.querySelectorAll('.slot').forEach(slot => {
+            slot.addEventListener('click', function(){
+                if (this.classList.contains('occupied')) return;
+                const sel = [...document.querySelectorAll('.slot.selected')];
+                if (this.classList.contains('selected')) {
+                    this.classList.remove('selected');
+                } else if (sel.length === 0) {
+                    this.classList.add('selected');
+                } else {
+                    const court = sel[0].dataset.court;
+                    const idxs = sel.map(s => parseInt(s.dataset.index,10));
+                    const min = Math.min(...idxs), max = Math.max(...idxs);
+                    const myIdx = parseInt(this.dataset.index,10);
+                    const adjacent = (myIdx === min-1 || myIdx === max+1);
+                    if (this.dataset.court === court && adjacent) {
+                        this.classList.add('selected');
+                    } else {
+                        sel.forEach(s => s.classList.remove('selected'));
+                        this.classList.add('selected');
+                    }
+                }
+                selectedSlotsCount = document.querySelectorAll('.slot.selected').length;
+                document.getElementById('checkout-btn').style.display = selectedSlotsCount > 0 ? 'flex' : 'none';
+            });
+        });
+
+        function getSelection(){
+            const sel = [...document.querySelectorAll('.slot.selected')].sort((a,b)=>a.dataset.index-b.dataset.index);
+            if (!sel.length) return null;
+            const date = dateInput ? dateInput.value : todayISO();
+            const court = sel[0].dataset.court;
+            const start = sel[0].dataset.start;
+            const end   = sel[sel.length-1].dataset.end;
+            return { date, court, start, end, slots: sel, startISO: date+'T'+start+':00+02:00', endISO: date+'T'+end+':00+02:00' };
+        }
+
+        function openModal(){
+            if (!getSelection()) return;
+            document.getElementById('booking-modal').classList.add('open');
+            document.getElementById('booking-form').classList.remove('hidden');
+            document.getElementById('modal-step-payment').classList.add('hidden');
+            document.getElementById('modal-step-success').classList.add('hidden');
+            calculatePrice();
+        }
+
+        function closeModal(){
+            document.getElementById('booking-modal').classList.remove('open');
+            if(!document.getElementById('modal-step-success').classList.contains('hidden')) {
+                clearSelection();
+                document.getElementById('booking-form').reset();
+            }
+        }
+
+        function calculatePrice(){
+            const hours = selectedSlotsCount * 0.5;
+            let membersCount = 0, guestsCount = 0;
+            for(let i=1;i<=4;i++){
+                const status = document.getElementById('p'+i+'-status').value;
+                const idField = document.getElementById('p'+i+'-id-field');
+                const idInput = document.getElementById('p'+i+'-id');
+                if(status === 'member'){ membersCount++; idField.classList.remove('hidden'); idInput.setAttribute('required','true'); }
+                else { guestsCount++; idField.classList.add('hidden'); idInput.removeAttribute('required'); }
+            }
+            const finalTotal = ((guestsCount*7.50)+(membersCount*3.75)) * hours;
+            document.getElementById('summary-time').innerText = hours + ' Std.';
+            document.getElementById('summary-players').innerText = guestsCount+' Gäste, '+membersCount+' Mitglieder';
+            const formatted = finalTotal.toFixed(2).replace('.', ',') + ' €';
+            document.getElementById('summary-price').innerText = formatted;
+            const payBtnAmount = document.getElementById('pay-btn-amount');
+            if(payBtnAmount) payBtnAmount.innerText = formatted;
+        }
+
+        function submitBooking(e){ e.preventDefault(); processBooking(); }
+
+        function val(id){ const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+        function collectPlayers(){
+            const players = [];
+            players.push({ name: (val('p1-vorname')+' '+val('p1-nachname')).trim(), status: document.getElementById('p1-status').value, memberId: val('p1-id'), main: true });
+            for(let i=2;i<=4;i++){
+                players.push({ name: val('p'+i+'-name'), status: document.getElementById('p'+i+'-status').value, memberId: val('p'+i+'-id') });
+            }
+            return { players, email: val('p1-email') };
+        }
+
+        async function processBooking(){
+            const selection = getSelection();
+            if (!selection) { alert('Bitte zuerst einen Slot auswählen.'); return; }
+            const { players, email } = collectPlayers();
+            const priceText = document.getElementById('summary-price').innerText;
+            const amount = parseFloat(priceText.replace(',', '.').replace(' €','')) || 0;
+
+            const footer = document.querySelector('#booking-form .modal-footer button[type="submit"]');
+            const original = footer ? footer.innerHTML : '';
+            if (footer) { footer.disabled = true; footer.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Buchung läuft...'; }
+
+            try {
+                const res = await fetch(WRITE_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ date: selection.date, court: selection.court, start: selection.startISO, end: selection.endISO, email, players, amount })
+                });
+                const data = await res.json().catch(()=>({}));
+
+                if (!res.ok || data.ok === false) {
+                    alert('Buchung nicht möglich: ' + (data.reason || data.message || 'Slot evtl. schon belegt.'));
+                    if (footer){ footer.disabled=false; footer.innerHTML=original; }
+                    await loadAvailability();
+                    return;
+                }
+
+                selection.slots.forEach(s => { s.classList.remove('selected'); s.classList.add('occupied'); });
+                selectedSlotsCount = 0;
+                document.getElementById('checkout-btn').style.display = 'none';
+                document.getElementById('booking-form').classList.add('hidden');
+                document.getElementById('modal-step-payment').classList.add('hidden');
+                document.getElementById('modal-step-success').classList.remove('hidden');
+                if (footer){ footer.disabled=false; footer.innerHTML=original; }
+            } catch(err) {
+                console.error(err);
+                alert('Keine Verbindung zum Buchungs-Server. Bitte später erneut versuchen.');
+                if (footer){ footer.disabled=false; footer.innerHTML=original; }
+            }
+        }
+
+        loadAvailability();
+
+        // ==========================================
+        // PAYPAL & SUMUP RENDER FUNKTIONEN
+        // ==========================================
+        function renderPayPal(orderId) {
+            const container = document.getElementById('payment-buttons-container');
+            
+            // Wir bereiten den Div für PayPal vor
+            container.innerHTML = '<div id="paypal-button-container" class="mt-4 w-full"></div>';
+            
+            // Das PayPal-Skript baut nun hier den Button rein
+            paypal.Buttons({
+                createOrder: function() { 
+                    // PayPal verlangt hier die Order-ID, die wir aus n8n bekommen haben
+                    return orderId; 
+                },
+                onApprove: async function(data, actions) {
+                    // Sobald das Geld bei PayPal durch ist:
+                    document.getElementById('modal-step-payment').classList.add('hidden');
+                    document.getElementById('modal-step-success').classList.remove('hidden');
+                },
+                onError: function(err) {
+                    alert("PayPal Zahlung fehlgeschlagen oder abgebrochen.");
+                }
+            }).render('#paypal-button-container');
+        }
+
+        function renderSumUp(checkoutId) {
+            const container = document.getElementById('payment-buttons-container');
+            
+            // Wir bereiten den Div für SumUp vor
+            container.innerHTML = '<div id="sumup-card" class="mt-4 border border-slate-200 rounded-xl p-4 bg-white shadow-sm w-full"></div>';
+            
+            // Das SumUp-Skript baut hier das Kreditkarten-Feld rein
+            SumUpCard.mount({
+                id: 'sumup-card',
+                checkoutId: checkoutId,
+                onResponse: function(type, body) {
+                    if (type === 'success') {
+                        // Zahlung war erfolgreich
+                        document.getElementById('modal-step-payment').classList.add('hidden');
+                        document.getElementById('modal-step-success').classList.remove('hidden');
+                    } else {
+                        console.error("SumUp Error:", body);
+                        alert("Kreditkartenzahlung fehlgeschlagen.");
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
