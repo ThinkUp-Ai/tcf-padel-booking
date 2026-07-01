@@ -833,15 +833,6 @@
 
                     <!-- Padel Info Section -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-2">
-                        <div class="card p-5 sm:p-6 border-l-4 border-[#A31D11]">
-                            <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-circle-info text-[#A31D11]"></i> Was ist Padel?</h4>
-                            <p class="text-sm text-slate-600 leading-relaxed mb-3">Padel ist die am schnellsten wachsende Sportart Europas: ein Mix aus Tennis und Squash, gespielt zu viert auf einem Court mit Glaswänden. Schnell erlernbar, riesiger Spaßfaktor.</p>
-                            <ul class="text-sm text-slate-700 space-y-1.5 mt-3">
-                                <li><i class="fa-solid fa-check text-[#A31D11] mr-2"></i>Cupra Court &amp; Frittlingen Court</li>
-                                <li><i class="fa-solid fa-check text-[#A31D11] mr-2"></i>Flutlicht für Abend-Spiele</li>
-                                <li><i class="fa-solid fa-check text-[#A31D11] mr-2"></i>Schlägerverleih vor Ort</li>
-                            </ul>
-                        </div>
                         <div class="card p-5 sm:p-6 border-l-4 border-[#FDE047]">
                             <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-tag text-amber-500"></i> Preise pro Platz</h4>
                             <div class="space-y-2 text-sm">
@@ -867,6 +858,22 @@
                                 </div>
                             </div>
                             <p class="text-xs text-slate-500 mt-3 leading-relaxed"><i class="fa-solid fa-circle-info mr-1"></i> Der Preis gilt pro Platz und Stunde. Jedes mitspielende Mitglied reduziert den Stundenpreis um 4 € – zzgl. optionalem Schlägerverleih.</p>
+                            <div class="mt-4 bg-[#A31D11]/5 border border-[#A31D11]/20 rounded-xl p-4">
+                                <p class="text-sm font-bold text-slate-800 mb-1">Noch kein Mitglied?</p>
+                                <p class="text-xs text-slate-600 mb-3">Als Mitglied spielst du dauerhaft günstiger – 4 € Rabatt pro Person und Stunde.</p>
+                                <a href="Beitrittserklärung ab 2018.pdf" target="_blank" class="inline-flex items-center gap-2 bg-[#A31D11] hover:bg-[#8a180e] text-white text-sm font-bold px-4 py-2.5 rounded-lg transition shadow-sm">
+                                    <i class="fa-solid fa-user-plus"></i> Jetzt Mitglied werden
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card p-5 sm:p-6 border-l-4 border-[#A31D11]">
+                            <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-circle-info text-[#A31D11]"></i> Was ist Padel?</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3">Padel ist die am schnellsten wachsende Sportart Europas: ein Mix aus Tennis und Squash, gespielt zu viert auf einem Court mit Glaswänden. Schnell erlernbar, riesiger Spaßfaktor.</p>
+                            <ul class="text-sm text-slate-700 space-y-1.5 mt-3">
+                                <li><i class="fa-solid fa-check text-[#A31D11] mr-2"></i>Cupra Court &amp; Frittlingen Court</li>
+                                <li><i class="fa-solid fa-check text-[#A31D11] mr-2"></i>Flutlicht für Abend-Spiele</li>
+                                <li><i class="fa-solid fa-check text-[#A31D11] mr-2"></i>Schlägerverleih vor Ort</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -1035,9 +1042,9 @@
                         <span id="summary-price" class="text-2xl font-black text-[#A31D11]">0,00 €</span>
                     </div>
                     <button type="submit" id="pay-btn" class="w-full bg-[#A31D11] hover:bg-[#8a180e] text-white py-3.5 rounded-xl font-bold text-base sm:text-lg transition shadow-md flex items-center justify-center gap-2 disabled:opacity-60">
-                        <span id="pay-btn-label">Zur Zahlung (Mollie)</span> <i class="fa-solid fa-arrow-right text-sm"></i>
+                        <span id="pay-btn-label">Zur Zahlung</span> <i class="fa-solid fa-arrow-right text-sm"></i>
                     </button>
-                    <p class="text-[11px] text-slate-400 text-center mt-2"><i class="fa-solid fa-lock mr-1"></i> Sichere Zahlung über Mollie (PayPal, Karte, SEPA)</p>
+                    <p class="text-[11px] text-slate-400 text-center mt-2"><i class="fa-solid fa-lock mr-1"></i> Sichere Zahlung – PayPal, Karte & SEPA</p>
                 </div>
             </form>
 
@@ -1468,7 +1475,7 @@
             const btn = document.getElementById('pay-btn');
             const label = document.getElementById('pay-btn-label');
             const oldLabel = label.innerText;
-            btn.disabled = true; label.innerText = 'Weiterleitung zu Mollie…';
+            btn.disabled = true; label.innerText = 'Weiterleitung zur Zahlung…';
 
             try {
                 const res = await fetch(API_BASE + '/checkout-start', {
