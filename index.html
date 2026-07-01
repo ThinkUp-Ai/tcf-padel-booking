@@ -123,6 +123,25 @@
         }
         .slot.selected:hover { background: var(--tcf-red-dark); }
         .booking-grid.loading .slot { opacity: 0.5; pointer-events: none; }
+        .booking-grid.disabled .slot { opacity: 0.4; pointer-events: none; }
+
+        /* Handy-Buchungsansicht (vertikale Kacheln) */
+        .mcourt-btn { border-color: #e2e8f0; color: #475569; background: #fff; }
+        .mcourt-btn.active { background: var(--tcf-red); color: #fff; border-color: var(--tcf-red); }
+        .mslot {
+            border: 1px solid #e2e8f0; border-radius: 10px;
+            padding: 10px 2px; text-align: center;
+            font-weight: 700; font-size: 15px;
+            background: #fff; color: #0f172a; cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, transform 0.05s;
+        }
+        .mslot:active { transform: scale(0.97); }
+        .mslot.occupied {
+            background: repeating-linear-gradient(45deg, #e2e8f0 0, #e2e8f0 5px, #cbd5e1 5px, #cbd5e1 10px);
+            color: #94a3b8; cursor: not-allowed;
+        }
+        .mslot.selected { background: var(--tcf-red); color: #fff; border-color: var(--tcf-red); }
+        .mslot .mslot-sub { display: block; font-size: 10px; font-weight: 500; margin-top: 2px; opacity: 0.85; }
 
         /* Scroll-Hinweis Mobile */
         .scroll-hint {
@@ -787,13 +806,29 @@
                             <div id="avail-status" class="text-[11px] text-slate-400 whitespace-nowrap hidden sm:block"></div>
                         </div>
 
-                        <div class="scroll-hint">
-                            <i class="fa-solid fa-arrows-left-right"></i>
-                            Horizontal scrollen für weitere Zeiten
+                        <div id="avail-error" class="hidden bg-red-50 border-b border-red-200 text-red-700 text-sm font-medium px-4 py-3 flex items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation flex-shrink-0"></i>
+                            <span>Verfügbarkeit konnte nicht geladen werden – Buchung momentan nicht möglich. Bitte lade die Seite später neu.</span>
                         </div>
 
-                        <div class="overflow-x-auto relative w-full">
-                            <div class="booking-grid min-w-[900px]" id="booking-grid"></div>
+                        <!-- Desktop / Tablet: Raster -->
+                        <div class="hidden md:block">
+                            <div class="scroll-hint">
+                                <i class="fa-solid fa-arrows-left-right"></i>
+                                Horizontal scrollen für weitere Zeiten
+                            </div>
+                            <div class="overflow-x-auto relative w-full">
+                                <div class="booking-grid min-w-[900px]" id="booking-grid"></div>
+                            </div>
+                        </div>
+
+                        <!-- Handy: ein Court, Uhrzeiten als antippbare Kacheln (kein Wischen) -->
+                        <div class="md:hidden">
+                            <div class="flex gap-2 p-3 bg-white border-b border-slate-200">
+                                <button type="button" id="mcourt-1" onclick="setMobileCourt('1')" class="mcourt-btn flex-1 py-2.5 rounded-lg text-sm font-bold border transition">Cupra Court</button>
+                                <button type="button" id="mcourt-2" onclick="setMobileCourt('2')" class="mcourt-btn flex-1 py-2.5 rounded-lg text-sm font-bold border transition">Frittlingen Court</button>
+                            </div>
+                            <div id="mobile-slots" class="p-3 grid grid-cols-3 gap-2"></div>
                         </div>
 
                         <div class="bg-white p-4 sm:p-5 flex flex-col md:flex-row justify-between items-start md:items-center text-sm border-t border-slate-200 gap-4">
@@ -1021,7 +1056,7 @@
                         <input type="checkbox" id="agb-check" required class="mt-0.5 w-5 h-5 accent-[#A31D11] flex-shrink-0">
                         <span class="text-sm text-slate-600 leading-snug">
                             Ich habe die <a href="#" onclick="openAgb(); return false;" class="text-[#A31D11] font-bold underline">AGB &amp; Platz-Nutzungsordnung</a>
-                            sowie die <a href="#" onclick="openAgb(); return false;" class="text-[#A31D11] font-bold underline">Datenschutzhinweise</a> gelesen und akzeptiere sie. *
+                            sowie die <a href="#" onclick="openLegal('datenschutz-modal'); return false;" class="text-[#A31D11] font-bold underline">Datenschutzhinweise</a> gelesen und akzeptiere sie. *
                         </span>
                     </label>
 
@@ -1133,6 +1168,99 @@
         </div>
     </div>
 
+    <!-- ================= IMPRESSUM MODAL ================= -->
+    <div id="impressum-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button onclick="closeLegal('impressum-modal')" aria-label="Schließen" class="absolute top-4 right-4 text-slate-500 hover:text-slate-900 transition z-50 bg-white border border-slate-200 rounded-full w-9 h-9 flex items-center justify-center shadow-sm">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-body legal">
+                <h3 class="text-xl sm:text-2xl font-black text-slate-900 mb-1 pr-10">Impressum</h3>
+                <p class="muted mb-4">Angaben gemäß § 5 TMG</p>
+                <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800 mb-4">
+                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> <strong>Entwurf</strong> – bitte Platzhalter [ … ] durch die echten Vereinsdaten ersetzen und rechtlich prüfen lassen.
+                </div>
+
+                <h4>Anbieter</h4>
+                <p><strong>Tennisclub Frittlingen e.V.</strong><br>Ecke Römerstraße / Schildeckstraße<br>78665 Frittlingen</p>
+
+                <h4>Vertreten durch</h4>
+                <p>[Vorstand gemäß § 26 BGB – Name(n) eintragen]</p>
+
+                <h4>Kontakt</h4>
+                <p>E-Mail: vorstand@tc-frittlingen.de<br>Telefon: [Telefonnummer eintragen]</p>
+
+                <h4>Registereintrag</h4>
+                <p>Eintragung im Vereinsregister.<br>Registergericht: [Amtsgericht …]<br>Registernummer: [VR …]</p>
+
+                <h4>Umsatzsteuer-ID</h4>
+                <p>[falls vorhanden – USt-IdNr. gemäß § 27a UStG, sonst diesen Punkt entfernen]</p>
+
+                <h4>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h4>
+                <p>[Name, Anschrift der verantwortlichen Person]</p>
+
+                <h4>Haftung für Inhalte &amp; Links</h4>
+                <p>Als Diensteanbieter sind wir für eigene Inhalte auf diesen Seiten verantwortlich. Für Inhalte externer Links sind ausschließlich deren Betreiber verantwortlich. Bei Bekanntwerden von Rechtsverletzungen entfernen wir betroffene Inhalte umgehend.</p>
+
+                <p class="muted mt-6">Padel-Buchung technisch umgesetzt von ThinkUp-AI.</p>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeLegal('impressum-modal')" class="w-full bg-[#A31D11] hover:bg-[#8a180e] text-white py-3.5 rounded-xl font-bold text-base sm:text-lg transition shadow-md">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= DATENSCHUTZ MODAL ================= -->
+    <div id="datenschutz-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button onclick="closeLegal('datenschutz-modal')" aria-label="Schließen" class="absolute top-4 right-4 text-slate-500 hover:text-slate-900 transition z-50 bg-white border border-slate-200 rounded-full w-9 h-9 flex items-center justify-center shadow-sm">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-body legal">
+                <h3 class="text-xl sm:text-2xl font-black text-slate-900 mb-1 pr-10">Datenschutzerklärung</h3>
+                <p class="muted mb-4">Informationen gemäß Art. 13 DSGVO · Stand: Saison 2026</p>
+                <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800 mb-4">
+                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> <strong>Entwurf</strong> – bitte vor Veröffentlichung rechtlich prüfen und Platzhalter ergänzen.
+                </div>
+
+                <h4>1. Verantwortlicher</h4>
+                <p>Tennisclub Frittlingen e.V., Ecke Römerstraße / Schildeckstraße, 78665 Frittlingen, E-Mail: vorstand@tc-frittlingen.de.</p>
+
+                <h4>2. Welche Daten wir verarbeiten</h4>
+                <ul>
+                    <li>Namen der mitspielenden Personen (Hauptbucher &amp; angegebene Mitglieder)</li>
+                    <li>E-Mail-Adresse des Hauptbuchers</li>
+                    <li>Buchungsdaten (Platz, Datum, Uhrzeit, Betrag)</li>
+                    <li>Zahlungsdaten (verarbeitet durch unseren Zahlungsdienstleister – wir erhalten keine vollständigen Kartendaten)</li>
+                </ul>
+
+                <h4>3. Zwecke &amp; Rechtsgrundlage</h4>
+                <p>Die Verarbeitung erfolgt zur Durchführung der Platzbuchung, zur Zahlungsabwicklung und zur Zutrittsverwaltung (Erstellung eines persönlichen Zugangscodes). Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung).</p>
+
+                <h4>4. Empfänger / eingesetzte Dienste</h4>
+                <ul>
+                    <li><strong>Mollie</strong> – Zahlungsabwicklung</li>
+                    <li><strong>Google</strong> – Kalender (Belegungsverwaltung) &amp; E-Mail-Versand der Bestätigung</li>
+                    <li><strong>Tuya / Mathfel</strong> – elektronisches Schließsystem (Erzeugung des Zugangscodes)</li>
+                    <li><strong>n8n</strong> – Ablauf-Automatisierung im Hintergrund</li>
+                    <li><strong>GitHub Pages</strong> – Hosting dieser Website</li>
+                </ul>
+                <p class="muted">Hinweis: Einzelne Dienste können Daten außerhalb der EU verarbeiten; entsprechende Garantien (z. B. Standardvertragsklauseln) sind zu prüfen/zu ergänzen.</p>
+
+                <h4>5. Speicherdauer</h4>
+                <p>Buchungs- und Zugangsdaten werden nur so lange gespeichert, wie es für die Abwicklung und gesetzliche Aufbewahrungspflichten erforderlich ist. Zugangscodes verlieren nach dem gebuchten Zeitraum ihre Gültigkeit.</p>
+
+                <h4>6. Deine Rechte</h4>
+                <p>Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit sowie Widerspruch. Zudem besteht ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde. Wende dich dazu an vorstand@tc-frittlingen.de.</p>
+
+                <p class="muted mt-6">TC Frittlingen e.V. · 78665 Frittlingen</p>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeLegal('datenschutz-modal')" class="w-full bg-[#A31D11] hover:bg-[#8a180e] text-white py-3.5 rounded-xl font-bold text-base sm:text-lg transition shadow-md">Schließen</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ================= FOOTER ================= -->
     <footer class="bg-slate-900 text-slate-300 pt-12 sm:pt-16 pb-8 mt-auto border-t-[5px] border-[#A31D11]">
         <div class="max-w-7xl mx-auto px-4">
@@ -1164,7 +1292,11 @@
                 </div>
             </div>
             <div class="border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-slate-500">
-                <p>© <span id="footer-year">2026</span> TC Frittlingen e.V. – Alle Rechte vorbehalten. · <a href="#" onclick="openAgb(); return false;" class="hover:text-[#FDE047]">AGB</a></p>
+                <p>© <span id="footer-year">2026</span> TC Frittlingen e.V. ·
+                    <a href="#" onclick="openAgb(); return false;" class="hover:text-[#FDE047]">AGB</a> ·
+                    <a href="#" onclick="openLegal('impressum-modal'); return false;" class="hover:text-[#FDE047]">Impressum</a> ·
+                    <a href="#" onclick="openLegal('datenschutz-modal'); return false;" class="hover:text-[#FDE047]">Datenschutz</a>
+                </p>
                 <p>Padel-Buchung powered by <a href="https://thinkupai.de" target="_blank" rel="noopener" class="font-bold text-[#FDE047] hover:underline">ThinkUp-AI</a></p>
             </div>
         </div>
@@ -1190,6 +1322,8 @@
 
         let selectedDateISO = null;   // 'YYYY-MM-DD' des gewählten Tages
         let currentAmount = 0;        // aktueller Gesamtbetrag (Zahl)
+        let availabilityOk = true;    // false, wenn Verfügbarkeit nicht geladen werden konnte
+        let mobileCourt = '1';        // aktiver Court in der Handy-Ansicht
 
         // ===== PAGE SWITCHING =====
         function switchPage(pageId) {
@@ -1303,22 +1437,29 @@
         async function loadAvailability() {
             const grid = document.getElementById('booking-grid');
             const status = document.getElementById('avail-status');
+            const errBanner = document.getElementById('avail-error');
             grid.classList.add('loading');
+            grid.classList.remove('disabled');
+            errBanner.classList.add('hidden');
             status.innerText = 'Verfügbarkeit wird geladen…';
-            // alle Slots zurücksetzen
             document.querySelectorAll('.slot').forEach(s => s.classList.remove('occupied', 'selected'));
             try {
                 const res = await fetch(API_BASE + '/verfuegbarkeit?date=' + encodeURIComponent(selectedDateISO), { method: 'GET' });
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 const data = await res.json();
                 applyOccupancy((data && data.occupied) || []);
+                availabilityOk = true;
                 status.innerText = '';
             } catch (e) {
-                // Fallback: nichts als belegt markieren, aber Hinweis zeigen
-                status.innerHTML = '<span class="text-amber-600"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Verfügbarkeit offline</span>';
+                // Fehler sichtbar machen: keine Buchung auf Basis unbekannter Belegung zulassen
+                availabilityOk = false;
+                grid.classList.add('disabled');
+                errBanner.classList.remove('hidden');
+                status.innerHTML = '<span class="text-red-600"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Offline</span>';
             } finally {
                 grid.classList.remove('loading');
                 updateSelectionBar();
+                if (typeof renderMobile === 'function') renderMobile();
             }
         }
 
@@ -1339,13 +1480,38 @@
             });
         }
 
+        // ===== HANDY-ANSICHT (vertikale Kacheln, ein Court) =====
+        function setMobileCourt(id) { mobileCourt = String(id); renderMobile(); }
+
+        function renderMobile() {
+            const box = document.getElementById('mobile-slots');
+            if (!box) return;
+            const b1 = document.getElementById('mcourt-1'), b2 = document.getElementById('mcourt-2');
+            if (b1) { b1.innerText = courtName('1'); b1.classList.toggle('active', mobileCourt === '1'); }
+            if (b2) { b2.innerText = courtName('2'); b2.classList.toggle('active', mobileCourt === '2'); }
+            box.style.opacity = availabilityOk ? '1' : '0.4';
+            box.innerHTML = '';
+            HOURS.forEach(h => {
+                const slot = document.querySelector('.slot[data-court="' + mobileCourt + '"][data-hour="' + h + '"]');
+                const occ = slot && slot.classList.contains('occupied');
+                const sel = slot && slot.classList.contains('selected');
+                const tile = document.createElement('div');
+                tile.className = 'mslot' + (occ ? ' occupied' : '') + (sel ? ' selected' : '');
+                tile.innerHTML = pad(h) + ':00<span class="mslot-sub">' + (occ ? 'Belegt' : (sel ? 'Gewählt' : 'Frei')) + '</span>';
+                if (!occ && availabilityOk && slot) tile.onclick = () => toggleSlot(slot);
+                box.appendChild(tile);
+            });
+        }
+
         function toggleSlot(slot) {
+            if (!availabilityOk) return;
             if (slot.classList.contains('occupied')) return;
             const court = slot.dataset.court;
             // Nur ein Court pro Buchung: Auswahl auf anderem Court verwerfen
             document.querySelectorAll('.slot.selected').forEach(s => { if (s.dataset.court !== court) s.classList.remove('selected'); });
             slot.classList.toggle('selected');
             updateSelectionBar();
+            if (typeof renderMobile === 'function') renderMobile();
         }
 
         function getSelection() {
@@ -1468,6 +1634,7 @@
                 email: document.getElementById('p1-email').value.trim(),
                 name: hauptbucherName(),
                 members: membersCountVal(),
+                rackets: parseInt(document.getElementById('racket-count').value, 10) || 0,
                 players: collectPlayers(),
                 method: 'mollie'
             };
@@ -1511,9 +1678,20 @@
         }
         function closeAgb() {
             document.getElementById('agb-modal').classList.remove('open');
-            // Body-Scroll nur freigeben, wenn kein anderes Modal offen ist
             const bookingOpen = document.getElementById('booking-modal').classList.contains('open');
             if (!bookingOpen) document.body.style.overflow = '';
+        }
+
+        // Generische Legal-Overlays (Impressum / Datenschutz)
+        function openLegal(id) {
+            document.getElementById(id).classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLegal(id) {
+            document.getElementById(id).classList.remove('open');
+            const anyOpen = ['booking-modal', 'agb-modal', 'impressum-modal', 'datenschutz-modal']
+                .some(m => document.getElementById(m).classList.contains('open'));
+            if (!anyOpen) document.body.style.overflow = '';
         }
 
         // ===== CHAT (Demo) =====
@@ -1551,6 +1729,7 @@
         document.getElementById('footer-year').innerText = new Date().getFullYear();
         buildDateSelector();
         buildBookingGrid();
+        renderMobile();
         loadAvailability();
         updateChatFab();
 
