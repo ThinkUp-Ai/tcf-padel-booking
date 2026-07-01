@@ -86,6 +86,7 @@
             gap: 1px;
             background: #e2e8f0;
             border-bottom: 1px solid #e2e8f0;
+            user-select: none; -webkit-user-select: none;
         }
         .grid-header {
             background: white; padding: 10px 4px;
@@ -849,7 +850,7 @@
                                     <span class="text-slate-600 font-medium">Deine Auswahl</span>
                                 </div>
                             </div>
-                            <div class="text-xs text-slate-400 hidden md:block">Tippe Stunden an, um sie auszuwählen</div>
+                            <div class="text-xs text-slate-400 hidden md:block"><i class="fa-solid fa-arrow-pointer mr-1"></i> Stunden anklicken – oder für die Dauer mit gedrückter Maus ziehen</div>
                         </div>
                     </div>
 
@@ -1353,6 +1354,7 @@
         let currentAmount = 0;        // aktueller Gesamtbetrag (Zahl)
         let availabilityOk = true;    // false, wenn Verfügbarkeit nicht geladen werden konnte
         let mobileCourt = '1';        // aktiver Court in der Handy-Ansicht
+        let dragging = false, dragMoved = false, dragAnchorHour = null, dragCourt = null, suppressClick = false;
 
         // ===== PAGE SWITCHING =====
         function switchPage(pageId) {
@@ -1406,7 +1408,7 @@
             const container = document.getElementById('date-selector');
             container.innerHTML = '';
             const today = new Date();
-            for (let i = 0; i < 14; i++) {
+            for (let i = 0; i < 60; i++) {
                 const d = new Date(today);
                 d.setDate(today.getDate() + i);
                 const label = i === 0 ? 'Heute' : (i === 1 ? 'Morgen' : WEEKDAYS[d.getDay()]);
@@ -1456,7 +1458,9 @@
                     slot.className = 'slot';
                     slot.dataset.court = court.id;
                     slot.dataset.hour = h;
-                    slot.addEventListener('click', () => toggleSlot(slot));
+                    slot.addEventListener('click', () => { if (suppressClick) { suppressClick = false; return; } toggleSlot(slot); });
+                    slot.addEventListener('mousedown', (e) => { e.preventDefault(); startDrag(slot); });
+                    slot.addEventListener('mouseenter', () => dragEnter(slot));
                     grid.appendChild(slot);
                 });
             });
@@ -1531,6 +1535,40 @@
                 box.appendChild(tile);
             });
         }
+
+        // ===== DAUER PER MAUS ZIEHEN (Desktop-Raster) =====
+        function slotAt(court, hour) {
+            return document.querySelector('.slot[data-court="' + court + '"][data-hour="' + hour + '"]');
+        }
+        function applyDragRange(court, anchorHour, hoverHour) {
+            document.querySelectorAll('.slot.selected').forEach(s => s.classList.remove('selected'));
+            const step = hoverHour >= anchorHour ? 1 : -1;
+            for (let h = anchorHour; ; h += step) {
+                const s = slotAt(court, h);
+                if (!s || s.classList.contains('occupied')) break; // an Belegt/Rand stoppen -> bleibt zusammenhängend
+                s.classList.add('selected');
+                if (h === hoverHour) break;
+            }
+            updateSelectionBar();
+        }
+        function startDrag(slot) {
+            if (!availabilityOk || slot.classList.contains('occupied')) return;
+            dragging = true; dragMoved = false;
+            dragAnchorHour = parseInt(slot.dataset.hour, 10);
+            dragCourt = slot.dataset.court;
+        }
+        function dragEnter(slot) {
+            if (!dragging || slot.dataset.court !== dragCourt) return;
+            const h = parseInt(slot.dataset.hour, 10);
+            if (h !== dragAnchorHour) dragMoved = true;
+            applyDragRange(dragCourt, dragAnchorHour, h);
+        }
+        function endDrag() {
+            if (!dragging) return;
+            dragging = false;
+            if (dragMoved) { suppressClick = true; updateSelectionBar(); if (typeof renderMobile === 'function') renderMobile(); }
+        }
+        document.addEventListener('mouseup', endDrag);
 
         function toggleSlot(slot) {
             if (!availabilityOk) return;
