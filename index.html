@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#A31D11">
+    <title>TC Frittlingen e.V. – Padel & Tennis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --tcf-red: #A31D11;
+            --tcf-red-dark: #8a180e;
+            --tcf-yellow: #FDE047;
+            --tcf-grey: #6B7280;
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        * { -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            overflow-y: scroll;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Seiten-Übergänge */
+        .page-section { display: none; animation: fadeIn 0.35s ease-out forwards; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Desktop Navigation */
+        .nav-link { position: relative; transition: color 0.2s; }
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 3px;
+            bottom: -6px; left: 0; background-color: var(--tcf-red);
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after, .nav-link.active-nav::after { width: 100%; }
+        .nav-link.active-nav { color: var(--tcf-red); }
+        .btn-primary { background: var(--tcf-red); color: white; transition: all 0.25s; }
+        .btn-primary:hover { background: var(--tcf-red-dark); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(163, 29, 17, 0.28); }
+        .btn-primary:active { transform: translateY(0); }
+
+        /* Mobile Drawer */
+        .mobile-drawer {
+            position: fixed; inset: 0; z-index: 99;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+        .mobile-drawer.open { opacity: 1; pointer-events: auto; }
+        .mobile-drawer-panel {
+            position: absolute; top: 0; right: 0; bottom: 0;
+            width: min(85vw, 360px); background: white;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+            display: flex; flex-direction: column;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.15);
+        }
+        .mobile-drawer.open .mobile-drawer-panel { transform: translateX(0); }
+        .mobile-nav-link {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 20px; font-weight: 700; color: #334155;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.15s, color 0.15s;
+        }
+        .mobile-nav-link:active { background: #f8fafc; }
+        .mobile-nav-link.active-nav { color: var(--tcf-red); background: #fef2f2; }
+
+        /* === BOOKING WIDGET === */
+        .booking-widget {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .booking-grid {
+            display: grid;
+            grid-template-columns: 92px repeat(32, minmax(34px, 1fr));
+            gap: 1px;
+            background: #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .grid-header {
+            background: white; padding: 10px 4px;
+            text-align: center; font-size: 11px; font-weight: 600;
+            color: #64748b;
+        }
+        .grid-header-empty { background: white; position: sticky; left: 0; z-index: 2; }
+        .grid-row-header {
+            background: white; padding: 10px 12px;
+            font-size: 13px; font-weight: 700;
+            display: flex; align-items: center; gap: 6px;
+            border-top: 1px solid #e2e8f0;
+            color: #334155;
+            position: sticky; left: 0; z-index: 2;
+            box-shadow: 4px 0 6px -4px rgba(0,0,0,0.08);
+        }
+        .grid-row-header .court-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--tcf-red); flex-shrink: 0;
+        }
+        .slot {
+            background: white; height: 46px;
+            cursor: pointer; transition: background 0.15s, transform 0.05s;
+            border-top: 1px solid #e2e8f0;
+            position: relative;
+        }
+        .slot:hover:not(.occupied):not(.selected) { background: #fef9c3; }
+        .slot.occupied {
+            background: repeating-linear-gradient(45deg, #cbd5e1 0, #cbd5e1 4px, #b8c2cf 4px, #b8c2cf 8px);
+            cursor: not-allowed;
+        }
+        .slot.selected {
+            background: var(--tcf-red);
+            box-shadow: inset 0 0 0 2px #fff;
+        }
+        .slot.selected:hover { background: var(--tcf-red-dark); }
+
+        /* Scroll-Hinweis Mobile */
+        .scroll-hint {
+            display: none;
+            font-size: 11px; color: #64748b;
+            text-align: center; padding: 6px 0;
+            background: #f1f5f9;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        @media (max-width: 1023px) {
+            .scroll-hint { display: flex; align-items: center; justify-content: center; gap: 8px; }
+            .scroll-hint i { animation: nudge 1.4s ease-in-out infinite; }
+        }
+        @keyframes nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(6px); } }
+
+        /* === CHATBOT === */
+        .chat-container {
+            background: #ffffff; border-radius: 18px;
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+            display: flex; flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-header { background: var(--tcf-red); color: white; }
+        .chat-bubble {
+            padding: 12px 16px; border-radius: 16px;
+            font-size: 0.9rem; line-height: 1.5;
+            max-width: 88%; margin-bottom: 10px;
+            animation: bubbleIn 0.25s ease-out;
+        }
+        @keyframes bubbleIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .bot-msg { background: #f1f5f9; color: #334155; border-bottom-left-radius: 4px; }
+        .user-msg { background: var(--tcf-red); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+        .chat-input-area { background: var(--tcf-red); padding: 14px; border-top: 1px solid var(--tcf-red-dark); }
+        .chat-input-wrapper {
+            background: #ffffff; border: 1px solid #e2e8f0;
+            border-radius: 100px; padding: 4px;
+            display: flex; align-items: center;
+        }
+
+        /* Floating Chat Button (Mobile) */
+        .chat-fab {
+            position: fixed; bottom: calc(20px + var(--safe-bottom)); right: 20px;
+            width: 60px; height: 60px;
+            background: var(--tcf-red); color: white;
+            border-radius: 50%;
+            display: none; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 24px rgba(163,29,17,0.4);
+            z-index: 45;
+            cursor: pointer;
+            animation: fabPulse 2.4s ease-in-out infinite;
+        }
+        @keyframes fabPulse {
+            0%, 100% { box-shadow: 0 8px 24px rgba(163,29,17,0.4); }
+            50% { box-shadow: 0 8px 28px rgba(163,29,17,0.6), 0 0 0 8px rgba(163,29,17,0.08); }
+        }
+        .chat-fab .fab-dot {
+            position: absolute; top: 6px; right: 6px;
+            width: 12px; height: 12px;
+            background: var(--tcf-yellow);
+            border: 2px solid white; border-radius: 50%;
+        }
+
+        /* Mobile Chat Sheet */
+        .chat-sheet {
+            position: fixed; inset: 0;
+            background: white; z-index: 60;
+            display: none; flex-direction: column;
+            animation: sheetUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .chat-sheet.open { display: flex; }
+        @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        /* === MODAL === */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: none; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.3s ease;
+            padding: 16px;
+            padding-bottom: calc(16px + var(--safe-bottom));
+        }
+        .modal-overlay.open { display: flex; opacity: 1; }
+        .modal-content {
+            background: white; border-radius: 20px;
+            width: 100%; max-width: 600px;
+            height: 92vh; max-height: 92vh;
+            display: flex; flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
+            transform: translateY(20px); transition: transform 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+        @media (min-height: 800px) {
+            .modal-content { height: auto; }
+        }
+        .modal-overlay.open .modal-content { transform: translateY(0); }
+        /* Form/step containers must fill modal-content & allow inner scroll */
+        .modal-step {
+            flex: 1 1 auto;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .modal-step.hidden { display: none; }
+        .modal-body {
+            overflow-y: auto;
+            padding: 24px;
+            flex: 1 1 auto;
+            min-height: 0;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
+        .modal-footer {
+            padding: 18px 22px calc(18px + var(--safe-bottom));
+            background: #f8fafc; border-top: 1px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+
+        /* Forms */
+        input, select, textarea { font-size: 16px !important; }
+        .field-input {
+            width: 100%; border: 1px solid #cbd5e1; border-radius: 10px;
+            padding: 11px 14px;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            background: white;
+        }
+        .field-input:focus {
+            outline: none; border-color: var(--tcf-red);
+            box-shadow: 0 0 0 3px rgba(163,29,17,0.12);
+        }
+        .field-input::placeholder { color: #94a3b8; }
+
+        /* Cards */
+        .card {
+            background: white; border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(15,23,42,0.08); }
+
+        /* Section heading */
+        .section-title {
+            font-weight: 900; text-transform: uppercase;
+            border-left: 8px solid var(--tcf-red);
+            padding-left: 16px;
+            letter-spacing: -0.01em;
+        }
+        .section-title.alt { border-left-color: var(--tcf-yellow); }
+
+        /* Skeleton glow on live dot */
+        .live-dot {
+            display: inline-block; width: 8px; height: 8px;
+            border-radius: 50%; background: #10b981;
+            box-shadow: 0 0 0 0 rgba(16,185,129,0.6);
+            animation: livePulse 1.8s infinite;
+            vertical-align: middle;
+        }
+        @keyframes livePulse {
+            0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
+            70% { box-shadow: 0 0 0 8px rgba(16,185,129,0); }
+            100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+        }
+
+        /* Date pill */
+        .date-pill {
+            padding: 8px 14px; border-radius: 100px;
+            background: white; border: 1px solid #e2e8f0;
+            font-weight: 700; font-size: 13px; color: #475569;
+            cursor: pointer; transition: all 0.2s; white-space: nowrap;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .date-pill:hover { border-color: var(--tcf-red); color: var(--tcf-red); }
+        .date-pill.active { background: var(--tcf-red); color: white; border-color: var(--tcf-red); }
+        .date-pill.active .date-sub { color: rgba(255,255,255,0.85); }
+        .date-sub { font-size: 11px; font-weight: 500; color: #94a3b8; }
+
+        /* Selection summary bar */
+        .selection-bar {
+            background: linear-gradient(135deg, var(--tcf-red) 0%, var(--tcf-red-dark) 100%);
+            color: white; border-radius: 14px;
+            padding: 16px 20px;
+            display: none;
+            box-shadow: 0 10px 24px rgba(163,29,17,0.25);
+            animation: slideUp 0.25s ease-out;
+        }
+        .selection-bar.show { display: flex; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Hide scrollbar on date selector */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Hero */
+        .hero-overlay {
+            background: linear-gradient(135deg, rgba(15,23,42,0.85) 0%, rgba(163,29,17,0.55) 100%);
+        }
+
+        /* Improved focus visibility */
+        a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+            outline: 3px solid rgba(163,29,17,0.4);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#FDE047] selection:text-[#A31D11]">
+
+    <!-- ================= NAV ================= -->
+    <nav class="bg-white/95 backdrop-blur-md border-b-[5px] border-[#FDE047] sticky top-0 z-50 shadow-sm">
+        <div class="max-w-[1600px] mx-auto px-4 h-20 md:h-24 flex justify-between items-center gap-3">
+            <div class="flex items-center cursor-pointer flex-shrink-0" onclick="switchPage('home')">
+                <img src="logo%20tcf.jpg" alt="Logo TC Frittlingen" class="h-12 md:h-16 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="hidden flex-col justify-center border-l-4 border-[#FDE047] pl-3">
+                    <span class="font-black text-lg md:text-xl text-[#A31D11] leading-none">TENNISCLUB</span>
+                    <span class="text-xs md:text-sm font-bold text-gray-500 mt-1">FRITTLINGEN E.V.</span>
+                </div>
+            </div>
+
+            <!-- Desktop Nav -->
+            <div class="hidden lg:flex gap-5 xl:gap-8 text-[13px] xl:text-[14px] font-bold text-slate-600 uppercase tracking-wider items-center">
+                <a href="#" onclick="switchPage('home'); return false;" id="nav-home" class="nav-link active-nav whitespace-nowrap hover:text-[#A31D11]">Startseite</a>
+                <a href="#" onclick="switchPage('tennis'); return false;" id="nav-tennis" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Tennis</a>
+                <a href="#" onclick="switchPage('verein'); return false;" id="nav-verein" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Unser Verein</a>
+                <a href="#" onclick="switchPage('spielbetrieb'); return false;" id="nav-spielbetrieb" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Spielbetrieb</a>
+                <a href="#" onclick="switchPage('mannschaften'); return false;" id="nav-mannschaften" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Mannschaften</a>
+                <a href="#" onclick="switchPage('aktuell'); return false;" id="nav-aktuell" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Aktuell</a>
+                <a href="#" onclick="switchPage('padel'); return false;" id="nav-padel" class="nav-link text-[#A31D11] relative whitespace-nowrap">
+                    Padel
+                    <span class="absolute -top-3 -right-7 bg-red-600 text-white text-[9px] px-1.5 py-0.5 rounded-full animate-pulse">NEU</span>
+                </a>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button onclick="switchPage('padel')" class="btn-primary px-4 sm:px-6 md:px-8 py-2.5 md:py-3 rounded text-xs sm:text-sm font-bold uppercase tracking-wide shadow-md whitespace-nowrap">
+                    <i class="fa-solid fa-calendar-check mr-1.5 sm:mr-2"></i>Platz buchen
+                </button>
+                <!-- Hamburger -->
+                <button onclick="toggleDrawer()" aria-label="Menü öffnen" class="lg:hidden w-11 h-11 rounded-lg flex items-center justify-center text-slate-700 hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer" class="mobile-drawer lg:hidden" onclick="if(event.target===this) toggleDrawer()">
+        <div class="mobile-drawer-panel">
+            <div class="flex items-center justify-between p-4 border-b border-slate-100">
+                <img src="logo%20tcf.jpg" alt="TCF" class="h-10 object-contain" onerror="this.style.display='none';">
+                <button onclick="toggleDrawer()" aria-label="Menü schließen" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto">
+                <a href="#" onclick="switchPage('home'); toggleDrawer(); return false;" id="mnav-home" class="mobile-nav-link active-nav">
+                    <span><i class="fa-solid fa-house w-6 text-[#A31D11]"></i> Startseite</span>
+                    <i class="fa-solid fa-chevron-right text-slate-300 text-sm"></i>
+                </a>
+                <a href="#" onclick="switchPage('padel'); toggleDrawer(); return false;" id="mnav-padel" class="mobile-nav-link">
+                    <span><i class="fa-solid fa-bolt w-6 text-[#A31D11]"></i> Padel <span class="ml-2 bg-red-600 text-white text-[9px] px-1.5 py-0.5 rounded-full">NEU</span></span>
+                    <i class="fa-solid fa-chevron-right text-slate-300 text-sm"></i>
+                </a>
+                <a href="#" onclick="switchPage('tennis'); toggleDrawer(); return false;" id="mnav-tennis" class="mobile-nav-link">
+                    <span><i class="fa-solid fa-fire w-6 text-orange-500"></i> Tennis</span>
+                    <i class="fa-solid fa-chevron-right text-slate-300 text-sm"></i>
+                </a>
+                <a href="#" onclick="switchPage('verein'); toggleDrawer(); return false;" id="mnav-verein" class="mobile-nav-link">
+                    <span><i class="fa-solid fa-users w-6 text-slate-500"></i> Unser Verein</span>
+                    <i class="fa-solid fa-chevron-right text-slate-300 text-sm"></i>
+                </a>
+                <a href="#" onclick="switchPage('spielbetrieb'); toggleDrawer(); return false;" id="mnav-spielbetrieb" class="mobile-nav-link">
+                    <span><i class="fa-solid fa-trophy w-6 text-slate-500"></i> Spielbetrieb</span>
+                    <i class="fa-solid fa-chevron-right text-slate-300 text-sm"></i>
+                </a>
+                <a href="#" onclick="switchPage('mannschaften'); toggleDrawer(); return false;" id="mnav-mannschaften" class="mobile-nav-link">
+                    <span><i class="fa-solid fa-people-group w-6 text-slate-500"></i> Mannschaften</span>
+                    <i class="fa-solid fa-chevron-right text-slate-300 text-sm"></i>
+                </a>
+                <a href="#" onclick="switchPage('aktuell'); toggleDrawer(); return false;" id="mnav-aktuell" class="mobile-nav-link">
+                    <span><i class="fa-regular fa-calendar w-6 text-slate-500"></i> Aktuell</span>
+                    <i class="fa-solid fa-chevron-right text-slate-300 text-sm"></i>
+                </a>
+            </div>
+            <div class="p-4 border-t border-slate-100 bg-slate-50">
+                <a href="mailto:vorstand@tc-frittlingen.de" class="text-xs text-slate-500 hover:text-[#A31D11] transition flex items-center gap-2">
+                    <i class="fa-regular fa-envelope"></i> vorstand@tc-frittlingen.de
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= HOME ================= -->
+    <main id="page-home" class="page-section active">
+        <section class="relative h-[78vh] min-h-[480px] flex items-center">
+            <img src="https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&w=2000&q=80" class="absolute inset-0 w-full h-full object-cover" alt="Tennisanlage">
+            <div class="absolute inset-0 hero-overlay"></div>
+
+            <div class="relative z-10 px-4 max-w-7xl mx-auto w-full">
+                <span class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/30 text-white text-xs sm:text-sm font-bold uppercase tracking-wider px-3 py-1.5 rounded-full mb-5">
+                    <span class="live-dot"></span> Padel-Courts jetzt online buchbar
+                </span>
+                <h1 class="text-4xl sm:text-5xl md:text-7xl font-black text-white mb-4 tracking-tight uppercase italic leading-[1.05]">
+                    Mehr als nur <span class="text-[#FDE047]">Tennis.</span>
+                </h1>
+                <p class="text-base sm:text-xl text-slate-100 mb-8 sm:mb-10 max-w-2xl leading-relaxed">
+                    Herzlich Willkommen beim TC Frittlingen e.V. – Entdecke unsere Sandplätze, die Beachanlage und ab sofort auch unsere brandneuen Padel-Courts.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                    <button onclick="switchPage('padel')" class="btn-primary px-6 sm:px-8 py-4 rounded text-base sm:text-lg font-bold uppercase shadow-xl text-center inline-flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-bolt"></i> Padel-Court buchen
+                    </button>
+                    <button onclick="switchPage('verein')" class="bg-white/10 backdrop-blur-md border border-white/50 text-white px-6 sm:px-8 py-4 rounded text-base sm:text-lg font-bold uppercase hover:bg-white/20 transition-all text-center">
+                        Verein entdecken
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Cards -->
+        <section class="max-w-7xl mx-auto px-4 -mt-10 sm:-mt-12 relative z-20 pb-12 sm:pb-16">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                <div onclick="switchPage('tennis')" class="card card-hover cursor-pointer p-6 sm:p-8 flex items-center gap-5 border-b-4 border-orange-500">
+                    <div class="text-4xl text-orange-500 flex-shrink-0"><i class="fa-solid fa-fire"></i></div>
+                    <div>
+                        <h3 class="font-black text-lg sm:text-xl">4 Sandplätze</h3>
+                        <p class="text-slate-500 text-sm">Für Training & Spielbetrieb</p>
+                    </div>
+                </div>
+                <div onclick="switchPage('padel')" class="cursor-pointer bg-[#A31D11] p-6 sm:p-8 rounded-2xl shadow-xl flex items-center gap-5 transform transition hover:-translate-y-1 text-white border-b-4 border-[#FDE047]">
+                    <div class="text-4xl text-[#FDE047] flex-shrink-0"><i class="fa-solid fa-bolt"></i></div>
+                    <div>
+                        <h3 class="font-black text-lg sm:text-xl flex items-center gap-2">Padel-Courts <span class="bg-white/20 text-xs px-2 py-0.5 rounded">NEU</span></h3>
+                        <p class="text-red-100 text-sm">Jetzt online buchen</p>
+                    </div>
+                </div>
+                <div onclick="switchPage('tennis')" class="card card-hover cursor-pointer p-6 sm:p-8 flex items-center gap-5 border-b-4 border-blue-500">
+                    <div class="text-4xl text-blue-500 flex-shrink-0"><i class="fa-solid fa-moon"></i></div>
+                    <div>
+                        <h3 class="font-black text-lg sm:text-xl">2 Beachplätze</h3>
+                        <p class="text-slate-500 text-sm">Inklusive Flutlichtanlage</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vereins-Pitch & News -->
+        <section class="max-w-7xl mx-auto px-4 pb-16 sm:pb-20">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+                <div class="lg:col-span-2 card p-6 sm:p-10">
+                    <span class="text-xs font-bold uppercase tracking-wider text-[#A31D11]">Willkommen</span>
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 mt-2 mb-4 leading-tight">50 Jahre Tennis in Frittlingen</h2>
+                    <p class="text-slate-600 leading-relaxed mb-4">
+                        Seit einem halben Jahrhundert steht der TC Frittlingen e.V. für sportlichen Zusammenhalt, spannende Turniere und ein aktives Vereinsleben.
+                        Mit unseren neuen Padel-Courts gehen wir 2026 den nächsten Schritt – modern, flutlicht-tauglich und für alle online buchbar.
+                    </p>
+                    <button onclick="switchPage('verein')" class="text-[#A31D11] font-bold inline-flex items-center gap-2 mt-2 hover:gap-3 transition-all">
+                        Mehr über uns <i class="fa-solid fa-arrow-right text-sm"></i>
+                    </button>
+                </div>
+                <div class="card p-6 sm:p-8 bg-gradient-to-br from-slate-900 to-slate-800 text-white border-0">
+                    <span class="text-xs font-bold uppercase tracking-wider text-[#FDE047]">Nächste Termine</span>
+                    <h3 class="text-xl font-black mt-2 mb-5">Save the date</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <div class="bg-[#A31D11] text-white text-center rounded-md min-w-[52px] py-1.5 flex-shrink-0">
+                                <span class="block text-sm font-black leading-tight">27.06.</span>
+                                <span class="block text-[10px] text-red-200">2026</span>
+                            </div>
+                            <div>
+                                <div class="font-bold">Cornholeturnier</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <div class="bg-[#A31D11] text-white text-center rounded-md min-w-[52px] py-1.5 flex-shrink-0">
+                                <span class="block text-sm font-black leading-tight">28.08.</span>
+                                <span class="block text-[10px] text-red-200">2026</span>
+                            </div>
+                            <div>
+                                <div class="font-bold">Kinderferienprogramm</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <div class="bg-[#A31D11] text-white text-center rounded-md min-w-[52px] py-1.5 flex-shrink-0">
+                                <span class="block text-sm font-black leading-tight">05.09.</span>
+                                <span class="block text-[10px] text-red-200">2026</span>
+                            </div>
+                            <div>
+                                <div class="font-bold">Laiendoppel</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <div class="bg-[#A31D11] text-white text-center rounded-md min-w-[52px] py-1.5 flex-shrink-0">
+                                <span class="block text-sm font-black leading-tight">02.10.</span>
+                                <span class="block text-[10px] text-red-200">2026</span>
+                            </div>
+                            <div>
+                                <div class="font-bold">Preisbinokel</div>
+                            </div>
+                        </li>
+                    </ul>
+                    <button onclick="switchPage('aktuell')" class="mt-6 text-[#FDE047] font-bold inline-flex items-center gap-2 hover:gap-3 transition-all">
+                        Alle Termine <i class="fa-solid fa-arrow-right text-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ================= TENNIS ================= -->
+    <main id="page-tennis" class="page-section bg-white min-h-screen py-12 sm:py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl sm:text-4xl section-title text-slate-900 mb-10 sm:mb-12">Unsere Anlage</h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12 sm:mb-16">
+                <div>
+                    <h3 class="text-xl sm:text-2xl font-bold mb-4">4 Sandplätze (Tennis)</h3>
+                    <p class="text-slate-600 mb-6 leading-relaxed">Das Herzstück unseres Vereins. Unsere Plätze sind bestens gepflegt und stehen unseren Mitgliedern für Training, den aktiven Spielbetrieb der Mannschaften und das freie Spielen zur Verfügung.</p>
+                    <ul class="space-y-3 font-medium text-slate-700">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-[#A31D11]"></i> Herren- und Damenmannschaften</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-[#A31D11]"></i> Aktive Jugendförderung</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-[#A31D11]"></i> Professionelles Training</li>
+                    </ul>
+                </div>
+                <div class="grid grid-cols-2 gap-3 sm:gap-4 h-auto lg:h-[420px]">
+                    <div class="col-span-2 bg-slate-200 rounded-xl overflow-hidden shadow-md h-48 lg:h-auto">
+                        <img src="Platz%201%20%26%202.jpg" alt="Platz 1 und 2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="bg-slate-200 rounded-xl overflow-hidden shadow-md h-32 lg:h-auto">
+                        <img src="Platz%203%20%26%204.jpg" alt="Platz 3 und 4" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="bg-slate-200 rounded-xl overflow-hidden shadow-md h-32 lg:h-auto">
+                        <img src="Tennisheim.jpg" alt="Tennisheim" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                <div class="bg-slate-200 h-64 rounded-xl overflow-hidden order-2 lg:order-1 shadow-md">
+                    <img src="Beach.jpg" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" alt="Beachplätze">
+                </div>
+                <div class="order-1 lg:order-2">
+                    <h3 class="text-xl sm:text-2xl font-bold mb-4">2 Beachplätze mit Flutlicht</h3>
+                    <p class="text-slate-600 mb-6 leading-relaxed">Direkt neben dem Clubheim befinden sich unsere modernen Beachplätze. Dank der integrierten Flutlichtanlage kann hier auch abends problemlos gespielt werden.</p>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="bg-slate-100 px-4 py-2 rounded text-sm font-bold border border-slate-200">Volleyball</span>
+                        <span class="bg-slate-100 px-4 py-2 rounded text-sm font-bold border border-slate-200">Handball</span>
+                        <span class="bg-slate-100 px-4 py-2 rounded text-sm font-bold border border-slate-200">Beachtennis</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ================= VEREIN ================= -->
+    <main id="page-verein" class="page-section bg-slate-50 min-h-screen py-12 sm:py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl sm:text-4xl section-title alt text-slate-900 mb-10 sm:mb-12">Unser Verein</h2>
+
+            <div class="card p-6 sm:p-8 mb-6 sm:mb-8">
+                <h3 class="text-xl sm:text-2xl font-bold mb-4 text-[#A31D11]">50 Jahre TCF</h3>
+                <p class="text-slate-600 leading-relaxed mb-4">Liebe Tennisfreunde, hier findet ihr alles, was man über unseren Verein wissen muss. Seit einem halben Jahrhundert steht der TC Frittlingen e.V. für sportlichen Zusammenhalt, spannende Turniere und ein aktives Vereinsleben in der Gemeinde.</p>
+                <p class="text-slate-600 leading-relaxed">Wir investieren stetig in unsere Anlage – von der Sanierung des Clubheims über die Flutlichtanlage der Beachplätze bis hin zum aktuellsten Projekt: unseren neuen Padel-Courts.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+                <div class="card p-6 sm:p-8">
+                    <h3 class="text-lg sm:text-xl font-bold mb-4 text-[#A31D11]"><i class="fa-regular fa-envelope mr-2"></i>Kontakt</h3>
+                    <p class="text-slate-600 mb-4">Hast du Fragen an uns? Schreibe uns gerne eine E-Mail:</p>
+                    <a href="mailto:vorstand@tc-frittlingen.de" class="text-blue-600 font-bold hover:underline break-all">vorstand@tc-frittlingen.de</a>
+
+                    <div class="mt-8">
+                        <h3 class="text-lg sm:text-xl font-bold mb-4 text-[#A31D11]"><i class="fa-solid fa-location-dot mr-2"></i>Anfahrt</h3>
+                        <div class="rounded-lg overflow-hidden shadow-md mb-3 border border-slate-200">
+                            <iframe
+                                src="https://www.google.com/maps?q=Tennisclub+Frittlingen+R%C3%B6merstra%C3%9Fe+Schildeckstra%C3%9Fe+78665+Frittlingen&output=embed"
+                                width="100%" height="280"
+                                style="border:0; display:block;"
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"
+                                title="Anfahrt TC Frittlingen"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-2 mb-3">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=Tennisclub+Frittlingen+R%C3%B6merstra%C3%9Fe+78665+Frittlingen" target="_blank" class="flex-1 inline-flex items-center justify-center gap-2 bg-[#A31D11] hover:bg-[#8a180e] text-white font-bold text-sm px-4 py-2.5 rounded-lg transition shadow-sm">
+                                <i class="fa-solid fa-diamond-turn-right"></i> Route planen
+                            </a>
+                            <a href="https://maps.apple.com/?q=Tennisclub+Frittlingen+R%C3%B6merstra%C3%9Fe+78665+Frittlingen" target="_blank" class="flex-1 inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm px-4 py-2.5 rounded-lg transition">
+                                <i class="fa-brands fa-apple"></i> Apple Maps
+                            </a>
+                        </div>
+                        <address class="not-italic text-sm text-slate-600 leading-relaxed">
+                            <strong class="text-slate-900">Tennisclub Frittlingen e.V.</strong><br>
+                            Ecke Römerstraße / Schildeckstraße<br>
+                            78665 Frittlingen
+                        </address>
+                    </div>
+                </div>
+                <div class="card p-6 sm:p-8">
+                    <h3 class="text-lg sm:text-xl font-bold mb-4 text-[#A31D11]"><i class="fa-solid fa-download mr-2"></i>Downloads</h3>
+                    <ul class="space-y-3 mt-6">
+                        <li>
+                            <a href="Beitrittserklärung ab 2018.pdf" target="_blank" class="text-slate-600 hover:text-[#A31D11] transition flex items-center p-3 rounded-lg hover:bg-slate-50">
+                                <i class="fa-regular fa-file-pdf mr-3 text-2xl text-red-500"></i>
+                                <span class="font-medium">Mitgliedsantrag (Beitrittserklärung)</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Nutzungsvereinbarung Beach-Platz.pdf" target="_blank" class="text-slate-600 hover:text-[#A31D11] transition flex items-center p-3 rounded-lg hover:bg-slate-50">
+                                <i class="fa-regular fa-file-pdf mr-3 text-2xl text-red-500"></i>
+                                <span class="font-medium">Nutzungsvereinbarung Beach-Platz</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Cornholeturnier Regeln.pdf" target="_blank" class="text-slate-600 hover:text-[#A31D11] transition flex items-center p-3 rounded-lg hover:bg-slate-50">
+                                <i class="fa-regular fa-file-pdf mr-3 text-2xl text-red-500"></i>
+                                <span class="font-medium">Cornholeturnier Regeln</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ================= SPIELBETRIEB ================= -->
+    <main id="page-spielbetrieb" class="page-section bg-white min-h-screen py-12 sm:py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl sm:text-4xl section-title text-slate-900 mb-10 sm:mb-12">Spielbetrieb</h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="card p-6">
+                        <h3 class="text-lg sm:text-xl font-bold text-slate-800 mb-4 border-b border-slate-200 pb-2">WTB Portal</h3>
+                        <a href="https://www.wtb-tennis.de/spielbetrieb/vereine/verein/v/20499.html" target="_blank" class="block text-[#A31D11] font-bold hover:text-red-700 transition mb-2">
+                            &gt;&gt; TC Frittlingen beim WTB &lt;&lt;
+                        </a>
+                        <p class="text-sm text-slate-600 mb-6 leading-relaxed">Verein 20499<br>TC Frittlingen WTB Bezirk E</p>
+                        <a href="https://www.wtb-tennis.de/spielbetrieb/vereine/verein/begegnungen/v/20499.html" target="_blank" class="block text-[#A31D11] font-bold hover:text-red-700 transition">
+                            &gt;&gt; Liste aller Begegnungen &lt;&lt;
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2">
+                    <div class="card p-6 sm:p-8">
+                        <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mb-4">Sommersaison 2026</h3>
+                        <p class="text-slate-600 mb-8 leading-relaxed">
+                            Diesen Sommer gehen wie schon in der letzten Saison vier Teams für den TCF an den Start.
+                            Gemeldet sind jeweils 4er-Mannschaften bei den KIDs U12, Herren und gleich zwei Mannschaften bei den Herren 40.
+                        </p>
+
+                        <div class="space-y-5">
+                            <div class="bg-slate-50 p-5 rounded-lg border-l-4 border-[#A31D11]">
+                                <h4 class="font-bold text-lg text-slate-900 mb-1">KIDs-Cup U12</h4>
+                                <p class="text-sm text-slate-700 leading-relaxed">Die Kids starten in der Bezirksstaffel 1, Gruppe 120 und treffen auf den TC RW Spaichingen 1, TC RW Tuttlingen 2, TC Trossingen 1, TC Heuberg 1 und die TA TV Wurmlingen 1.</p>
+                            </div>
+                            <div class="bg-slate-50 p-5 rounded-lg border-l-4 border-[#A31D11]">
+                                <h4 class="font-bold text-lg text-slate-900 mb-1">Herren 1</h4>
+                                <p class="text-sm text-slate-700 leading-relaxed">Die erste Mannschaft des TCF trifft in der Kreisstaffel 1, Gruppe 015 auf den TC Schwenningen 1, TC Lossburg 1, TC Hopfau 1, TC Schömberg 1, TC Dunningen 3 und die TA TG Schura-Trossingen 1.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ================= MANNSCHAFTEN ================= -->
+    <main id="page-mannschaften" class="page-section bg-slate-50 min-h-screen py-12 sm:py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl sm:text-4xl section-title text-slate-900 mb-8 sm:mb-10">Mannschaften</h2>
+            <a href="https://www.wtb-tennis.de/spielbetrieb/vereine/verein/v/20499.html" target="_blank" class="inline-block text-[#A31D11] font-bold hover:text-red-700 transition mb-10 sm:mb-12">
+                &gt;&gt; Übersicht Mannschaften beim WTB &lt;&lt;
+            </a>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                <div class="card card-hover overflow-hidden">
+                    <img src="U12.jpeg" alt="KIDS-Cup U12" class="w-full h-56 sm:h-64 object-cover object-top">
+                    <div class="p-6"><h3 class="text-xl font-bold">KIDS-Cup U12</h3><p class="text-slate-500 font-medium mt-1">Sommersaison 2025</p></div>
+                </div>
+                <div class="card card-hover overflow-hidden">
+                    <img src="Herren%2030.jpeg" alt="Herren 30" class="w-full h-56 sm:h-64 object-cover object-top">
+                    <div class="p-6"><h3 class="text-xl font-bold">Herren 30</h3><p class="text-slate-500 font-medium mt-1">Sommersaison 2025</p></div>
+                </div>
+                <div class="card card-hover overflow-hidden">
+                    <img src="Herren%2040.jpeg" alt="Herren 40" class="w-full h-56 sm:h-64 object-cover object-top">
+                    <div class="p-6"><h3 class="text-xl font-bold">Herren 40</h3><p class="text-slate-500 font-medium mt-1">Sommersaison 2025</p></div>
+                </div>
+            </div>
+
+            <div class="mt-8 card p-5 sm:p-6 flex items-center gap-4">
+                <i class="fa-regular fa-clock text-3xl text-[#A31D11]"></i>
+                <div>
+                    <h3 class="font-bold text-lg text-slate-900">Trainingszeiten Herren</h3>
+                    <p class="text-slate-600">Mittwoch und Freitag, 18:00 – 20:30 Uhr</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ================= AKTUELL ================= -->
+    <main id="page-aktuell" class="page-section bg-white min-h-screen py-12 sm:py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl sm:text-4xl section-title text-slate-900 mb-10 sm:mb-12" style="border-left-color:#f97316;">Vorschau & Termine</h2>
+            <div class="card p-6 mt-6">
+                <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-5 border-b pb-3 flex items-center gap-3">
+                    <i class="fa-regular fa-calendar text-[#A31D11]"></i> Vorschau 2026
+                </h3>
+                <ul class="space-y-3">
+                    <li class="flex items-center gap-4 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition">
+                        <div class="bg-[#A31D11] text-white text-center rounded-md w-20 py-1.5 flex-shrink-0">
+                            <span class="block text-sm font-bold leading-tight">27.06.</span>
+                            <span class="block text-[10px] text-red-200">2026</span>
+                        </div>
+                        <div class="text-slate-900 font-bold">Cornholeturnier</div>
+                    </li>
+                    <li class="flex items-center gap-4 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition">
+                        <div class="bg-[#A31D11] text-white text-center rounded-md w-20 py-1.5 flex-shrink-0">
+                            <span class="block text-sm font-bold leading-tight">28.08.</span>
+                            <span class="block text-[10px] text-red-200">2026</span>
+                        </div>
+                        <div class="text-slate-900 font-bold">Kinderferienprogramm</div>
+                    </li>
+                    <li class="flex items-center gap-4 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition">
+                        <div class="bg-[#A31D11] text-white text-center rounded-md w-20 py-1.5 flex-shrink-0">
+                            <span class="block text-sm font-bold leading-tight">05.09.</span>
+                            <span class="block text-[10px] text-red-200">2026</span>
+                        </div>
+                        <div class="text-slate-900 font-bold">Laiendoppel</div>
+                    </li>
+                    <li class="flex items-center gap-4 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition">
+                        <div class="bg-[#A31D11] text-white text-center rounded-md w-20 py-1.5 flex-shrink-0">
+                            <span class="block text-sm font-bold leading-tight">02.10.</span>
+                            <span class="block text-[10px] text-red-200">2026</span>
+                        </div>
+                        <div class="text-slate-900 font-bold">Preisbinokel</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- ================= PADEL ================= -->
+    <main id="page-padel" class="page-section bg-white min-h-screen py-8 sm:py-10">
+        <div class="max-w-[1600px] mx-auto px-4">
+
+            <!-- Header -->
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6 sm:mb-8">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-[#A31D11]">Padel-Buchung</span>
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 mt-1">Verfügbare Plätze</h2>
+                </div>
+                <div class="flex items-center gap-4 text-sm text-slate-600">
+                    <span class="inline-flex items-center gap-2"><span class="live-dot"></span> Live-Verfügbarkeit</span>
+                    <span class="hidden sm:inline-flex items-center gap-2 text-slate-400"><i class="fa-regular fa-clock"></i> 30-Min-Takt</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-6 items-start w-full">
+
+                <!-- LEFT: Booking + Info -->
+                <div class="flex-grow lg:w-3/4 flex flex-col gap-5 sm:gap-6 w-full overflow-hidden">
+
+                    <!-- WhatsApp Card -->
+                    <div class="bg-gradient-to-r from-[#25D366]/10 to-[#25D366]/5 border border-[#25D366]/30 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
+                        <div class="flex items-center gap-4 w-full md:w-auto">
+                            <div class="w-12 h-12 sm:w-14 sm:h-14 bg-[#25D366] rounded-full flex items-center justify-center text-white text-2xl sm:text-3xl shadow-md flex-shrink-0">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-base sm:text-lg">Bequem per WhatsApp buchen!</h4>
+                                <p class="text-xs sm:text-sm text-slate-600 leading-snug">Schreib unserem KI-Assistenten deinen Wunschtermin – Buchung & Schlägerverleih in Sekunden erledigt.</p>
+                            </div>
+                        </div>
+                        <a href="https://wa.me/4915112345678" target="_blank" class="w-full md:w-auto text-center whitespace-nowrap bg-[#25D366] text-white px-6 sm:px-8 py-3 rounded-full font-bold shadow-md hover:bg-[#1ebd5a] transition hover:-translate-y-1 text-sm sm:text-base">
+                            <i class="fa-brands fa-whatsapp mr-2"></i>+49 151 1234 5678
+                        </a>
+                    </div>
+
+                    <!-- Date selector -->
+                    <div class="card p-4 sm:p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-bold text-slate-900 text-sm sm:text-base"><i class="fa-regular fa-calendar text-[#A31D11] mr-2"></i>Datum wählen</h4>
+                            <span id="selected-date-label" class="text-xs sm:text-sm text-slate-500 font-medium">Heute</span>
+                        </div>
+                        <div id="date-selector" class="flex gap-2 overflow-x-auto no-scrollbar -mx-1 px-1 pb-1"></div>
+                    </div>
+
+                    <!-- Booking Widget -->
+                    <div class="booking-widget">
+                        <div class="flex items-center p-4 bg-slate-50 border-b border-slate-200 gap-4">
+                            <div class="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center p-1.5 shadow-sm flex-shrink-0">
+                                <img src="Logo%20NEU.png" alt="ThinkUp-AI" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                <span style="display:none;" class="text-white text-[10px] font-bold">TU</span>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-bold text-slate-900 text-sm">Padel-Platz Übersicht <span class="text-slate-400 font-normal">(30 Min. Takt)</span></h4>
+                                <p class="text-[11px] sm:text-xs text-slate-500 truncate">Bequem buchen & verwalten, powered by <span class="font-bold">ThinkUp-AI</span></p>
+                            </div>
+                        </div>
+
+                        <div class="scroll-hint">
+                            <i class="fa-solid fa-arrows-left-right"></i>
+                            Horizontal scrollen für weitere Zeiten
+                        </div>
+
+                        <div class="overflow-x-auto relative w-full">
+                            <div class="booking-grid min-w-[1180px]" id="booking-grid">
+                                <!-- Wird per JS gefüllt -->
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-4 sm:p-5 flex flex-col md:flex-row justify-between items-start md:items-center text-sm border-t border-slate-200 gap-4">
+                            <div class="flex flex-wrap gap-3 sm:gap-5">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-4 h-4 rounded-full border-2 border-slate-300 bg-white"></div>
+                                    <span class="text-slate-600 font-medium">Verfügbar</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-4 h-4 rounded-full" style="background: repeating-linear-gradient(45deg, #cbd5e1 0, #cbd5e1 2px, #b8c2cf 2px, #b8c2cf 4px);"></div>
+                                    <span class="text-slate-600 font-medium">Belegt</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-4 h-4 rounded-full bg-[#A31D11] shadow"></div>
+                                    <span class="text-slate-600 font-medium">Deine Auswahl</span>
+                                </div>
+                            </div>
+                            <div class="text-xs text-slate-400 hidden md:block">
+                                Tippe Slots an, um sie auszuwählen
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Selection Summary -->
+                    <div id="selection-bar" class="selection-bar items-center justify-between flex-col sm:flex-row gap-4">
+                        <div class="flex items-center gap-4 w-full sm:w-auto">
+                            <div class="w-12 h-12 bg-white/15 rounded-full flex items-center justify-center text-2xl flex-shrink-0">
+                                <i class="fa-regular fa-clock"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs text-white/80 uppercase tracking-wider font-bold">Deine Auswahl</div>
+                                <div id="selection-summary-text" class="font-bold text-base sm:text-lg leading-tight">–</div>
+                            </div>
+                        </div>
+                        <button onclick="openModal()" class="bg-white text-[#A31D11] px-6 sm:px-8 py-3 rounded-full font-bold hover:bg-slate-100 transition shadow-md flex items-center gap-2 w-full sm:w-auto justify-center whitespace-nowrap">
+                            Platz buchen <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Padel Info Section -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-2">
+                        <div class="card p-5 sm:p-6 border-l-4 border-[#A31D11]">
+                            <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-circle-info text-[#A31D11]"></i> Was ist Padel?</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3">Padel ist die am schnellsten wachsende Sportart Europas: ein Mix aus Tennis und Squash, gespielt zu viert auf einem Court mit Glaswänden. Schnell erlernbar, riesiger Spaßfaktor.</p>
+                            <ul class="text-sm text-slate-700 space-y-1.5 mt-3">
+                                <li><i class="fa-solid fa-check text-[#A31D11] mr-2"></i>2 brandneue Outdoor-Courts</li>
+                                <li><i class="fa-solid fa-check text-[#A31D11] mr-2"></i>Flutlicht für Abend-Spiele</li>
+                                <li><i class="fa-solid fa-check text-[#A31D11] mr-2"></i>Schlägerverleih vor Ort</li>
+                            </ul>
+                        </div>
+                        <div class="card p-5 sm:p-6 border-l-4 border-[#FDE047]">
+                            <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-tag text-amber-500"></i> Preise</h4>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                                    <span class="text-slate-700">Mitglied <span class="text-slate-400">(pro Person / Std.)</span></span>
+                                    <span class="font-bold text-slate-900">3,75 €</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                                    <span class="text-slate-700">Gast <span class="text-slate-400">(pro Person / Std.)</span></span>
+                                    <span class="font-bold text-slate-900">7,50 €</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2">
+                                    <span class="text-slate-700">Schlägerverleih <span class="text-slate-400">(pro Schläger)</span></span>
+                                    <span class="font-bold text-slate-900">2,00 €</span>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-3 leading-relaxed"><i class="fa-solid fa-circle-info mr-1"></i> Padel wird zu viert gespielt. Der Endpreis ergibt sich aus der Summe der Spieler-Anteile zzgl. optionalem Schlägerverleih.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: Chat (Desktop only sidebar) -->
+                <div class="hidden lg:block lg:w-1/4 w-full flex-shrink-0 lg:sticky lg:top-28 self-start">
+                    <div class="chat-container h-[640px]">
+                        <div class="chat-header p-4 sm:p-5 flex items-center gap-4">
+                            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center border-2 border-white shadow-md overflow-hidden p-1 flex-shrink-0">
+                                <img src="logo%20tcf.jpg" alt="TCF Bot" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                <i style="display:none;" class="fa-solid fa-robot text-[#A31D11] text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-[15px] text-white flex items-center gap-2">TC Frittlingen <span class="live-dot"></span></h3>
+                                <p class="text-[11px] text-white/90 font-bold">KI-Assistent · Padel-Buchung</p>
+                            </div>
+                        </div>
+
+                        <div class="flex-grow p-4 sm:p-5 flex flex-col overflow-y-auto bg-white" id="chat-box-desktop">
+                            <div class="chat-bubble bot-msg">Willkommen beim TC Frittlingen! 👋 Ich helfe dir bei der Padel-Buchung. Frag mich nach freien Slots, Preisen oder unserem Schlägerverleih.</div>
+                            <div class="chat-bubble bot-msg">Beispiele:<br>• „Wann ist Padel 1 morgen frei?"<br>• „Was kostet eine Stunde für 2 Mitglieder & 2 Gäste?"</div>
+                        </div>
+
+                        <div class="chat-input-area">
+                            <form id="chat-form-desktop" onsubmit="sendMessage(event, 'desktop')" class="chat-input-wrapper">
+                                <input type="text" id="chat-input-desktop" autocomplete="off" placeholder="Nachricht eingeben…" class="w-full bg-transparent border-none py-2 pl-4 pr-2 text-sm text-slate-700 focus:outline-none placeholder-slate-400">
+                                <button type="submit" aria-label="Senden" class="w-9 h-9 bg-[#FDE047] rounded-full flex items-center justify-center hover:bg-yellow-400 transition ml-2 shadow-sm flex-shrink-0">
+                                    <i class="fa-regular fa-paper-plane text-slate-900"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ================= MOBILE FLOATING CHAT BUTTON ================= -->
+    <button id="chat-fab" class="chat-fab" onclick="openChatSheet()" aria-label="Chat öffnen">
+        <i class="fa-solid fa-comments"></i>
+        <span class="fab-dot"></span>
+    </button>
+
+    <!-- ================= MOBILE CHAT SHEET ================= -->
+    <div id="chat-sheet" class="chat-sheet">
+        <div class="chat-header p-4 flex items-center gap-4">
+            <button onclick="closeChatSheet()" aria-label="Chat schließen" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white shadow-md overflow-hidden p-1 flex-shrink-0">
+                <img src="logo%20tcf.jpg" alt="TCF Bot" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                <i style="display:none;" class="fa-solid fa-robot text-[#A31D11] text-xl"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-[15px] text-white flex items-center gap-2">TC Frittlingen <span class="live-dot"></span></h3>
+                <p class="text-[11px] text-white/90 font-bold">KI-Assistent</p>
+            </div>
+        </div>
+        <div class="flex-grow p-4 flex flex-col overflow-y-auto bg-white" id="chat-box-mobile">
+            <div class="chat-bubble bot-msg">Willkommen beim TC Frittlingen! 👋 Ich helfe dir bei der Padel-Buchung. Frag mich nach freien Slots, Preisen oder unserem Schlägerverleih.</div>
+        </div>
+        <div class="chat-input-area" style="padding-bottom: calc(14px + var(--safe-bottom));">
+            <form id="chat-form-mobile" onsubmit="sendMessage(event, 'mobile')" class="chat-input-wrapper">
+                <input type="text" id="chat-input-mobile" autocomplete="off" placeholder="Nachricht eingeben…" class="w-full bg-transparent border-none py-2 pl-4 pr-2 text-base text-slate-700 focus:outline-none placeholder-slate-400">
+                <button type="submit" aria-label="Senden" class="w-10 h-10 bg-[#FDE047] rounded-full flex items-center justify-center hover:bg-yellow-400 transition ml-2 shadow-sm flex-shrink-0">
+                    <i class="fa-regular fa-paper-plane text-slate-900"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MODAL ================= -->
+    <div id="booking-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button onclick="closeModal()" aria-label="Schließen" class="absolute top-4 right-4 text-slate-500 hover:text-slate-900 transition z-50 bg-white border border-slate-200 rounded-full w-9 h-9 flex items-center justify-center shadow-sm">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- STEP 1: FORM -->
+            <form id="booking-form" onsubmit="goToPayment(event)" class="modal-step">
+
+                <div class="modal-body bg-white">
+                    <h3 class="text-xl sm:text-2xl font-black text-slate-900 mb-2 mt-1 pr-10">Spieler eintragen</h3>
+                    <p class="text-sm text-slate-500 mb-4">Padel wird zu viert gespielt. Bitte gib an, wer Mitglied ist – das senkt den Preis pro Anteil.</p>
+
+                    <!-- Booking summary in modal -->
+                    <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-4 rounded-xl mb-5 shadow">
+                        <div class="text-[11px] uppercase tracking-wider font-bold text-[#FDE047] mb-1">Deine Buchung</div>
+                        <div class="flex items-center justify-between gap-3 flex-wrap">
+                            <div>
+                                <div class="font-bold text-base sm:text-lg" id="modal-court-time">Padel · Heute</div>
+                                <div class="text-xs text-slate-300" id="modal-court-detail">–</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-[11px] text-slate-300 uppercase">Dauer</div>
+                                <div class="font-black text-lg" id="modal-duration">0,0 h</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 sm:p-5 rounded-xl border border-slate-200 mb-4 shadow-sm">
+                        <h4 class="font-bold text-[#A31D11] mb-3 border-b border-slate-200 pb-2"><i class="fa-solid fa-user-check mr-2"></i>Spieler 1 (Hauptbucher)</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                            <input type="text" required placeholder="Vorname" class="field-input">
+                            <input type="text" required placeholder="Nachname" class="field-input">
+                        </div>
+                        <input type="email" required placeholder="E-Mail-Adresse" class="field-input mb-3">
+                        <select id="p1-status" onchange="calculatePrice()" class="field-input mb-3 font-medium">
+                            <option value="guest">Gast (7,50 €/h Anteil)</option>
+                            <option value="member">Mitglied (3,75 €/h Anteil)</option>
+                        </select>
+                        <div id="p1-id-field" class="hidden">
+                            <input type="text" id="p1-id" placeholder="Mitgliedsnummer *" class="field-input">
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
+                        <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide">Spieler 2</h4>
+                        <input type="text" required placeholder="Vollständiger Name" class="field-input mb-3">
+                        <select id="p2-status" onchange="calculatePrice()" class="field-input mb-3">
+                            <option value="guest">Gast (7,50 €/h Anteil)</option>
+                            <option value="member">Mitglied (3,75 €/h Anteil)</option>
+                        </select>
+                        <div id="p2-id-field" class="hidden"><input type="text" id="p2-id" placeholder="Mitgliedsnummer *" class="field-input"></div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
+                        <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide">Spieler 3</h4>
+                        <input type="text" required placeholder="Vollständiger Name" class="field-input mb-3">
+                        <select id="p3-status" onchange="calculatePrice()" class="field-input mb-3">
+                            <option value="guest">Gast (7,50 €/h Anteil)</option>
+                            <option value="member">Mitglied (3,75 €/h Anteil)</option>
+                        </select>
+                        <div id="p3-id-field" class="hidden"><input type="text" id="p3-id" placeholder="Mitgliedsnummer *" class="field-input"></div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
+                        <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide">Spieler 4</h4>
+                        <input type="text" required placeholder="Vollständiger Name" class="field-input mb-3">
+                        <select id="p4-status" onchange="calculatePrice()" class="field-input mb-3">
+                            <option value="guest">Gast (7,50 €/h Anteil)</option>
+                            <option value="member">Mitglied (3,75 €/h Anteil)</option>
+                        </select>
+                        <div id="p4-id-field" class="hidden"><input type="text" id="p4-id" placeholder="Mitgliedsnummer *" class="field-input"></div>
+                    </div>
+
+                    <!-- Schlägerverleih -->
+                    <div class="bg-[#FDE047]/15 p-4 rounded-xl border border-[#FDE047]/60">
+                        <div class="flex items-start gap-3 mb-3">
+                            <div class="w-10 h-10 bg-[#FDE047] rounded-lg flex items-center justify-center text-slate-900 text-lg flex-shrink-0">
+                                <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm">Schlägerverleih</h4>
+                                <p class="text-xs text-slate-500">Kein eigener Schläger? Leih dir welche für je 2,00 €.</p>
+                            </div>
+                        </div>
+                        <label for="racket-count" class="block text-sm font-medium text-slate-700 mb-1">Anzahl Schläger</label>
+                        <select id="racket-count" onchange="calculatePrice()" class="field-input font-medium">
+                            <option value="0">Keine – wir bringen eigene Schläger mit</option>
+                            <option value="1">1 Schläger (2,00 €)</option>
+                            <option value="2">2 Schläger (4,00 €)</option>
+                            <option value="3">3 Schläger (6,00 €)</option>
+                            <option value="4">4 Schläger (8,00 €)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                    <div class="flex justify-between items-center mb-1 text-sm">
+                        <span class="text-slate-600 font-medium">Spielzeit: <span id="summary-time" class="font-bold text-slate-900">0,0 h</span></span>
+                        <span class="text-slate-600 font-medium" id="summary-players">4 Gäste, 0 Mitglieder</span>
+                    </div>
+                    <div class="flex justify-between items-center mb-2 text-sm">
+                        <span class="text-slate-600 font-medium">Platzmiete: <span id="summary-court" class="font-bold text-slate-900">0,00 €</span></span>
+                        <span class="text-slate-600 font-medium">Schläger: <span id="summary-rackets" class="font-bold text-slate-900">0,00 €</span></span>
+                    </div>
+                    <div class="flex justify-between items-center mb-3 pt-2 border-t border-slate-200">
+                        <span class="text-base sm:text-lg font-bold text-slate-900">Gesamtbetrag:</span>
+                        <span id="summary-price" class="text-2xl font-black text-[#A31D11]">0,00 €</span>
+                    </div>
+                    <button type="submit" class="w-full bg-[#A31D11] hover:bg-[#8a180e] text-white py-3.5 rounded-xl font-bold text-base sm:text-lg transition shadow-md flex items-center justify-center gap-2">
+                        Weiter zur Zahlung <i class="fa-solid fa-arrow-right text-sm"></i>
+                    </button>
+                </div>
+            </form>
+
+            <!-- STEP 2: PAYMENT -->
+            <div id="modal-step-payment" class="modal-step hidden">
+                <div class="modal-body">
+                    <div class="flex items-center gap-3 mb-6 mt-1 pr-10">
+                        <button type="button" onclick="backToForm()" class="text-slate-400 hover:text-slate-700 transition"><i class="fa-solid fa-arrow-left text-xl"></i></button>
+                        <h3 class="text-xl sm:text-2xl font-black text-slate-900">Zahlung</h3>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="flex items-center justify-between p-4 border-2 border-[#A31D11] bg-red-50/50 rounded-xl cursor-pointer transition shadow-sm">
+                            <div class="flex items-center gap-4">
+                                <input type="radio" name="payment" checked class="w-5 h-5 accent-[#A31D11]">
+                                <span class="font-bold text-slate-800 text-base sm:text-lg">PayPal</span>
+                            </div>
+                            <i class="fa-brands fa-paypal text-3xl text-[#00457C]"></i>
+                        </label>
+                        <label class="flex items-center justify-between p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
+                            <div class="flex items-center gap-4">
+                                <input type="radio" name="payment" class="w-5 h-5 accent-[#A31D11]">
+                                <span class="font-bold text-slate-800 text-base sm:text-lg">Kreditkarte</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <i class="fa-brands fa-cc-visa text-3xl text-slate-600"></i>
+                                <i class="fa-brands fa-cc-mastercard text-3xl text-slate-600"></i>
+                            </div>
+                        </label>
+                        <label class="flex items-center justify-between p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
+                            <div class="flex items-center gap-4">
+                                <input type="radio" name="payment" class="w-5 h-5 accent-[#A31D11]">
+                                <span class="font-bold text-slate-800 text-base sm:text-lg">SEPA-Lastschrift</span>
+                            </div>
+                            <i class="fa-solid fa-building-columns text-3xl text-slate-500"></i>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" onclick="processPayment()" class="w-full bg-green-600 text-white py-3.5 rounded-xl font-bold text-base sm:text-lg hover:bg-green-700 transition shadow-md flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-lock"></i> Verbindlich zahlen (<span id="pay-btn-amount">0,00 €</span>)
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 3: SUCCESS -->
+            <div id="modal-step-success" class="modal-step hidden items-center justify-center text-center p-6 sm:p-8">
+                <div class="w-20 h-20 sm:w-24 sm:h-24 bg-green-100 rounded-full flex items-center justify-center mb-5 shadow-inner mt-4">
+                    <i class="fa-solid fa-check text-4xl sm:text-5xl text-green-500"></i>
+                </div>
+                <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mb-3">Buchung erfolgreich!</h3>
+                <p class="text-slate-600 leading-relaxed mb-6 max-w-sm text-base sm:text-lg">
+                    Vielen Dank! Wir haben dir eine Bestätigungsmail mit allen Details und deinem <strong class="text-slate-900">persönlichen Zugangscode für die Anlage</strong> gesendet.
+                </p>
+                <button onclick="closeModal()" class="w-full sm:w-auto sm:px-12 bg-[#A31D11] text-white py-3.5 rounded-xl font-bold text-base sm:text-lg hover:bg-[#8a180e] transition shadow-md">
+                    Zurück zur Übersicht
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-slate-900 text-slate-300 pt-12 sm:pt-16 pb-8 mt-auto border-t-[5px] border-[#A31D11]">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+                <div class="lg:col-span-2">
+                    <h4 class="font-black text-xl text-white tracking-tight mb-3">TC FRITTLINGEN E.V.</h4>
+                    <p class="text-sm text-slate-400 leading-relaxed max-w-md">
+                        Seit 50 Jahren das Zuhause für Tennis, Beach und ab jetzt Padel in Frittlingen.
+                        Werde Teil unserer Vereinsfamilie.
+                    </p>
+                    <button onclick="switchPage('verein')" class="mt-4 inline-flex items-center gap-2 text-[#FDE047] font-bold text-sm hover:gap-3 transition-all">
+                        Mitglied werden <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+                <div>
+                    <h5 class="font-bold text-white text-sm uppercase tracking-wider mb-4">Quicklinks</h5>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" onclick="switchPage('padel'); return false;" class="hover:text-[#FDE047] transition">Padel buchen</a></li>
+                        <li><a href="#" onclick="switchPage('tennis'); return false;" class="hover:text-[#FDE047] transition">Tennisplätze</a></li>
+                        <li><a href="#" onclick="switchPage('mannschaften'); return false;" class="hover:text-[#FDE047] transition">Mannschaften</a></li>
+                        <li><a href="#" onclick="switchPage('aktuell'); return false;" class="hover:text-[#FDE047] transition">Termine</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold text-white text-sm uppercase tracking-wider mb-4">Kontakt</h5>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="mailto:vorstand@tc-frittlingen.de" class="hover:text-[#FDE047] transition break-all"><i class="fa-regular fa-envelope mr-2"></i>vorstand@tc-frittlingen.de</a></li>
+                        <li><a href="https://www.google.com/maps?q=Tennisclub+Frittlingen+R%C3%B6merstra%C3%9Fe+78665+Frittlingen" target="_blank" class="hover:text-[#FDE047] transition"><i class="fa-solid fa-location-dot mr-2"></i>Römerstraße/Schildeckstraße<br><span class="ml-5">78665 Frittlingen</span></a></li>
+                        <li><a href="https://wa.me/4915112345678" target="_blank" class="hover:text-[#FDE047] transition"><i class="fa-brands fa-whatsapp mr-2"></i>+49 151 1234 5678</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-slate-500">
+                <p>© <span id="footer-year">2026</span> TC Frittlingen e.V. – Alle Rechte vorbehalten.</p>
+                <p>Padel-Buchung powered by <span class="font-bold text-slate-300">ThinkUp-AI</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ===== PAGE SWITCHING =====
+        function switchPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(el => el.classList.remove('active-nav'));
+            const target = document.getElementById('page-' + pageId);
+            if (target) target.classList.add('active');
+            const navLink = document.getElementById('nav-' + pageId);
+            if (navLink) navLink.classList.add('active-nav');
+            const mNavLink = document.getElementById('mnav-' + pageId);
+            if (mNavLink) mNavLink.classList.add('active-nav');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            updateChatFab();
+        }
+
+        // ===== MOBILE DRAWER =====
+        function toggleDrawer() {
+            const d = document.getElementById('mobile-drawer');
+            d.classList.toggle('open');
+            document.body.style.overflow = d.classList.contains('open') ? 'hidden' : '';
+        }
+
+        // ===== CHAT FAB (Mobile only, Padel page only) =====
+        function updateChatFab() {
+            const fab = document.getElementById('chat-fab');
+            const isPadel = document.getElementById('page-padel').classList.contains('active');
+            const isMobile = window.innerWidth < 1024;
+            fab.style.display = (isPadel && isMobile) ? 'flex' : 'none';
+        }
+        window.addEventListener('resize', updateChatFab);
+
+        function openChatSheet() {
+            document.getElementById('chat-sheet').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeChatSheet() {
+            document.getElementById('chat-sheet').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // ===== DATE SELECTOR =====
+        const WEEKDAYS = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+        const MONTHS = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+        let selectedDateIndex = 0;
+
+        function buildDateSelector() {
+            const container = document.getElementById('date-selector');
+            container.innerHTML = '';
+            const today = new Date();
+            for (let i = 0; i < 14; i++) {
+                const d = new Date(today);
+                d.setDate(today.getDate() + i);
+                const label = i === 0 ? 'Heute' : (i === 1 ? 'Morgen' : WEEKDAYS[d.getDay()]);
+                const sub = `${d.getDate()}. ${MONTHS[d.getMonth()]}`;
+                const pill = document.createElement('button');
+                pill.type = 'button';
+                pill.className = 'date-pill' + (i === 0 ? ' active' : '');
+                pill.innerHTML = `<span>${label}</span><span class="date-sub">${sub}</span>`;
+                pill.onclick = () => selectDate(i, label, sub, pill);
+                container.appendChild(pill);
+            }
+        }
+
+        function selectDate(idx, label, sub, pill) {
+            selectedDateIndex = idx;
+            document.querySelectorAll('.date-pill').forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            document.getElementById('selected-date-label').innerText = `${label}, ${sub}`;
+            document.querySelectorAll('.slot.selected').forEach(s => s.classList.remove('selected'));
+            updateSelectionBar();
+            randomizeOccupancy();
+        }
+
+        // ===== BOOKING GRID =====
+        const HOURS = [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
+        const COURTS = ['Padel 1', 'Padel 2'];
+
+        function buildBookingGrid() {
+            const grid = document.getElementById('booking-grid');
+            grid.innerHTML = '';
+            const emptyHeader = document.createElement('div');
+            emptyHeader.className = 'grid-header-empty';
+            grid.appendChild(emptyHeader);
+            HOURS.forEach(h => {
+                const hd = document.createElement('div');
+                hd.className = 'grid-header';
+                hd.style.gridColumn = 'span 2';
+                hd.innerText = `${String(h).padStart(2,'0')}:00`;
+                grid.appendChild(hd);
+            });
+            COURTS.forEach((court, courtIdx) => {
+                const rowHeader = document.createElement('div');
+                rowHeader.className = 'grid-row-header';
+                rowHeader.innerHTML = `<span class="court-dot"></span>${court}`;
+                grid.appendChild(rowHeader);
+                HOURS.forEach(h => {
+                    [0, 30].forEach(min => {
+                        const slot = document.createElement('div');
+                        slot.className = 'slot';
+                        slot.dataset.court = court;
+                        slot.dataset.hour = h;
+                        slot.dataset.min = min;
+                        slot.dataset.courtIdx = courtIdx;
+                        slot.addEventListener('click', () => toggleSlot(slot));
+                        grid.appendChild(slot);
+                    });
+                });
+            });
+            randomizeOccupancy();
+        }
+
+        function randomizeOccupancy() {
+            const slots = document.querySelectorAll('.slot');
+            slots.forEach(s => {
+                s.classList.remove('occupied', 'selected');
+                const h = parseInt(s.dataset.hour, 10);
+                const evening = h >= 17 ? 0.5 : 0.25;
+                if (Math.random() < evening) s.classList.add('occupied');
+            });
+        }
+
+        function toggleSlot(slot) {
+            if (slot.classList.contains('occupied')) return;
+            slot.classList.toggle('selected');
+            updateSelectionBar();
+        }
+
+        function updateSelectionBar() {
+            const selected = Array.from(document.querySelectorAll('.slot.selected'));
+            const bar = document.getElementById('selection-bar');
+            if (selected.length === 0) {
+                bar.classList.remove('show');
+                return;
+            }
+            bar.classList.add('show');
+
+            const byCourt = {};
+            selected.forEach(s => {
+                const c = s.dataset.court;
+                if (!byCourt[c]) byCourt[c] = [];
+                byCourt[c].push(s);
+            });
+            const summaries = [];
+            Object.entries(byCourt).forEach(([court, list]) => {
+                list.sort((a, b) => (a.dataset.hour - b.dataset.hour) || (a.dataset.min - b.dataset.min));
+                const first = list[0];
+                const last = list[list.length - 1];
+                const startH = String(first.dataset.hour).padStart(2,'0');
+                const startM = String(first.dataset.min).padStart(2,'0');
+                let endH = parseInt(last.dataset.hour, 10);
+                let endM = parseInt(last.dataset.min, 10) + 30;
+                if (endM >= 60) { endH += 1; endM -= 60; }
+                summaries.push(`${court}: ${startH}:${startM}–${String(endH).padStart(2,'0')}:${String(endM).padStart(2,'0')}`);
+            });
+            document.getElementById('selection-summary-text').innerText = summaries.join(' · ');
+        }
+
+        // ===== MODAL =====
+        function openModal() {
+            const selected = document.querySelectorAll('.slot.selected');
+            const dateLabel = document.getElementById('selected-date-label').innerText;
+            const selectionText = document.getElementById('selection-summary-text').innerText;
+            document.getElementById('modal-court-time').innerText = dateLabel;
+            document.getElementById('modal-court-detail').innerText = selectionText;
+            const hours = (selected.length * 0.5).toFixed(1).replace('.', ',');
+            document.getElementById('modal-duration').innerText = `${hours} h`;
+
+            document.getElementById('booking-modal').classList.add('open');
+            document.getElementById('booking-form').classList.remove('hidden');
+            document.getElementById('modal-step-payment').classList.add('hidden');
+            document.getElementById('modal-step-success').classList.add('hidden');
+            document.body.style.overflow = 'hidden';
+            calculatePrice();
+        }
+
+        function closeModal() {
+            document.getElementById('booking-modal').classList.remove('open');
+            document.body.style.overflow = '';
+            if (!document.getElementById('modal-step-success').classList.contains('hidden')) {
+                document.querySelectorAll('.slot.selected').forEach(s => s.classList.remove('selected'));
+                updateSelectionBar();
+                document.getElementById('booking-form').reset();
+            }
+        }
+
+        function calculatePrice() {
+            const selectedSlotsCount = document.querySelectorAll('.slot.selected').length;
+            const hours = selectedSlotsCount * 0.5;
+            let membersCount = 0, guestsCount = 0;
+
+            for (let i = 1; i <= 4; i++) {
+                const status = document.getElementById(`p${i}-status`).value;
+                const idField = document.getElementById(`p${i}-id-field`);
+                const idInput = document.getElementById(`p${i}-id`);
+                if (status === 'member') {
+                    membersCount++;
+                    idField.classList.remove('hidden');
+                    idInput.setAttribute('required', 'true');
+                } else {
+                    guestsCount++;
+                    idField.classList.add('hidden');
+                    idInput.removeAttribute('required');
+                }
+            }
+
+            // Platzmiete (Spieler-Anteile pro Stunde)
+            const hourlyTotal = (guestsCount * 7.50) + (membersCount * 3.75);
+            const courtTotal = hourlyTotal * hours;
+
+            // Schlägerverleih (2,00 € pauschal pro Schläger)
+            const racketCount = parseInt(document.getElementById('racket-count').value, 10) || 0;
+            const racketTotal = racketCount * 2.00;
+
+            const finalTotal = courtTotal + racketTotal;
+
+            const fmt = (v) => v.toFixed(2).replace('.', ',') + ' €';
+            document.getElementById('summary-time').innerText = hours.toString().replace('.', ',') + ' h';
+            document.getElementById('summary-players').innerText = `${guestsCount} Gäste, ${membersCount} Mitglieder`;
+            document.getElementById('summary-court').innerText = fmt(courtTotal);
+            document.getElementById('summary-rackets').innerText = fmt(racketTotal);
+            document.getElementById('summary-price').innerText = fmt(finalTotal);
+            document.getElementById('pay-btn-amount').innerText = fmt(finalTotal);
+        }
+
+        function goToPayment(e) {
+            e.preventDefault();
+            document.getElementById('booking-form').classList.add('hidden');
+            document.getElementById('modal-step-payment').classList.remove('hidden');
+        }
+
+        function backToForm() {
+            document.getElementById('modal-step-payment').classList.add('hidden');
+            document.getElementById('booking-form').classList.remove('hidden');
+        }
+
+        function processPayment() {
+            document.getElementById('modal-step-payment').classList.add('hidden');
+            document.getElementById('modal-step-success').classList.remove('hidden');
+        }
+
+        // ===== CHAT (Demo) =====
+        const BOT_REPLIES = [
+            "Klar! Welcher Tag passt dir denn?",
+            "Padel 1 ist morgen ab 18:00 Uhr noch 90 Minuten frei. Soll ich für dich reservieren?",
+            "Eine Stunde für 2 Mitglieder & 2 Gäste kostet insgesamt 22,50 €.",
+            "Schlägerverleih kostet 2,00 € pro Schläger. Soll ich welche zur Buchung hinzufügen?",
+            "Alles klar – du bekommst gleich die Bestätigung per E-Mail."
+        ];
+        let botIdx = 0;
+        function sendMessage(e, target) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input-' + target);
+            const box = document.getElementById('chat-box-' + target);
+            const txt = input.value.trim();
+            if (!txt) return;
+            const u = document.createElement('div');
+            u.className = 'chat-bubble user-msg';
+            u.innerText = txt;
+            box.appendChild(u);
+            input.value = '';
+            box.scrollTop = box.scrollHeight;
+            setTimeout(() => {
+                const b = document.createElement('div');
+                b.className = 'chat-bubble bot-msg';
+                b.innerText = BOT_REPLIES[botIdx % BOT_REPLIES.length];
+                botIdx++;
+                box.appendChild(b);
+                box.scrollTop = box.scrollHeight;
+            }, 700);
+        }
+
+        // ===== INIT =====
+        document.getElementById('footer-year').innerText = new Date().getFullYear();
+        buildDateSelector();
+        buildBookingGrid();
+        updateChatFab();
+    </script>
+</body>
+</html>
