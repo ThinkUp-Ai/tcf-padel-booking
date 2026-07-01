@@ -774,9 +774,12 @@
                     <span class="text-xs font-bold uppercase tracking-wider text-[#A31D11]">Padel-Buchung</span>
                     <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 mt-1">Verfügbare Plätze</h2>
                 </div>
-                <div class="flex items-center gap-4 text-sm text-slate-600">
-                    <span class="inline-flex items-center gap-2"><span class="live-dot"></span> Live-Verfügbarkeit</span>
-                    <span class="hidden sm:inline-flex items-center gap-2 text-slate-400"><i class="fa-regular fa-clock"></i> Stundentakt</span>
+                <div class="flex items-center gap-3 flex-wrap">
+                    <span class="inline-flex items-center gap-2 text-sm text-slate-600"><span class="live-dot"></span> Live-Verfügbarkeit</span>
+                    <span class="hidden md:inline-flex items-center gap-2 text-sm text-slate-400"><i class="fa-regular fa-clock"></i> Stundentakt</span>
+                    <button type="button" onclick="openStorno()" class="inline-flex items-center gap-2 border-2 border-[#A31D11] text-[#A31D11] hover:bg-[#A31D11] hover:text-white font-bold text-sm px-4 py-2.5 rounded-lg transition">
+                        <i class="fa-solid fa-rotate-left"></i> Buchung stornieren
+                    </button>
                 </div>
             </div>
 
@@ -1304,7 +1307,6 @@
                     <h5 class="font-bold text-white text-sm uppercase tracking-wider mb-4">Quicklinks</h5>
                     <ul class="space-y-2 text-sm">
                         <li><a href="#" onclick="switchPage('padel'); return false;" class="hover:text-[#FDE047] transition">Padel buchen</a></li>
-                        <li><a href="#" onclick="openStorno(); return false;" class="hover:text-[#FDE047] transition">Buchung stornieren</a></li>
                         <li><a href="#" onclick="switchPage('tennis'); return false;" class="hover:text-[#FDE047] transition">Tennisplätze</a></li>
                         <li><a href="#" onclick="switchPage('mannschaften'); return false;" class="hover:text-[#FDE047] transition">Mannschaften</a></li>
                         <li><a href="#" onclick="openAgb(); return false;" class="hover:text-[#FDE047] transition">AGB &amp; Nutzungsordnung</a></li>
