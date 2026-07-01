@@ -963,50 +963,29 @@
                         </div>
                     </div>
 
+                    <!-- Hauptbucher -->
                     <div class="bg-slate-50 p-4 sm:p-5 rounded-xl border border-slate-200 mb-4 shadow-sm">
-                        <h4 class="font-bold text-[#A31D11] mb-3 border-b border-slate-200 pb-2"><i class="fa-solid fa-user-check mr-2"></i>Spieler 1 (Hauptbucher)</h4>
+                        <h4 class="font-bold text-[#A31D11] mb-3 border-b border-slate-200 pb-2"><i class="fa-solid fa-user-check mr-2"></i>Deine Daten (Hauptbucher)</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                             <input type="text" id="p1-first" required placeholder="Vorname" class="field-input">
                             <input type="text" id="p1-last" required placeholder="Nachname" class="field-input">
                         </div>
-                        <input type="email" id="p1-email" required placeholder="E-Mail-Adresse" class="field-input mb-3">
-                        <select id="p1-status" onchange="calculatePrice()" class="field-input mb-3 font-medium">
-                            <option value="guest">Gast</option>
-                            <option value="member">Mitglied (−4 € Rabatt/Std.)</option>
-                        </select>
-                        <div id="p1-id-field" class="hidden">
-                            <input type="text" id="p1-id" placeholder="Mitgliedsnummer *" class="field-input">
-                        </div>
+                        <input type="email" id="p1-email" required placeholder="E-Mail-Adresse" class="field-input">
                     </div>
 
+                    <!-- Mitglieder im Team -->
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
-                        <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide">Spieler 2</h4>
-                        <input type="text" id="p2-name" required placeholder="Vollständiger Name" class="field-input mb-3">
-                        <select id="p2-status" onchange="calculatePrice()" class="field-input mb-3">
-                            <option value="guest">Gast</option>
-                            <option value="member">Mitglied (−4 € Rabatt/Std.)</option>
+                        <h4 class="font-bold text-slate-700 mb-1 text-sm uppercase tracking-wide">Mitglieder im Team</h4>
+                        <p class="text-xs text-slate-500 mb-3">Jedes mitspielende Mitglied senkt den Preis um 4 € pro Stunde. Der Hauptbucher zählt mit, falls er Mitglied ist.</p>
+                        <label for="member-count" class="block text-sm font-medium text-slate-700 mb-1">Anzahl Mitglieder (0–4)</label>
+                        <select id="member-count" onchange="onMembersChange()" class="field-input font-medium">
+                            <option value="0">0 – alle Gäste</option>
+                            <option value="1">1 Mitglied</option>
+                            <option value="2">2 Mitglieder</option>
+                            <option value="3">3 Mitglieder</option>
+                            <option value="4">4 Mitglieder</option>
                         </select>
-                        <div id="p2-id-field" class="hidden"><input type="text" id="p2-id" placeholder="Mitgliedsnummer *" class="field-input"></div>
-                    </div>
-
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
-                        <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide">Spieler 3</h4>
-                        <input type="text" id="p3-name" required placeholder="Vollständiger Name" class="field-input mb-3">
-                        <select id="p3-status" onchange="calculatePrice()" class="field-input mb-3">
-                            <option value="guest">Gast</option>
-                            <option value="member">Mitglied (−4 € Rabatt/Std.)</option>
-                        </select>
-                        <div id="p3-id-field" class="hidden"><input type="text" id="p3-id" placeholder="Mitgliedsnummer *" class="field-input"></div>
-                    </div>
-
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
-                        <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide">Spieler 4</h4>
-                        <input type="text" id="p4-name" required placeholder="Vollständiger Name" class="field-input mb-3">
-                        <select id="p4-status" onchange="calculatePrice()" class="field-input mb-3">
-                            <option value="guest">Gast</option>
-                            <option value="member">Mitglied (−4 € Rabatt/Std.)</option>
-                        </select>
-                        <div id="p4-id-field" class="hidden"><input type="text" id="p4-id" placeholder="Mitgliedsnummer *" class="field-input"></div>
+                        <div id="member-names" class="mt-3 space-y-3"></div>
                     </div>
 
                     <!-- Schlägerverleih -->
@@ -1132,7 +1111,7 @@
                 <p>Bei Verstößen gegen diese Bedingungen – insbesondere bei Beschädigung der Anlage, Weitergabe des Zugangscodes, Nutzung außerhalb der gebuchten Zeit oder unsportlichem Verhalten – ist der Verein berechtigt, den betreffenden Personen den weiteren Zutritt zu verweigern, sie von künftigen Buchungen auszuschließen (Sperre) und entstandene Schäden sowie Mehrkosten in Rechnung zu stellen. Diese AGB dienen dem Verein als Handlungsgrundlage für entsprechende Maßnahmen.</p>
 
                 <h4>8. Datenschutz</h4>
-                <p>Die im Rahmen der Buchung erhobenen personenbezogenen Daten (Name, E-Mail, ggf. Mitgliedsnummer) werden ausschließlich zur Abwicklung der Buchung, der Zahlung und der Zutrittsverwaltung verarbeitet und nicht an unbeteiligte Dritte weitergegeben. Details regelt die Datenschutzerklärung des Vereins. Es gelten die Vorgaben der DSGVO.</p>
+                <p>Die im Rahmen der Buchung erhobenen personenbezogenen Daten (Name der Spieler, E-Mail) werden ausschließlich zur Abwicklung der Buchung, der Zahlung und der Zutrittsverwaltung verarbeitet und nicht an unbeteiligte Dritte weitergegeben. Details regelt die Datenschutzerklärung des Vereins. Es gelten die Vorgaben der DSGVO.</p>
 
                 <h4>9. Schlussbestimmungen</h4>
                 <p>Es gilt deutsches Recht. Sollte eine Bestimmung dieser Bedingungen unwirksam sein, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt. Änderungen bedürfen der Textform.</p>
@@ -1403,6 +1382,7 @@
                 document.querySelectorAll('.slot.selected').forEach(s => s.classList.remove('selected'));
                 updateSelectionBar();
                 document.getElementById('booking-form').reset();
+                document.getElementById('member-names').innerHTML = '';
                 loadAvailability();
             }
         }
@@ -1414,24 +1394,26 @@
             document.body.style.overflow = 'hidden';
         }
 
+        function membersCountVal() { return parseInt(document.getElementById('member-count').value, 10) || 0; }
+
+        // Baut pro weiterem Mitglied (über den Hauptbucher hinaus) ein Namensfeld
+        function onMembersChange() {
+            const n = membersCountVal();
+            const box = document.getElementById('member-names');
+            box.innerHTML = '';
+            for (let i = 2; i <= n; i++) {
+                const wrap = document.createElement('div');
+                wrap.innerHTML = '<label class="block text-xs font-medium text-slate-500 mb-1">Name Mitglied ' + i + '</label>' +
+                    '<input type="text" required class="field-input member-name" placeholder="Vollständiger Name">';
+                box.appendChild(wrap);
+            }
+            calculatePrice();
+        }
+
         function calculatePrice() {
             const sel = getSelection();
             const hours = sel ? sel.count : 0;
-            let membersCount = 0, guestsCount = 0;
-            for (let i = 1; i <= 4; i++) {
-                const status = document.getElementById('p' + i + '-status').value;
-                const idField = document.getElementById('p' + i + '-id-field');
-                const idInput = document.getElementById('p' + i + '-id');
-                if (status === 'member') {
-                    membersCount++;
-                    idField.classList.remove('hidden');
-                    idInput.setAttribute('required', 'true');
-                } else {
-                    guestsCount++;
-                    idField.classList.add('hidden');
-                    idInput.removeAttribute('required');
-                }
-            }
+            const membersCount = membersCountVal();
             const pricePerHour = 26 - (4 * membersCount);
             const courtTotal = pricePerHour * hours;
             const racketCount = parseInt(document.getElementById('racket-count').value, 10) || 0;
@@ -1446,11 +1428,19 @@
             document.getElementById('summary-price').innerText = fmtEuro(finalTotal);
         }
 
-        function collectPlayers() {
+        function hauptbucherName() {
             const v = (id) => (document.getElementById(id).value || '').trim();
-            const players = [];
-            players.push({ name: (v('p1-first') + ' ' + v('p1-last')).trim(), status: v('p1-status'), member_id: v('p1-id') });
-            for (let i = 2; i <= 4; i++) players.push({ name: v('p' + i + '-name'), status: v('p' + i + '-status'), member_id: v('p' + i + '-id') });
+            return (v('p1-first') + ' ' + v('p1-last')).trim();
+        }
+
+        function collectPlayers() {
+            const members = membersCountVal();
+            // Hauptbucher = Mitglied 1 (falls Mitglieder > 0), sonst Gast
+            const players = [{ name: hauptbucherName(), status: members >= 1 ? 'member' : 'guest' }];
+            document.querySelectorAll('#member-names .member-name').forEach(inp => {
+                const nm = (inp.value || '').trim();
+                if (nm) players.push({ name: nm, status: 'member' });
+            });
             return players;
         }
 
@@ -1469,6 +1459,8 @@
                 end:   selectedDateISO + 'T' + pad(sel.endH) + ':00:00' + off,
                 amount: currentAmount,
                 email: document.getElementById('p1-email').value.trim(),
+                name: hauptbucherName(),
+                members: membersCountVal(),
                 players: collectPlayers(),
                 method: 'mollie'
             };
