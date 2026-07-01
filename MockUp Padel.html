@@ -82,7 +82,7 @@
         }
         .booking-grid {
             display: grid;
-            grid-template-columns: 92px repeat(32, minmax(34px, 1fr));
+            grid-template-columns: 92px repeat(16, minmax(48px, 1fr));
             gap: 1px;
             background: #e2e8f0;
             border-bottom: 1px solid #e2e8f0;
@@ -781,7 +781,7 @@
                 </div>
                 <div class="flex items-center gap-4 text-sm text-slate-600">
                     <span class="inline-flex items-center gap-2"><span class="live-dot"></span> Live-Verfügbarkeit</span>
-                    <span class="hidden sm:inline-flex items-center gap-2 text-slate-400"><i class="fa-regular fa-clock"></i> 30-Min-Takt</span>
+                    <span class="hidden sm:inline-flex items-center gap-2 text-slate-400"><i class="fa-regular fa-clock"></i> Stundentakt</span>
                 </div>
             </div>
 
@@ -789,22 +789,6 @@
 
                 <!-- LEFT: Booking + Info -->
                 <div class="flex-grow lg:w-3/4 flex flex-col gap-5 sm:gap-6 w-full overflow-hidden">
-
-                    <!-- WhatsApp Card -->
-                    <div class="bg-gradient-to-r from-[#25D366]/10 to-[#25D366]/5 border border-[#25D366]/30 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
-                        <div class="flex items-center gap-4 w-full md:w-auto">
-                            <div class="w-12 h-12 sm:w-14 sm:h-14 bg-[#25D366] rounded-full flex items-center justify-center text-white text-2xl sm:text-3xl shadow-md flex-shrink-0">
-                                <i class="fa-brands fa-whatsapp"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-slate-800 text-base sm:text-lg">Bequem per WhatsApp buchen!</h4>
-                                <p class="text-xs sm:text-sm text-slate-600 leading-snug">Schreib unserem KI-Assistenten deinen Wunschtermin – Buchung & Schlägerverleih in Sekunden erledigt.</p>
-                            </div>
-                        </div>
-                        <a href="https://wa.me/4915112345678" target="_blank" class="w-full md:w-auto text-center whitespace-nowrap bg-[#25D366] text-white px-6 sm:px-8 py-3 rounded-full font-bold shadow-md hover:bg-[#1ebd5a] transition hover:-translate-y-1 text-sm sm:text-base">
-                            <i class="fa-brands fa-whatsapp mr-2"></i>+49 151 1234 5678
-                        </a>
-                    </div>
 
                     <!-- Date selector -->
                     <div class="card p-4 sm:p-5">
@@ -823,7 +807,7 @@
                                 <span style="display:none;" class="text-white text-[10px] font-bold">TU</span>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <h4 class="font-bold text-slate-900 text-sm">Padel-Platz Übersicht <span class="text-slate-400 font-normal">(30 Min. Takt)</span></h4>
+                                <h4 class="font-bold text-slate-900 text-sm">Padel-Platz Übersicht <span class="text-slate-400 font-normal">(Stundentakt)</span></h4>
                                 <p class="text-[11px] sm:text-xs text-slate-500 truncate">Bequem buchen & verwalten, powered by <span class="font-bold">ThinkUp-AI</span></p>
                             </div>
                         </div>
@@ -834,7 +818,7 @@
                         </div>
 
                         <div class="overflow-x-auto relative w-full">
-                            <div class="booking-grid min-w-[1180px]" id="booking-grid">
+                            <div class="booking-grid min-w-[880px]" id="booking-grid">
                                 <!-- Wird per JS gefüllt -->
                             </div>
                         </div>
@@ -855,7 +839,7 @@
                                 </div>
                             </div>
                             <div class="text-xs text-slate-400 hidden md:block">
-                                Tippe Slots an, um sie auszuwählen
+                                Tippe Stunden an, um sie auszuwählen
                             </div>
                         </div>
                     </div>
@@ -888,22 +872,30 @@
                             </ul>
                         </div>
                         <div class="card p-5 sm:p-6 border-l-4 border-[#FDE047]">
-                            <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-tag text-amber-500"></i> Preise</h4>
+                            <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-tag text-amber-500"></i> Preise pro Platz</h4>
                             <div class="space-y-2 text-sm">
                                 <div class="flex justify-between items-center py-2 border-b border-slate-100">
-                                    <span class="text-slate-700">Mitglied <span class="text-slate-400">(pro Person / Std.)</span></span>
-                                    <span class="font-bold text-slate-900">3,75 €</span>
+                                    <span class="text-slate-700">Platzmiete <span class="text-slate-400">(pro Stunde)</span></span>
+                                    <span class="font-bold text-slate-900">26,00 €</span>
                                 </div>
                                 <div class="flex justify-between items-center py-2 border-b border-slate-100">
-                                    <span class="text-slate-700">Gast <span class="text-slate-400">(pro Person / Std.)</span></span>
-                                    <span class="font-bold text-slate-900">7,50 €</span>
+                                    <span class="text-slate-700">Rabatt je Mitglied <span class="text-slate-400">(pro Stunde)</span></span>
+                                    <span class="font-bold text-green-600">− 4,00 €</span>
                                 </div>
                                 <div class="flex justify-between items-center py-2">
                                     <span class="text-slate-700">Schlägerverleih <span class="text-slate-400">(pro Schläger)</span></span>
                                     <span class="font-bold text-slate-900">2,00 €</span>
                                 </div>
                             </div>
-                            <p class="text-xs text-slate-500 mt-3 leading-relaxed"><i class="fa-solid fa-circle-info mr-1"></i> Padel wird zu viert gespielt. Der Endpreis ergibt sich aus der Summe der Spieler-Anteile zzgl. optionalem Schlägerverleih.</p>
+                            <div class="mt-3 pt-3 border-t border-slate-100">
+                                <div class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Beispiele pro Stunde</div>
+                                <div class="space-y-1 text-sm">
+                                    <div class="flex justify-between"><span class="text-slate-600">Nur Gäste</span><span class="font-bold text-slate-900">26,00 €</span></div>
+                                    <div class="flex justify-between"><span class="text-slate-600">2 Mitglieder + 2 Gäste</span><span class="font-bold text-slate-900">18,00 €</span></div>
+                                    <div class="flex justify-between"><span class="text-slate-600">4 Mitglieder</span><span class="font-bold text-[#A31D11]">10,00 €</span></div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-3 leading-relaxed"><i class="fa-solid fa-circle-info mr-1"></i> Der Preis gilt pro Platz und Stunde. Jedes mitspielende Mitglied reduziert den Stundenpreis um 4 € – zzgl. optionalem Schlägerverleih.</p>
                         </div>
                     </div>
                 </div>
@@ -923,7 +915,7 @@
                         </div>
 
                         <div class="flex-grow p-4 sm:p-5 flex flex-col overflow-y-auto bg-white" id="chat-box-desktop">
-                            <div class="chat-bubble bot-msg">Willkommen beim TC Frittlingen! 👋 Ich helfe dir bei der Padel-Buchung. Frag mich nach freien Slots, Preisen oder unserem Schlägerverleih.</div>
+                            <div class="chat-bubble bot-msg">Willkommen beim TC Frittlingen! 👋 Ich helfe dir bei der Padel-Buchung. Frag mich nach freien Stunden, Preisen oder unserem Schlägerverleih.</div>
                             <div class="chat-bubble bot-msg">Beispiele:<br>• „Wann ist Padel 1 morgen frei?"<br>• „Was kostet eine Stunde für 2 Mitglieder & 2 Gäste?"</div>
                         </div>
 
@@ -963,7 +955,7 @@
             </div>
         </div>
         <div class="flex-grow p-4 flex flex-col overflow-y-auto bg-white" id="chat-box-mobile">
-            <div class="chat-bubble bot-msg">Willkommen beim TC Frittlingen! 👋 Ich helfe dir bei der Padel-Buchung. Frag mich nach freien Slots, Preisen oder unserem Schlägerverleih.</div>
+            <div class="chat-bubble bot-msg">Willkommen beim TC Frittlingen! 👋 Ich helfe dir bei der Padel-Buchung. Frag mich nach freien Stunden, Preisen oder unserem Schlägerverleih.</div>
         </div>
         <div class="chat-input-area" style="padding-bottom: calc(14px + var(--safe-bottom));">
             <form id="chat-form-mobile" onsubmit="sendMessage(event, 'mobile')" class="chat-input-wrapper">
@@ -987,7 +979,7 @@
 
                 <div class="modal-body bg-white">
                     <h3 class="text-xl sm:text-2xl font-black text-slate-900 mb-2 mt-1 pr-10">Spieler eintragen</h3>
-                    <p class="text-sm text-slate-500 mb-4">Padel wird zu viert gespielt. Bitte gib an, wer Mitglied ist – das senkt den Preis pro Anteil.</p>
+                    <p class="text-sm text-slate-500 mb-4">Padel wird zu viert gespielt. Gib an, wer Mitglied ist – jedes Mitglied senkt den Platzpreis um 4 € pro Stunde.</p>
 
                     <!-- Booking summary in modal -->
                     <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-4 rounded-xl mb-5 shadow">
@@ -999,7 +991,7 @@
                             </div>
                             <div class="text-right">
                                 <div class="text-[11px] text-slate-300 uppercase">Dauer</div>
-                                <div class="font-black text-lg" id="modal-duration">0,0 h</div>
+                                <div class="font-black text-lg" id="modal-duration">0 h</div>
                             </div>
                         </div>
                     </div>
@@ -1012,8 +1004,8 @@
                         </div>
                         <input type="email" required placeholder="E-Mail-Adresse" class="field-input mb-3">
                         <select id="p1-status" onchange="calculatePrice()" class="field-input mb-3 font-medium">
-                            <option value="guest">Gast (7,50 €/h Anteil)</option>
-                            <option value="member">Mitglied (3,75 €/h Anteil)</option>
+                            <option value="guest">Gast</option>
+                            <option value="member">Mitglied (−4 € Rabatt/Std.)</option>
                         </select>
                         <div id="p1-id-field" class="hidden">
                             <input type="text" id="p1-id" placeholder="Mitgliedsnummer *" class="field-input">
@@ -1024,8 +1016,8 @@
                         <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide">Spieler 2</h4>
                         <input type="text" required placeholder="Vollständiger Name" class="field-input mb-3">
                         <select id="p2-status" onchange="calculatePrice()" class="field-input mb-3">
-                            <option value="guest">Gast (7,50 €/h Anteil)</option>
-                            <option value="member">Mitglied (3,75 €/h Anteil)</option>
+                            <option value="guest">Gast</option>
+                            <option value="member">Mitglied (−4 € Rabatt/Std.)</option>
                         </select>
                         <div id="p2-id-field" class="hidden"><input type="text" id="p2-id" placeholder="Mitgliedsnummer *" class="field-input"></div>
                     </div>
@@ -1034,8 +1026,8 @@
                         <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide">Spieler 3</h4>
                         <input type="text" required placeholder="Vollständiger Name" class="field-input mb-3">
                         <select id="p3-status" onchange="calculatePrice()" class="field-input mb-3">
-                            <option value="guest">Gast (7,50 €/h Anteil)</option>
-                            <option value="member">Mitglied (3,75 €/h Anteil)</option>
+                            <option value="guest">Gast</option>
+                            <option value="member">Mitglied (−4 € Rabatt/Std.)</option>
                         </select>
                         <div id="p3-id-field" class="hidden"><input type="text" id="p3-id" placeholder="Mitgliedsnummer *" class="field-input"></div>
                     </div>
@@ -1044,8 +1036,8 @@
                         <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide">Spieler 4</h4>
                         <input type="text" required placeholder="Vollständiger Name" class="field-input mb-3">
                         <select id="p4-status" onchange="calculatePrice()" class="field-input mb-3">
-                            <option value="guest">Gast (7,50 €/h Anteil)</option>
-                            <option value="member">Mitglied (3,75 €/h Anteil)</option>
+                            <option value="guest">Gast</option>
+                            <option value="member">Mitglied (−4 € Rabatt/Std.)</option>
                         </select>
                         <div id="p4-id-field" class="hidden"><input type="text" id="p4-id" placeholder="Mitgliedsnummer *" class="field-input"></div>
                     </div>
@@ -1074,8 +1066,8 @@
 
                 <div class="modal-footer shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
                     <div class="flex justify-between items-center mb-1 text-sm">
-                        <span class="text-slate-600 font-medium">Spielzeit: <span id="summary-time" class="font-bold text-slate-900">0,0 h</span></span>
-                        <span class="text-slate-600 font-medium" id="summary-players">4 Gäste, 0 Mitglieder</span>
+                        <span class="text-slate-600 font-medium">Spielzeit: <span id="summary-time" class="font-bold text-slate-900">0 h</span></span>
+                        <span class="text-slate-600 font-medium">Preis/Std.: <span id="summary-rate" class="font-bold text-slate-900">26,00 €</span></span>
                     </div>
                     <div class="flex justify-between items-center mb-2 text-sm">
                         <span class="text-slate-600 font-medium">Platzmiete: <span id="summary-court" class="font-bold text-slate-900">0,00 €</span></span>
@@ -1179,7 +1171,6 @@
                     <ul class="space-y-2 text-sm">
                         <li><a href="mailto:vorstand@tc-frittlingen.de" class="hover:text-[#FDE047] transition break-all"><i class="fa-regular fa-envelope mr-2"></i>vorstand@tc-frittlingen.de</a></li>
                         <li><a href="https://www.google.com/maps?q=Tennisclub+Frittlingen+R%C3%B6merstra%C3%9Fe+78665+Frittlingen" target="_blank" class="hover:text-[#FDE047] transition"><i class="fa-solid fa-location-dot mr-2"></i>Römerstraße/Schildeckstraße<br><span class="ml-5">78665 Frittlingen</span></a></li>
-                        <li><a href="https://wa.me/4915112345678" target="_blank" class="hover:text-[#FDE047] transition"><i class="fa-brands fa-whatsapp mr-2"></i>+49 151 1234 5678</a></li>
                     </ul>
                 </div>
             </div>
@@ -1263,39 +1254,37 @@
             randomizeOccupancy();
         }
 
-        // ===== BOOKING GRID =====
+        // ===== BOOKING GRID (Stundentakt) =====
         const HOURS = [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
         const COURTS = ['Padel 1', 'Padel 2'];
 
         function buildBookingGrid() {
             const grid = document.getElementById('booking-grid');
             grid.innerHTML = '';
+            // Kopfzeile: leere Ecke + eine Spalte je Stunde
             const emptyHeader = document.createElement('div');
             emptyHeader.className = 'grid-header-empty';
             grid.appendChild(emptyHeader);
             HOURS.forEach(h => {
                 const hd = document.createElement('div');
                 hd.className = 'grid-header';
-                hd.style.gridColumn = 'span 2';
                 hd.innerText = `${String(h).padStart(2,'0')}:00`;
                 grid.appendChild(hd);
             });
+            // Court-Reihen: ein Slot = eine volle Stunde
             COURTS.forEach((court, courtIdx) => {
                 const rowHeader = document.createElement('div');
                 rowHeader.className = 'grid-row-header';
                 rowHeader.innerHTML = `<span class="court-dot"></span>${court}`;
                 grid.appendChild(rowHeader);
                 HOURS.forEach(h => {
-                    [0, 30].forEach(min => {
-                        const slot = document.createElement('div');
-                        slot.className = 'slot';
-                        slot.dataset.court = court;
-                        slot.dataset.hour = h;
-                        slot.dataset.min = min;
-                        slot.dataset.courtIdx = courtIdx;
-                        slot.addEventListener('click', () => toggleSlot(slot));
-                        grid.appendChild(slot);
-                    });
+                    const slot = document.createElement('div');
+                    slot.className = 'slot';
+                    slot.dataset.court = court;
+                    slot.dataset.hour = h;
+                    slot.dataset.courtIdx = courtIdx;
+                    slot.addEventListener('click', () => toggleSlot(slot));
+                    grid.appendChild(slot);
                 });
             });
             randomizeOccupancy();
@@ -1334,15 +1323,12 @@
             });
             const summaries = [];
             Object.entries(byCourt).forEach(([court, list]) => {
-                list.sort((a, b) => (a.dataset.hour - b.dataset.hour) || (a.dataset.min - b.dataset.min));
+                list.sort((a, b) => (a.dataset.hour - b.dataset.hour));
                 const first = list[0];
                 const last = list[list.length - 1];
                 const startH = String(first.dataset.hour).padStart(2,'0');
-                const startM = String(first.dataset.min).padStart(2,'0');
-                let endH = parseInt(last.dataset.hour, 10);
-                let endM = parseInt(last.dataset.min, 10) + 30;
-                if (endM >= 60) { endH += 1; endM -= 60; }
-                summaries.push(`${court}: ${startH}:${startM}–${String(endH).padStart(2,'0')}:${String(endM).padStart(2,'0')}`);
+                const endH = parseInt(last.dataset.hour, 10) + 1; // 1 Slot = 1 Stunde
+                summaries.push(`${court}: ${startH}:00–${String(endH).padStart(2,'0')}:00`);
             });
             document.getElementById('selection-summary-text').innerText = summaries.join(' · ');
         }
@@ -1354,8 +1340,7 @@
             const selectionText = document.getElementById('selection-summary-text').innerText;
             document.getElementById('modal-court-time').innerText = dateLabel;
             document.getElementById('modal-court-detail').innerText = selectionText;
-            const hours = (selected.length * 0.5).toFixed(1).replace('.', ',');
-            document.getElementById('modal-duration').innerText = `${hours} h`;
+            document.getElementById('modal-duration').innerText = `${selected.length} h`;
 
             document.getElementById('booking-modal').classList.add('open');
             document.getElementById('booking-form').classList.remove('hidden');
@@ -1376,8 +1361,8 @@
         }
 
         function calculatePrice() {
-            const selectedSlotsCount = document.querySelectorAll('.slot.selected').length;
-            const hours = selectedSlotsCount * 0.5;
+            // 1 ausgewählter Slot = 1 volle Stunde
+            const hours = document.querySelectorAll('.slot.selected').length;
             let membersCount = 0, guestsCount = 0;
 
             for (let i = 1; i <= 4; i++) {
@@ -1395,19 +1380,19 @@
                 }
             }
 
-            // Platzmiete (Spieler-Anteile pro Stunde)
-            const hourlyTotal = (guestsCount * 7.50) + (membersCount * 3.75);
-            const courtTotal = hourlyTotal * hours;
+            // Preis pro Platz & Stunde: 26 € Basis, minus 4 € je Mitglied (min. 10 € bei 4 Mitgliedern)
+            const pricePerHour = 26 - (4 * membersCount);
+            const courtTotal = pricePerHour * hours;
 
-            // Schlägerverleih (2,00 € pauschal pro Schläger)
+            // Schlägerverleih: 2,00 € pauschal je Schläger
             const racketCount = parseInt(document.getElementById('racket-count').value, 10) || 0;
             const racketTotal = racketCount * 2.00;
 
             const finalTotal = courtTotal + racketTotal;
 
             const fmt = (v) => v.toFixed(2).replace('.', ',') + ' €';
-            document.getElementById('summary-time').innerText = hours.toString().replace('.', ',') + ' h';
-            document.getElementById('summary-players').innerText = `${guestsCount} Gäste, ${membersCount} Mitglieder`;
+            document.getElementById('summary-time').innerText = hours + ' h';
+            document.getElementById('summary-rate').innerText = fmt(pricePerHour);
             document.getElementById('summary-court').innerText = fmt(courtTotal);
             document.getElementById('summary-rackets').innerText = fmt(racketTotal);
             document.getElementById('summary-price').innerText = fmt(finalTotal);
@@ -1433,8 +1418,8 @@
         // ===== CHAT (Demo) =====
         const BOT_REPLIES = [
             "Klar! Welcher Tag passt dir denn?",
-            "Padel 1 ist morgen ab 18:00 Uhr noch 90 Minuten frei. Soll ich für dich reservieren?",
-            "Eine Stunde für 2 Mitglieder & 2 Gäste kostet insgesamt 22,50 €.",
+            "Padel 1 ist morgen ab 18:00 Uhr noch frei. Soll ich für dich reservieren?",
+            "Eine Stunde für 2 Mitglieder & 2 Gäste kostet 18,00 € pro Platz.",
             "Schlägerverleih kostet 2,00 € pro Schläger. Soll ich welche zur Buchung hinzufügen?",
             "Alles klar – du bekommst gleich die Bestätigung per E-Mail."
         ];
