@@ -158,65 +158,6 @@
         }
         @keyframes nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(6px); } }
 
-        /* === CHATBOT === */
-        .chat-container {
-            background: #ffffff; border-radius: 18px;
-            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
-            border: 1px solid #e2e8f0;
-            display: flex; flex-direction: column;
-            overflow: hidden;
-        }
-        .chat-header { background: var(--tcf-red); color: white; }
-        .chat-bubble {
-            padding: 12px 16px; border-radius: 16px;
-            font-size: 0.9rem; line-height: 1.5;
-            max-width: 88%; margin-bottom: 10px;
-            animation: bubbleIn 0.25s ease-out;
-        }
-        @keyframes bubbleIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-        .bot-msg { background: #f1f5f9; color: #334155; border-bottom-left-radius: 4px; }
-        .user-msg { background: var(--tcf-red); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
-        .chat-input-area { background: var(--tcf-red); padding: 14px; border-top: 1px solid var(--tcf-red-dark); }
-        .chat-input-wrapper {
-            background: #ffffff; border: 1px solid #e2e8f0;
-            border-radius: 100px; padding: 4px;
-            display: flex; align-items: center;
-        }
-
-        /* Floating Chat Button (Mobile) */
-        .chat-fab {
-            position: fixed; bottom: calc(20px + var(--safe-bottom)); right: 20px;
-            width: 60px; height: 60px;
-            background: var(--tcf-red); color: white;
-            border-radius: 50%;
-            display: none; align-items: center; justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 8px 24px rgba(163,29,17,0.4);
-            z-index: 45;
-            cursor: pointer;
-            animation: fabPulse 2.4s ease-in-out infinite;
-        }
-        @keyframes fabPulse {
-            0%, 100% { box-shadow: 0 8px 24px rgba(163,29,17,0.4); }
-            50% { box-shadow: 0 8px 28px rgba(163,29,17,0.6), 0 0 0 8px rgba(163,29,17,0.08); }
-        }
-        .chat-fab .fab-dot {
-            position: absolute; top: 6px; right: 6px;
-            width: 12px; height: 12px;
-            background: var(--tcf-yellow);
-            border: 2px solid white; border-radius: 50%;
-        }
-
-        /* Mobile Chat Sheet */
-        .chat-sheet {
-            position: fixed; inset: 0;
-            background: white; z-index: 60;
-            display: none; flex-direction: column;
-            animation: sheetUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
-        }
-        .chat-sheet.open { display: flex; }
-        @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
         /* === MODAL === */
         .modal-overlay {
             position: fixed; inset: 0;
@@ -430,6 +371,10 @@
                     <span><i class="fa-regular fa-calendar w-6 text-slate-500"></i> Aktuell</span>
                     <i class="fa-solid fa-chevron-right text-slate-300 text-sm"></i>
                 </a>
+                <a href="#" onclick="switchPage('mitglied'); toggleDrawer(); return false;" id="mnav-mitglied" class="mobile-nav-link">
+                    <span><i class="fa-solid fa-user-plus w-6 text-[#A31D11]"></i> Mitglied werden</span>
+                    <i class="fa-solid fa-chevron-right text-slate-300 text-sm"></i>
+                </a>
             </div>
             <div class="p-4 border-t border-slate-100 bg-slate-50">
                 <a href="mailto:vorstand@tc-frittlingen.de" class="text-xs text-slate-500 hover:text-[#A31D11] transition flex items-center gap-2">
@@ -629,9 +574,9 @@
                     <h3 class="text-lg sm:text-xl font-bold mb-4 text-[#A31D11]"><i class="fa-solid fa-download mr-2"></i>Downloads</h3>
                     <ul class="space-y-3 mt-6">
                         <li>
-                            <a href="Beitrittserklärung ab 2018.pdf" target="_blank" class="text-slate-600 hover:text-[#A31D11] transition flex items-center p-3 rounded-lg hover:bg-slate-50">
-                                <i class="fa-regular fa-file-pdf mr-3 text-2xl text-red-500"></i>
-                                <span class="font-medium">Mitgliedsantrag (Beitrittserklärung)</span>
+                            <a href="#" onclick="switchPage('mitglied'); return false;" class="text-slate-600 hover:text-[#A31D11] transition flex items-center p-3 rounded-lg hover:bg-slate-50 border border-[#A31D11]/20 bg-[#A31D11]/5">
+                                <i class="fa-solid fa-user-plus mr-3 text-2xl text-[#A31D11]"></i>
+                                <span class="font-bold">Mitglied werden – Online-Antrag</span>
                             </a>
                         </li>
                         <li>
@@ -768,6 +713,125 @@
     </main>
 
     <!-- ================= PADEL ================= -->
+    <!-- ================= MITGLIED WERDEN ================= -->
+    <main id="page-mitglied" class="page-section bg-slate-50 min-h-screen py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-3xl sm:text-4xl section-title text-slate-900 mb-3">Mitglied werden</h2>
+            <p class="text-slate-600 mb-8 max-w-2xl">Fülle den Aufnahmeantrag bequem online aus – er geht direkt an unseren Vorstand. Über die Aufnahme entscheidet der Vorstand; du hörst anschließend von uns.</p>
+
+            <div class="card p-5 sm:p-6 mb-8">
+                <h3 class="font-black text-lg mb-4 flex items-center gap-2"><i class="fa-solid fa-tag text-amber-500"></i> Jahresbeiträge</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 text-sm">
+                    <div class="flex justify-between border-b border-slate-100 py-2"><span class="text-slate-600">Erwachsener (aktiv, Erstmitglied)</span><span class="font-bold text-slate-900">90,00 €</span></div>
+                    <div class="flex justify-between border-b border-slate-100 py-2"><span class="text-slate-600">Erwachsener (aktiv, Zweitmitglied)</span><span class="font-bold text-slate-900">45,00 €</span></div>
+                    <div class="flex justify-between border-b border-slate-100 py-2"><span class="text-slate-600">Erwachsener (passiv)</span><span class="font-bold text-slate-900">15,00 €</span></div>
+                    <div class="flex justify-between border-b border-slate-100 py-2"><span class="text-slate-600">Gastspieler (pro Stunde)</span><span class="font-bold text-slate-900">5,00 €</span></div>
+                    <div class="flex justify-between border-b border-slate-100 py-2"><span class="text-slate-600">Kinder 0–16 J. (mit Elternteil)</span><span class="font-bold text-slate-900">beitragsfrei</span></div>
+                    <div class="flex justify-between border-b border-slate-100 py-2"><span class="text-slate-600">Kinder 0–16 J. (ohne Elternteil)</span><span class="font-bold text-slate-900">20,00 €</span></div>
+                    <div class="flex justify-between border-b border-slate-100 py-2"><span class="text-slate-600">Jugendliche ab 17 J. (mit Elternteil)</span><span class="font-bold text-slate-900">30,00 €</span></div>
+                    <div class="flex justify-between border-b border-slate-100 py-2"><span class="text-slate-600">Jugendliche ab 17 J. (ohne Elternteil)</span><span class="font-bold text-slate-900">40,00 €</span></div>
+                </div>
+                <p class="text-xs text-slate-500 mt-3">Jugendtarif gilt auch für Schüler, Auszubildende & Studenten bis max. 27 Jahre.</p>
+            </div>
+
+            <form id="mitglied-form" onsubmit="submitMitglied(event)" class="space-y-6">
+                <div class="card p-5 sm:p-6">
+                    <h3 class="font-black text-lg mb-1">Mitglieder</h3>
+                    <p class="text-xs text-slate-500 mb-4">Nur das Erstmitglied ist Pflicht. Weitere Personen (z. B. Familie) sind optional.</p>
+
+                    <div class="mb-5">
+                        <div class="text-sm font-bold text-[#A31D11] mb-2">Erstmitglied (aktiv) *</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <input id="erst_name" required placeholder="Nachname" class="field-input">
+                            <input id="erst_vorname" required placeholder="Vorname" class="field-input">
+                            <input id="erst_gebdatum" type="date" required class="field-input" aria-label="Geburtsdatum Erstmitglied">
+                        </div>
+                    </div>
+                    <div class="mb-5">
+                        <div class="text-sm font-bold text-slate-600 mb-2">Zweitmitglied (aktiv – Ehe-/Lebenspartner)</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <input id="zweit_name" placeholder="Nachname" class="field-input">
+                            <input id="zweit_vorname" placeholder="Vorname" class="field-input">
+                            <input id="zweit_gebdatum" type="date" class="field-input" aria-label="Geburtsdatum Zweitmitglied">
+                        </div>
+                    </div>
+                    <div class="mb-5">
+                        <div class="text-sm font-bold text-slate-600 mb-2">Mitglied (passiv)</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <input id="passiv_name" placeholder="Nachname" class="field-input">
+                            <input id="passiv_vorname" placeholder="Vorname" class="field-input">
+                            <input id="passiv_gebdatum" type="date" class="field-input" aria-label="Geburtsdatum passives Mitglied">
+                        </div>
+                    </div>
+                    <div class="mb-5">
+                        <div class="text-sm font-bold text-slate-600 mb-2">Kind / Jugendlicher</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <input id="kind1_name" placeholder="Nachname" class="field-input">
+                            <input id="kind1_vorname" placeholder="Vorname" class="field-input">
+                            <input id="kind1_gebdatum" type="date" class="field-input" aria-label="Geburtsdatum Kind 1">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-slate-600 mb-2">Kind / Jugendlicher</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <input id="kind2_name" placeholder="Nachname" class="field-input">
+                            <input id="kind2_vorname" placeholder="Vorname" class="field-input">
+                            <input id="kind2_gebdatum" type="date" class="field-input" aria-label="Geburtsdatum Kind 2">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-5 sm:p-6">
+                    <h3 class="font-black text-lg mb-4">Adresse & Kontakt</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input id="strasse" required placeholder="Straße & Hausnummer" class="field-input sm:col-span-2">
+                        <input id="plz_ort" required placeholder="PLZ & Ort" class="field-input sm:col-span-2">
+                        <input id="email" type="email" required placeholder="E-Mail-Adresse" class="field-input sm:col-span-2">
+                        <input id="tel_privat" placeholder="Telefon privat" class="field-input">
+                        <input id="tel_gesch" placeholder="Telefon geschäftlich" class="field-input">
+                    </div>
+                </div>
+
+                <div class="card p-5 sm:p-6">
+                    <h3 class="font-black text-lg mb-1">Bankverbindung (SEPA)</h3>
+                    <p class="text-xs text-slate-500 mb-4">Für den Einzug des Jahresbeitrags.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input id="iban" required placeholder="IBAN" class="field-input sm:col-span-2">
+                        <input id="bic" placeholder="BIC" class="field-input">
+                        <input id="bank" placeholder="Bank" class="field-input">
+                        <input id="inhaber" placeholder="Kontoinhaber (falls abweichend)" class="field-input sm:col-span-2">
+                    </div>
+                </div>
+
+                <div class="card p-5 sm:p-6">
+                    <h3 class="font-black text-lg mb-4">Bestätigung</h3>
+                    <input id="ort_datum" required placeholder="Ort, Datum" class="field-input mb-4 sm:max-w-xs">
+                    <label class="flex items-start gap-3 mb-3 cursor-pointer">
+                        <input type="checkbox" id="einwilligung_aufnahme" required class="mt-1 w-5 h-5 accent-[#A31D11] flex-shrink-0">
+                        <span class="text-sm text-slate-700">Ich erkenne die Aufnahmebedingungen und die Beitragsordnung des TC Frittlingen e.V. an. *</span>
+                    </label>
+                    <label class="flex items-start gap-3 mb-3 cursor-pointer">
+                        <input type="checkbox" id="einwilligung_sepa" required class="mt-1 w-5 h-5 accent-[#A31D11] flex-shrink-0">
+                        <span class="text-sm text-slate-700">Ich ermächtige den TC Frittlingen e.V., den Jahresbeitrag sowie ggf. Trainingsumlagen per SEPA-Lastschrift von meinem Konto einzuziehen. *</span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="einwilligung_datenschutz" required class="mt-1 w-5 h-5 accent-[#A31D11] flex-shrink-0">
+                        <span class="text-sm text-slate-700">Ich habe die <a href="#" onclick="openLegal('datenschutz-modal'); return false;" class="text-[#A31D11] font-bold underline">Datenschutzhinweise</a> gelesen und akzeptiere sie. *</span>
+                    </label>
+                </div>
+
+                <div id="mitglied-result"></div>
+
+                <div>
+                    <button type="submit" id="mitglied-btn" class="w-full sm:w-auto sm:px-12 bg-[#A31D11] hover:bg-[#8a180e] text-white py-3.5 rounded-xl font-bold text-base sm:text-lg transition shadow-md inline-flex items-center justify-center gap-2 disabled:opacity-60">
+                        <span id="mitglied-btn-label">Antrag absenden</span> <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                    <p class="text-xs text-slate-400 mt-2">Lieber klassisch? <a href="Beitrittserklärung ab 2018.pdf" target="_blank" class="underline hover:text-[#A31D11]">Antrag als PDF herunterladen</a>.</p>
+                </div>
+            </form>
+        </div>
+    </main>
+
     <main id="page-padel" class="page-section bg-white min-h-screen py-8 sm:py-10">
         <div class="max-w-[1600px] mx-auto px-4">
             <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6 sm:mb-8">
@@ -784,8 +848,8 @@
                 </div>
             </div>
 
-            <div class="flex flex-col lg:flex-row gap-6 items-start w-full">
-                <div class="flex-grow lg:w-3/4 flex flex-col gap-5 sm:gap-6 w-full overflow-hidden">
+            <div class="w-full">
+                <div class="flex flex-col gap-5 sm:gap-6 w-full">
 
                     <!-- Date selector -->
                     <div class="card p-4 sm:p-5">
@@ -900,7 +964,7 @@
                             <div class="mt-4 bg-[#A31D11]/5 border border-[#A31D11]/20 rounded-xl p-4">
                                 <p class="text-sm font-bold text-slate-800 mb-1">Noch kein Mitglied?</p>
                                 <p class="text-xs text-slate-600 mb-3">Als Mitglied spielst du dauerhaft günstiger – 4 € Rabatt pro Person und Stunde.</p>
-                                <a href="Beitrittserklärung ab 2018.pdf" target="_blank" class="inline-flex items-center gap-2 bg-[#A31D11] hover:bg-[#8a180e] text-white text-sm font-bold px-4 py-2.5 rounded-lg transition shadow-sm">
+                                <a href="#" onclick="switchPage('mitglied'); return false;" class="inline-flex items-center gap-2 bg-[#A31D11] hover:bg-[#8a180e] text-white text-sm font-bold px-4 py-2.5 rounded-lg transition shadow-sm">
                                     <i class="fa-solid fa-user-plus"></i> Jetzt Mitglied werden
                                 </a>
                             </div>
@@ -917,70 +981,9 @@
                     </div>
                 </div>
 
-                <!-- RIGHT: Chat -->
-                <div class="hidden lg:block lg:w-1/4 w-full flex-shrink-0 lg:sticky lg:top-28 self-start">
-                    <div class="chat-container h-[640px]">
-                        <div class="chat-header p-4 sm:p-5 flex items-center gap-4">
-                            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center border-2 border-white shadow-md overflow-hidden p-1 flex-shrink-0">
-                                <img src="logo%20tcf.jpg" alt="TCF Bot" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                                <i style="display:none;" class="fa-solid fa-robot text-[#A31D11] text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-[15px] text-white flex items-center gap-2">TC Frittlingen <span class="live-dot"></span></h3>
-                                <p class="text-[11px] text-white/90 font-bold">KI-Assistent · Padel-Buchung</p>
-                            </div>
-                        </div>
-                        <div class="flex-grow p-4 sm:p-5 flex flex-col overflow-y-auto bg-white" id="chat-box-desktop">
-                            <div class="chat-bubble bot-msg">Willkommen beim TC Frittlingen! 👋 Ich helfe dir bei der Padel-Buchung. Frag mich nach freien Stunden, Preisen oder unserem Schlägerverleih.</div>
-                            <div class="chat-bubble bot-msg">Beispiele:<br>• „Wann ist der Cupra Court morgen frei?"<br>• „Was kostet eine Stunde für 2 Mitglieder & 2 Gäste?"</div>
-                        </div>
-                        <div class="chat-input-area">
-                            <form id="chat-form-desktop" onsubmit="sendMessage(event, 'desktop')" class="chat-input-wrapper">
-                                <input type="text" id="chat-input-desktop" autocomplete="off" placeholder="Nachricht eingeben…" class="w-full bg-transparent border-none py-2 pl-4 pr-2 text-sm text-slate-700 focus:outline-none placeholder-slate-400">
-                                <button type="submit" aria-label="Senden" class="w-9 h-9 bg-[#FDE047] rounded-full flex items-center justify-center hover:bg-yellow-400 transition ml-2 shadow-sm flex-shrink-0">
-                                    <i class="fa-regular fa-paper-plane text-slate-900"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </main>
-
-    <!-- MOBILE FLOATING CHAT BUTTON -->
-    <button id="chat-fab" class="chat-fab" onclick="openChatSheet()" aria-label="Chat öffnen">
-        <i class="fa-solid fa-comments"></i>
-        <span class="fab-dot"></span>
-    </button>
-
-    <!-- MOBILE CHAT SHEET -->
-    <div id="chat-sheet" class="chat-sheet">
-        <div class="chat-header p-4 flex items-center gap-4">
-            <button onclick="closeChatSheet()" aria-label="Chat schließen" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition">
-                <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
-            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white shadow-md overflow-hidden p-1 flex-shrink-0">
-                <img src="logo%20tcf.jpg" alt="TCF Bot" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                <i style="display:none;" class="fa-solid fa-robot text-[#A31D11] text-xl"></i>
-            </div>
-            <div>
-                <h3 class="font-bold text-[15px] text-white flex items-center gap-2">TC Frittlingen <span class="live-dot"></span></h3>
-                <p class="text-[11px] text-white/90 font-bold">KI-Assistent</p>
-            </div>
-        </div>
-        <div class="flex-grow p-4 flex flex-col overflow-y-auto bg-white" id="chat-box-mobile">
-            <div class="chat-bubble bot-msg">Willkommen beim TC Frittlingen! 👋 Ich helfe dir bei der Padel-Buchung. Frag mich nach freien Stunden, Preisen oder unserem Schlägerverleih.</div>
-        </div>
-        <div class="chat-input-area" style="padding-bottom: calc(14px + var(--safe-bottom));">
-            <form id="chat-form-mobile" onsubmit="sendMessage(event, 'mobile')" class="chat-input-wrapper">
-                <input type="text" id="chat-input-mobile" autocomplete="off" placeholder="Nachricht eingeben…" class="w-full bg-transparent border-none py-2 pl-4 pr-2 text-base text-slate-700 focus:outline-none placeholder-slate-400">
-                <button type="submit" aria-label="Senden" class="w-10 h-10 bg-[#FDE047] rounded-full flex items-center justify-center hover:bg-yellow-400 transition ml-2 shadow-sm flex-shrink-0">
-                    <i class="fa-regular fa-paper-plane text-slate-900"></i>
-                </button>
-            </form>
-        </div>
-    </div>
 
     <!-- ================= BOOKING MODAL ================= -->
     <div id="booking-modal" class="modal-overlay">
@@ -1300,7 +1303,7 @@
                     <p class="text-sm text-slate-400 leading-relaxed max-w-md">
                         Seit 50 Jahren das Zuhause für Tennis, Beach und ab jetzt Padel in Frittlingen. Werde Teil unserer Vereinsfamilie.
                     </p>
-                    <button onclick="switchPage('verein')" class="mt-4 inline-flex items-center gap-2 text-[#FDE047] font-bold text-sm hover:gap-3 transition-all">
+                    <button onclick="switchPage('mitglied')" class="mt-4 inline-flex items-center gap-2 text-[#FDE047] font-bold text-sm hover:gap-3 transition-all">
                         Mitglied werden <i class="fa-solid fa-arrow-right text-xs"></i>
                     </button>
                 </div>
@@ -1367,7 +1370,6 @@
             const mNavLink = document.getElementById('mnav-' + pageId);
             if (mNavLink) mNavLink.classList.add('active-nav');
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            updateChatFab();
         }
 
         // ===== MOBILE DRAWER =====
@@ -1376,17 +1378,6 @@
             d.classList.toggle('open');
             document.body.style.overflow = d.classList.contains('open') ? 'hidden' : '';
         }
-
-        // ===== CHAT FAB =====
-        function updateChatFab() {
-            const fab = document.getElementById('chat-fab');
-            const isPadel = document.getElementById('page-padel').classList.contains('active');
-            const isMobile = window.innerWidth < 1024;
-            fab.style.display = (isPadel && isMobile) ? 'flex' : 'none';
-        }
-        window.addEventListener('resize', updateChatFab);
-        function openChatSheet() { document.getElementById('chat-sheet').classList.add('open'); document.body.style.overflow = 'hidden'; }
-        function closeChatSheet() { document.getElementById('chat-sheet').classList.remove('open'); document.body.style.overflow = ''; }
 
         // ===== ZEITZONEN-HELFER (Europe/Berlin Offset für ein Datum) =====
         function berlinOffset(dateStr){
@@ -1817,35 +1808,45 @@
             }
         }
 
-        // ===== CHAT (Demo) =====
-        const BOT_REPLIES = [
-            "Klar! Welcher Tag passt dir denn?",
-            "Der Cupra Court ist morgen ab 18:00 Uhr noch frei. Soll ich für dich reservieren?",
-            "Eine Stunde für 2 Mitglieder & 2 Gäste kostet 18,00 € pro Platz.",
-            "Schlägerverleih kostet 2,00 € pro Schläger. Soll ich welche zur Buchung hinzufügen?",
-            "Alles klar – du bekommst gleich die Bestätigung per E-Mail."
-        ];
-        let botIdx = 0;
-        function sendMessage(e, target) {
+        // ===== MITGLIED WERDEN (Antragsformular) =====
+        async function submitMitglied(e) {
             e.preventDefault();
-            const input = document.getElementById('chat-input-' + target);
-            const box = document.getElementById('chat-box-' + target);
-            const txt = input.value.trim();
-            if (!txt) return;
-            const u = document.createElement('div');
-            u.className = 'chat-bubble user-msg';
-            u.innerText = txt;
-            box.appendChild(u);
-            input.value = '';
-            box.scrollTop = box.scrollHeight;
-            setTimeout(() => {
-                const b = document.createElement('div');
-                b.className = 'chat-bubble bot-msg';
-                b.innerText = BOT_REPLIES[botIdx % BOT_REPLIES.length];
-                botIdx++;
-                box.appendChild(b);
-                box.scrollTop = box.scrollHeight;
-            }, 700);
+            const btn = document.getElementById('mitglied-btn');
+            const label = document.getElementById('mitglied-btn-label');
+            const result = document.getElementById('mitglied-result');
+            const val = id => (document.getElementById(id).value || '').trim();
+            const chk = id => document.getElementById(id).checked;
+            const fields = ['erst_name','erst_vorname','erst_gebdatum','zweit_name','zweit_vorname','zweit_gebdatum',
+                'passiv_name','passiv_vorname','passiv_gebdatum','kind1_name','kind1_vorname','kind1_gebdatum',
+                'kind2_name','kind2_vorname','kind2_gebdatum','strasse','plz_ort','email','tel_privat','tel_gesch',
+                'iban','bic','bank','inhaber','ort_datum'];
+            const payload = {};
+            fields.forEach(f => payload[f] = val(f));
+            payload.einwilligung_aufnahme = chk('einwilligung_aufnahme');
+            payload.einwilligung_sepa = chk('einwilligung_sepa');
+            payload.einwilligung_datenschutz = chk('einwilligung_datenschutz');
+
+            btn.disabled = true; label.innerText = 'Wird gesendet…'; result.innerHTML = '';
+            try {
+                const res = await fetch(API_BASE + '/mitgliedsantrag', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+                });
+                const data = await res.json().catch(() => ({}));
+                if (data && data.ok) {
+                    result.innerHTML = '<div class="bg-green-50 border border-green-200 text-green-800 rounded-xl p-4"><i class="fa-solid fa-circle-check mr-1"></i> Vielen Dank! Dein Antrag ist beim Vorstand eingegangen – du erhältst eine Bestätigung per E-Mail.</div>';
+                    document.getElementById('mitglied-form').reset();
+                    prefillOrtDatum();
+                    label.innerText = 'Gesendet ✓';
+                    result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else { throw new Error('nok'); }
+            } catch (err) {
+                result.innerHTML = '<div class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-4">Senden fehlgeschlagen. Bitte später erneut versuchen oder das PDF nutzen.</div>';
+                btn.disabled = false; label.innerText = 'Erneut senden';
+            }
+        }
+        function prefillOrtDatum() {
+            const od = document.getElementById('ort_datum');
+            if (od) od.value = 'Frittlingen, ' + new Date().toLocaleDateString('de-DE');
         }
 
         // ===== INIT =====
@@ -1854,7 +1855,7 @@
         buildBookingGrid();
         renderMobile();
         loadAvailability();
-        updateChatFab();
+        prefillOrtDatum();
 
         // ?storno=1 (z. B. Link aus der Bestätigungsmail) -> Storno-Fenster öffnen
         if (new URLSearchParams(location.search).get('storno') === '1') { switchPage('padel'); setTimeout(openStorno, 200); }
