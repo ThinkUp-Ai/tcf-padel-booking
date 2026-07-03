@@ -725,7 +725,6 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 text-sm">
                     <div class="flex justify-between border-b border-slate-100 py-2"><span class="text-slate-600">Erwachsener (aktiv, Erstmitglied)</span><span class="font-bold text-slate-900">90,00 €</span></div>
                     <div class="flex justify-between border-b border-slate-100 py-2"><span class="text-slate-600">Erwachsener (aktiv, Zweitmitglied)</span><span class="font-bold text-slate-900">45,00 €</span></div>
-                    <div class="flex justify-between border-b border-slate-100 py-2"><span class="text-slate-600">Erwachsener (passiv)</span><span class="font-bold text-slate-900">15,00 €</span></div>
                     <div class="flex justify-between border-b border-slate-100 py-2"><span class="text-slate-600">Gastspieler (pro Stunde)</span><span class="font-bold text-slate-900">5,00 €</span></div>
                     <div class="flex justify-between border-b border-slate-100 py-2"><span class="text-slate-600">Kinder 0–16 J. (mit Elternteil)</span><span class="font-bold text-slate-900">beitragsfrei</span></div>
                     <div class="flex justify-between border-b border-slate-100 py-2"><span class="text-slate-600">Kinder 0–16 J. (ohne Elternteil)</span><span class="font-bold text-slate-900">20,00 €</span></div>
@@ -754,14 +753,6 @@
                             <input id="zweit_name" placeholder="Nachname" class="field-input">
                             <input id="zweit_vorname" placeholder="Vorname" class="field-input">
                             <input id="zweit_gebdatum" type="date" class="field-input" aria-label="Geburtsdatum Zweitmitglied">
-                        </div>
-                    </div>
-                    <div class="mb-5">
-                        <div class="text-sm font-bold text-slate-600 mb-2">Mitglied (passiv)</div>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <input id="passiv_name" placeholder="Nachname" class="field-input">
-                            <input id="passiv_vorname" placeholder="Vorname" class="field-input">
-                            <input id="passiv_gebdatum" type="date" class="field-input" aria-label="Geburtsdatum passives Mitglied">
                         </div>
                     </div>
                     <div class="mb-5">
@@ -1818,7 +1809,7 @@
             const val = id => (document.getElementById(id).value || '').trim();
             const chk = id => document.getElementById(id).checked;
             const fields = ['erst_name','erst_vorname','erst_gebdatum','zweit_name','zweit_vorname','zweit_gebdatum',
-                'passiv_name','passiv_vorname','passiv_gebdatum','kind1_name','kind1_vorname','kind1_gebdatum',
+                'kind1_name','kind1_vorname','kind1_gebdatum',
                 'kind2_name','kind2_vorname','kind2_gebdatum','strasse','plz_ort','email','tel_privat','tel_gesch',
                 'iban','bic','bank','inhaber','ort_datum'];
             const payload = {};
