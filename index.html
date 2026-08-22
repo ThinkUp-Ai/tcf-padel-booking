@@ -114,6 +114,12 @@
             position: relative;
         }
         .slot:hover:not(.occupied):not(.selected) { background: #fef9c3; }
+        .slot.past {
+            background: #f1f5f9;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .slot.past:hover { background: #f1f5f9; }
         .slot.occupied {
             background: repeating-linear-gradient(45deg, #cbd5e1 0, #cbd5e1 4px, #b8c2cf 4px, #b8c2cf 8px);
             cursor: not-allowed;
@@ -1317,7 +1323,7 @@
             </button>
             <div class="modal-body">
                 <h3 class="text-xl sm:text-2xl font-black text-slate-900 mb-2 mt-1 pr-10">Buchung stornieren</h3>
-                <p class="text-sm text-slate-500 mb-5">Stornierung ist <strong>bis 1 Stunde vor Beginn</strong> möglich. Die Erstattung erfolgt automatisch über Mollie auf dein ursprüngliches Zahlungsmittel.</p>
+                <p class="text-sm text-slate-500 mb-5">Stornierung ist <strong>bis 24 Stunden vor Beginn</strong> möglich. Die Erstattung erfolgt automatisch über Mollie auf dein ursprüngliches Zahlungsmittel.</p>
 
                 <label class="block text-sm font-medium text-slate-700 mb-1">Buchungsnummer</label>
                 <input id="storno-nr" type="text" placeholder="z. B. TCF-AB12CD" class="field-input mb-4" autocomplete="off">
@@ -1441,7 +1447,7 @@
             const container = document.getElementById('date-selector');
             container.innerHTML = '';
             const today = new Date();
-            for (let i = 0; i < 60; i++) {
+            for (let i = 0; i < 14; i++) {
                 const d = new Date(today);
                 d.setDate(today.getDate() + i);
                 const label = i === 0 ? 'Heute' : (i === 1 ? 'Morgen' : WEEKDAYS[d.getDay()]);
@@ -1544,6 +1550,25 @@
                 });
                 if (busy) slot.classList.add('occupied');
             });
+            markPastSlots();
+        }
+
+        // Bereits vergangene Stunden sperren (heute: alles bis zur laufenden Stunde)
+        function isPastHour(hour) {
+            if (!selectedDateISO) return false;
+            const now = new Date();
+            const todayISO = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate());
+            if (selectedDateISO < todayISO) return true;    // Tag liegt komplett zurück
+            if (selectedDateISO > todayISO) return false;   // Zukunft
+            return hour <= now.getHours();                  // heute: laufende Stunde nicht mehr buchbar
+        }
+
+        function markPastSlots() {
+            document.querySelectorAll('.slot').forEach(slot => {
+                const past = isPastHour(parseInt(slot.dataset.hour, 10));
+                slot.classList.toggle('past', past);
+                if (past) slot.classList.remove('selected');
+            });
         }
 
         // ===== HANDY-ANSICHT (vertikale Kacheln, ein Court) =====
@@ -1559,11 +1584,12 @@
             box.innerHTML = '';
             HOURS.forEach(h => {
                 const slot = document.querySelector('.slot[data-court="' + mobileCourt + '"][data-hour="' + h + '"]');
-                const occ = slot && slot.classList.contains('occupied');
+                const occ = slot && (slot.classList.contains('occupied') || slot.classList.contains('past'));
+                const past = slot && slot.classList.contains('past');
                 const sel = slot && slot.classList.contains('selected');
                 const tile = document.createElement('div');
                 tile.className = 'mslot' + (occ ? ' occupied' : '') + (sel ? ' selected' : '');
-                tile.innerHTML = pad(h) + ':00<span class="mslot-sub">' + (occ ? 'Belegt' : (sel ? 'Gewählt' : 'Frei')) + '</span>';
+                tile.innerHTML = pad(h) + ':00<span class="mslot-sub">' + (past ? 'Vorbei' : (occ ? 'Belegt' : (sel ? 'Gewählt' : 'Frei'))) + '</span>';
                 if (!occ && availabilityOk && slot) tile.onclick = () => toggleSlot(slot);
                 box.appendChild(tile);
             });
@@ -1578,14 +1604,14 @@
             const step = hoverHour >= anchorHour ? 1 : -1;
             for (let h = anchorHour; ; h += step) {
                 const s = slotAt(court, h);
-                if (!s || s.classList.contains('occupied')) break; // an Belegt/Rand stoppen -> bleibt zusammenhängend
+                if (!s || s.classList.contains('occupied') || s.classList.contains('past')) break; // an Belegt/Vergangen/Rand stoppen
                 s.classList.add('selected');
                 if (h === hoverHour) break;
             }
             updateSelectionBar();
         }
         function startDrag(slot) {
-            if (!availabilityOk || slot.classList.contains('occupied')) return;
+            if (!availabilityOk || slot.classList.contains('occupied') || slot.classList.contains('past')) return;
             dragging = true; dragMoved = false;
             dragAnchorHour = parseInt(slot.dataset.hour, 10);
             dragCourt = slot.dataset.court;
@@ -1605,7 +1631,7 @@
 
         function toggleSlot(slot) {
             if (!availabilityOk) return;
-            if (slot.classList.contains('occupied')) return;
+            if (slot.classList.contains('occupied') || slot.classList.contains('past')) return;
             const court = slot.dataset.court;
             // Nur ein Court pro Buchung: Auswahl auf anderem Court verwerfen
             let sel = Array.from(document.querySelectorAll('.slot.selected'));
@@ -1999,6 +2025,8 @@
         loadAvailability();
         prefillOrtDatum();
         updateVoucherPrice();
+        // Vergangene Stunden regelmaessig nachziehen (Stundenwechsel)
+        setInterval(() => { markPastSlots(); if (typeof renderMobile === 'function') renderMobile(); }, 60000);
 
         // ?storno=1 (z. B. Link aus der Bestätigungsmail) -> Storno-Fenster öffnen
         if (new URLSearchParams(location.search).get('storno') === '1') { switchPage('padel'); setTimeout(openStorno, 200); }
