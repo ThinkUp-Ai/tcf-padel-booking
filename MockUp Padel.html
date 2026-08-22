@@ -961,6 +961,30 @@
                                 </a>
                             </div>
                         </div>
+                        <div class="card p-5 sm:p-6 border-l-4 border-[#FDE047] bg-gradient-to-br from-[#FDE047]/10 to-white">
+                            <h4 class="font-black text-lg mb-1 flex items-center gap-2"><i class="fa-solid fa-gift text-[#A31D11]"></i> Gutschein verschenken</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-4">Das perfekte Geschenk: Padel-Guthaben für den ganzen Court (4 Personen). Der Code kommt sofort per E-Mail und ist frei einlösbar – auch in Teilbeträgen.</p>
+                            <label class="block text-xs font-medium text-slate-500 mb-1">Umfang</label>
+                            <select id="gs-hours" onchange="updateVoucherPrice()" class="field-input font-medium mb-3">
+                                <option value="1">1 Stunde Padel – 26,00 €</option>
+                                <option value="2">2 Stunden Padel – 52,00 €</option>
+                                <option value="3">3 Stunden Padel – 78,00 €</option>
+                                <option value="4">4 Stunden Padel – 104,00 €</option>
+                            </select>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                                <input type="text" id="gs-name" placeholder="Dein Name (optional)" class="field-input">
+                                <input type="email" id="gs-email" placeholder="E-Mail für den Gutschein *" class="field-input">
+                            </div>
+                            <div class="flex items-center justify-between mb-3 pt-2 border-t border-slate-200">
+                                <span class="font-bold text-slate-900">Preis:</span>
+                                <span id="gs-price" class="text-xl font-black text-[#A31D11]">26,00 €</span>
+                            </div>
+                            <button type="button" id="gs-btn" onclick="buyVoucher()" class="w-full bg-[#A31D11] hover:bg-[#8a180e] text-white py-3 rounded-xl font-bold transition shadow-md inline-flex items-center justify-center gap-2 disabled:opacity-60">
+                                <i class="fa-solid fa-gift"></i> Gutschein kaufen
+                            </button>
+                            <div id="gs-result" class="mt-2"></div>
+                            <p class="text-[11px] text-slate-400 mt-2 text-center">Guthaben verfällt nicht · Restbeträge bleiben erhalten</p>
+                        </div>
                         <div class="card p-5 sm:p-6 border-l-4 border-[#A31D11]">
                             <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-circle-info text-[#A31D11]"></i> Was ist Padel?</h4>
                             <p class="text-sm text-slate-600 leading-relaxed mb-3">Padel ist die am schnellsten wachsende Sportart Europas: ein Mix aus Tennis und Squash, gespielt zu viert auf einem Court mit Glaswänden. Schnell erlernbar, riesiger Spaßfaktor.</p>
@@ -1050,6 +1074,27 @@
                         </select>
                     </div>
 
+                    <!-- Gutscheincode -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
+                        <div class="flex items-start gap-3 mb-3">
+                            <div class="w-10 h-10 bg-[#A31D11] rounded-lg flex items-center justify-center text-white text-lg flex-shrink-0">
+                                <i class="fa-solid fa-gift"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm">Gutscheincode</h4>
+                                <p class="text-xs text-slate-500">Guthaben wird automatisch vom Gesamtbetrag abgezogen.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" id="voucher-code" placeholder="TCF-XXXX-XXXX" maxlength="20" autocomplete="off"
+                                   oninput="onVoucherInput()" class="field-input font-mono uppercase tracking-wider flex-1">
+                            <button type="button" id="voucher-btn" onclick="checkVoucher()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-900 text-white font-bold text-sm whitespace-nowrap transition disabled:opacity-60">
+                                Prüfen
+                            </button>
+                        </div>
+                        <div id="voucher-result" class="mt-2"></div>
+                    </div>
+
                     <!-- AGB Pflicht-Checkbox -->
                     <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 bg-white cursor-pointer">
                         <input type="checkbox" id="agb-check" required class="mt-0.5 w-5 h-5 accent-[#A31D11] flex-shrink-0">
@@ -1070,6 +1115,10 @@
                     <div class="flex justify-between items-center mb-2 text-sm">
                         <span class="text-slate-600 font-medium">Platzmiete: <span id="summary-court" class="font-bold text-slate-900">0,00 €</span></span>
                         <span class="text-slate-600 font-medium">Schläger: <span id="summary-rackets" class="font-bold text-slate-900">0,00 €</span></span>
+                    </div>
+                    <div id="summary-voucher-row" class="hidden justify-between items-center mb-2 text-sm">
+                        <span class="text-green-700 font-medium"><i class="fa-solid fa-gift mr-1"></i>Gutschein <span id="summary-voucher-code" class="font-mono"></span></span>
+                        <span id="summary-voucher" class="font-bold text-green-700">− 0,00 €</span>
                     </div>
                     <div class="flex justify-between items-center mb-3 pt-2 border-t border-slate-200">
                         <span class="text-base sm:text-lg font-bold text-slate-900">Gesamtbetrag:</span>
@@ -1350,6 +1399,7 @@
         let availabilityOk = true;    // false, wenn Verfügbarkeit nicht geladen werden konnte
         let mobileCourt = '1';        // aktiver Court in der Handy-Ansicht
         let dragging = false, dragMoved = false, dragAnchorHour = null, dragCourt = null, suppressClick = false;
+        let voucherValid = false, voucherCode = '', voucherCentAvailable = 0;
 
         // ===== PAGE SWITCHING =====
         function switchPage(pageId) {
@@ -1620,6 +1670,7 @@
                 updateSelectionBar();
                 document.getElementById('booking-form').reset();
                 document.getElementById('member-names').innerHTML = '';
+                resetVoucher();
                 loadAvailability();
             }
         }
@@ -1655,7 +1706,12 @@
             const courtTotal = pricePerHour * hours;
             const racketCount = parseInt(document.getElementById('racket-count').value, 10) || 0;
             const racketTotal = racketCount * 2.00;
-            const finalTotal = courtTotal + racketTotal;
+            const brutto = courtTotal + racketTotal;
+
+            // Gutschein anrechnen (nur Anzeige – Server rechnet verbindlich nach)
+            const vAvail = voucherValid ? (voucherCentAvailable / 100) : 0;
+            const vUsed = Math.min(vAvail, brutto);
+            const finalTotal = Math.max(0, brutto - vUsed);
             currentAmount = finalTotal;
 
             document.getElementById('summary-time').innerText = hours + ' h';
@@ -1663,6 +1719,92 @@
             document.getElementById('summary-court').innerText = fmtEuro(courtTotal);
             document.getElementById('summary-rackets').innerText = fmtEuro(racketTotal);
             document.getElementById('summary-price').innerText = fmtEuro(finalTotal);
+
+            const vRow = document.getElementById('summary-voucher-row');
+            if (vUsed > 0) {
+                vRow.classList.remove('hidden'); vRow.classList.add('flex');
+                document.getElementById('summary-voucher').innerText = '− ' + fmtEuro(vUsed);
+                document.getElementById('summary-voucher-code').innerText = voucherCode;
+            } else {
+                vRow.classList.add('hidden'); vRow.classList.remove('flex');
+            }
+            const lbl = document.getElementById('pay-btn-label');
+            if (lbl) lbl.innerText = (finalTotal <= 0 && voucherValid) ? 'Jetzt verbindlich buchen' : 'Zur Zahlung';
+        }
+
+        // ===== GUTSCHEIN =====
+        function onVoucherInput() {
+            const inp = document.getElementById('voucher-code');
+            inp.value = inp.value.toUpperCase();
+            if (voucherValid) { voucherValid = false; voucherCentAvailable = 0; voucherCode = ''; calculatePrice(); }
+            document.getElementById('voucher-result').innerHTML = '';
+        }
+
+        async function checkVoucher() {
+            const code = (document.getElementById('voucher-code').value || '').trim().toUpperCase();
+            const out = document.getElementById('voucher-result');
+            const btn = document.getElementById('voucher-btn');
+            if (!code) { out.innerHTML = '<div class="text-xs text-slate-500">Bitte Code eingeben.</div>'; return; }
+            btn.disabled = true; btn.innerText = 'Prüfe…';
+            try {
+                const res = await fetch(API_BASE + '/gutschein-pruefen', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (data && data.ok) {
+                    voucherValid = true; voucherCode = data.code; voucherCentAvailable = Number(data.guthaben_cent) || 0;
+                    out.innerHTML = '<div class="text-sm bg-green-50 border border-green-200 text-green-800 rounded-lg px-3 py-2">'
+                        + '<i class="fa-solid fa-circle-check mr-1"></i> Gutschein gültig – Guthaben <b>'
+                        + fmtEuro(voucherCentAvailable / 100) + '</b></div>';
+                } else {
+                    voucherValid = false; voucherCentAvailable = 0; voucherCode = '';
+                    out.innerHTML = '<div class="text-sm bg-red-50 border border-red-200 text-red-700 rounded-lg px-3 py-2">'
+                        + ((data && data.reason) || 'Gutscheincode ungültig.') + '</div>';
+                }
+            } catch (err) {
+                voucherValid = false; voucherCentAvailable = 0; voucherCode = '';
+                out.innerHTML = '<div class="text-sm bg-red-50 border border-red-200 text-red-700 rounded-lg px-3 py-2">Prüfung fehlgeschlagen. Bitte später erneut versuchen.</div>';
+            } finally {
+                btn.disabled = false; btn.innerText = 'Prüfen';
+                calculatePrice();
+            }
+        }
+
+        function resetVoucher() {
+            voucherValid = false; voucherCentAvailable = 0; voucherCode = '';
+            const inp = document.getElementById('voucher-code'); if (inp) inp.value = '';
+            const out = document.getElementById('voucher-result'); if (out) out.innerHTML = '';
+        }
+
+        // ===== GUTSCHEIN KAUFEN =====
+        async function buyVoucher() {
+            const hours = parseInt(document.getElementById('gs-hours').value, 10) || 1;
+            const email = (document.getElementById('gs-email').value || '').trim();
+            const name = (document.getElementById('gs-name').value || '').trim();
+            const out = document.getElementById('gs-result');
+            const btn = document.getElementById('gs-btn');
+            if (!email || !email.includes('@')) {
+                out.innerHTML = '<div class="text-sm bg-amber-50 border border-amber-200 text-amber-800 rounded-lg px-3 py-2">Bitte gültige E-Mail-Adresse angeben – dorthin schicken wir den Gutschein.</div>';
+                return;
+            }
+            btn.disabled = true; btn.innerText = 'Weiterleitung zur Zahlung…'; out.innerHTML = '';
+            try {
+                const res = await fetch(API_BASE + '/gutschein-kaufen', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ stunden: hours, email, name })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (data && data.ok && data.redirectUrl) { window.location.href = data.redirectUrl; return; }
+                throw new Error('nok');
+            } catch (err) {
+                out.innerHTML = '<div class="text-sm bg-red-50 border border-red-200 text-red-700 rounded-lg px-3 py-2">Kauf konnte nicht gestartet werden. Bitte später erneut versuchen.</div>';
+                btn.disabled = false; btn.innerText = 'Gutschein kaufen';
+            }
+        }
+
+        function updateVoucherPrice() {
+            const h = parseInt(document.getElementById('gs-hours').value, 10) || 1;
+            document.getElementById('gs-price').innerText = fmtEuro(h * 26);
         }
 
         function hauptbucherName() {
@@ -1700,6 +1842,7 @@
                 members: membersCountVal(),
                 rackets: parseInt(document.getElementById('racket-count').value, 10) || 0,
                 players: collectPlayers(),
+                voucher: voucherValid ? voucherCode : '',
                 method: 'mollie'
             };
 
@@ -1715,6 +1858,13 @@
                     body: JSON.stringify(payload)
                 });
                 const data = await res.json().catch(() => ({}));
+                if (data && data.ok && data.gratis) {
+                    // Komplett per Gutschein bezahlt – keine Zahlung nötig
+                    resetVoucher();
+                    showSuccess();
+                    loadAvailability();
+                    return;
+                }
                 if (data && data.ok && data.redirectUrl) {
                     window.location.href = data.redirectUrl;   // zur Mollie-Bezahlseite
                     return;
@@ -1848,18 +1998,30 @@
         renderMobile();
         loadAvailability();
         prefillOrtDatum();
+        updateVoucherPrice();
 
         // ?storno=1 (z. B. Link aus der Bestätigungsmail) -> Storno-Fenster öffnen
         if (new URLSearchParams(location.search).get('storno') === '1') { switchPage('padel'); setTimeout(openStorno, 200); }
 
-        // Rückkehr von Mollie: ?bezahlt=1 -> Erfolgsansicht zeigen
+        // Rückkehr von Mollie
         (function handleReturn(){
             const params = new URLSearchParams(location.search);
+            const clean = () => { if (window.history && history.replaceState) history.replaceState({}, '', location.pathname); };
+            if (params.get('gutschein') === 'ok') {
+                switchPage('padel');
+                const out = document.getElementById('gs-result');
+                if (out) {
+                    out.innerHTML = '<div class="text-sm bg-green-50 border border-green-200 text-green-800 rounded-lg px-3 py-2">'
+                        + '<i class="fa-solid fa-circle-check mr-1"></i> Danke! Sobald die Zahlung bestätigt ist, kommt dein Gutscheincode per E-Mail.</div>';
+                    setTimeout(() => out.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
+                }
+                clean();
+                return;
+            }
             if (params.get('bezahlt') === '1' || params.get('mollie') === 'return') {
                 switchPage('padel');
                 showSuccess();
-                // URL aufräumen
-                if (window.history && history.replaceState) history.replaceState({}, '', location.pathname);
+                clean();
             }
         })();
     </script>
