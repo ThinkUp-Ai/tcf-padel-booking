@@ -137,6 +137,9 @@
         .btn-padel {
             background: var(--padel); color: #fff; transition: all .25s;
         }
+        /* Buchen-Button faerbt sich auf der Padel-Seite um */
+        .btn-primary.padel-active { background: var(--padel); }
+        .btn-primary.padel-active:hover { background: var(--padel-deep); box-shadow: 0 8px 22px rgba(254,80,0,.3); }
         .btn-padel:hover { background: var(--padel-deep); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(254,80,0,.3); }
         .slot.past {
             background: #f1f5f9;
@@ -354,7 +357,7 @@
             </div>
 
             <div class="flex items-center gap-2">
-                <button onclick="switchPage('padel')" class="btn-primary px-4 sm:px-6 md:px-8 py-2.5 md:py-3 rounded text-xs sm:text-sm font-bold uppercase tracking-wide shadow-md whitespace-nowrap">
+                <button id="nav-book-btn" onclick="switchPage('padel')" class="btn-primary px-4 sm:px-6 md:px-8 py-2.5 md:py-3 rounded text-xs sm:text-sm font-bold uppercase tracking-wide shadow-md whitespace-nowrap">
                     <i class="fa-solid fa-calendar-check mr-1.5 sm:mr-2"></i>Platz buchen
                 </button>
                 <button onclick="toggleDrawer()" aria-label="Menü öffnen" class="lg:hidden w-11 h-11 rounded-lg flex items-center justify-center text-slate-700 hover:bg-slate-100 transition">
@@ -1448,6 +1451,8 @@
             if (navLink) navLink.classList.add('active-nav');
             const mNavLink = document.getElementById('mnav-' + pageId);
             if (mNavLink) mNavLink.classList.add('active-nav');
+            const bookBtn = document.getElementById('nav-book-btn');
+            if (bookBtn) bookBtn.classList.toggle('padel-active', pageId === 'padel');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
