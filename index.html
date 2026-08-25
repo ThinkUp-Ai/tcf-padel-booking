@@ -1563,7 +1563,6 @@
         const fmtEuro = (v) => v.toFixed(2).replace('.', ',') + ' €';
 
         let selectedDateISO = null;   // 'YYYY-MM-DD' des gewählten Tages
-        let currentAmount = 0;        // aktueller Gesamtbetrag (Zahl)
         let availabilityOk = true;    // false, wenn Verfügbarkeit nicht geladen werden konnte
         let mobileCourt = '1';        // aktiver Court in der Handy-Ansicht
         let dragging = false, dragMoved = false, dragAnchorHour = null, dragCourt = null, suppressClick = false;
@@ -1938,7 +1937,6 @@
             const vAvail = voucherValid ? (voucherCentAvailable / 100) : 0;
             const vUsed = Math.min(vAvail, brutto);
             const finalTotal = Math.max(0, brutto - vUsed);
-            currentAmount = finalTotal;
 
             document.getElementById('summary-time').innerText = hours + ' h';
             document.getElementById('summary-rate').innerText = fmtEuro(pricePerHour);
@@ -2060,11 +2058,12 @@
             if (!sel) { showError('Bitte wähle mindestens eine Stunde aus.'); return; }
 
             const off = berlinOffset(selectedDateISO);
+            // Kein Betrag im Payload: den rechnet create_booking serverseitig aus
+            // der settings-Tabelle. Die Anzeige oben ist reine Vorschau.
             const payload = {
                 court: sel.court,
                 start: selectedDateISO + 'T' + pad(sel.startH) + ':00:00' + off,
                 end:   selectedDateISO + 'T' + pad(sel.endH) + ':00:00' + off,
-                amount: currentAmount,
                 email: document.getElementById('p1-email').value.trim(),
                 name: hauptbucherName(),
                 members: membersCountVal(),
