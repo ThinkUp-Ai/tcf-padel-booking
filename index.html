@@ -51,8 +51,8 @@
         .nav-link.nav-padel { color: var(--padel); }
         .nav-link.nav-padel::after { background-color: var(--padel); }
         .nav-link.nav-padel.active-nav { color: var(--padel); }
-        .btn-primary { background: var(--tcf-red); color: white; transition: all 0.25s; }
-        .btn-primary:hover { background: var(--tcf-red-dark); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(163, 29, 17, 0.28); }
+        .btn-primary { background: var(--btn-bg, var(--tcf-red)); color: white; transition: all 0.25s; }
+        .btn-primary:hover { background: var(--btn-bg-hover, var(--tcf-red-dark)); transform: translateY(-2px); box-shadow: 0 8px 22px var(--btn-glow, rgba(163, 29, 17, 0.28)); }
         .btn-primary:active { transform: translateY(0); }
 
         /* Mobile Drawer */
@@ -137,9 +137,6 @@
         .btn-padel {
             background: var(--padel); color: #fff; transition: all .25s;
         }
-        /* Buchen-Button faerbt sich auf der Padel-Seite um */
-        .btn-primary.padel-active { background: var(--padel); }
-        .btn-primary.padel-active:hover { background: var(--padel-deep); box-shadow: 0 8px 22px rgba(254,80,0,.3); }
         .btn-padel:hover { background: var(--padel-deep); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(254,80,0,.3); }
         .slot.past {
             background: #f1f5f9;
@@ -1452,7 +1449,12 @@
             const mNavLink = document.getElementById('mnav-' + pageId);
             if (mNavLink) mNavLink.classList.add('active-nav');
             const bookBtn = document.getElementById('nav-book-btn');
-            if (bookBtn) bookBtn.classList.toggle('padel-active', pageId === 'padel');
+            if (bookBtn) {
+                const padelMode = (pageId === 'padel');
+                bookBtn.style.setProperty('--btn-bg', padelMode ? '#FE5000' : '');
+                bookBtn.style.setProperty('--btn-bg-hover', padelMode ? '#D64200' : '');
+                bookBtn.style.setProperty('--btn-glow', padelMode ? 'rgba(254,80,0,.3)' : '');
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
