@@ -1170,13 +1170,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card p-5 sm:p-6 border-l-4 border-[#FE5000]">
-                            <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-circle-info text-[#FE5000]"></i> Was ist Padel? <button type="button" class="info-btn" onclick="openInfo('padel')" aria-label="Mehr Infos"><i class="fa-solid fa-info"></i></button></h4>
-                            <p class="text-sm text-slate-600 leading-relaxed mb-3">Tennis trifft Squash &ndash; zu viert auf einem Court mit Glaswänden. In Minuten erlernt.</p>
-                            <div class="flex flex-wrap gap-2 mt-3">
-                                <span class="text-xs font-medium bg-[#FFF2EC] text-[#D64200] px-2.5 py-1 rounded-full">2 Courts</span>
-                                <span class="text-xs font-medium bg-[#FFF2EC] text-[#D64200] px-2.5 py-1 rounded-full">Flutlicht</span>
-                                <span class="text-xs font-medium bg-[#FFF2EC] text-[#D64200] px-2.5 py-1 rounded-full">Schläger vor Ort</span>
+                        <div class="panel" id="panel-padel">
+                            <button type="button" class="panel-head" onclick="togglePanel('padel')" aria-expanded="false" aria-controls="panel-padel-body">
+                                <span class="panel-title"><i class="fa-solid fa-circle-info text-[#FE5000]"></i> Was ist Padel?</span>
+                                <span class="flex items-center gap-2">
+                                    <span class="panel-hint">Tennis trifft Squash</span>
+                                    <span class="panel-chevron"><i class="fa-solid fa-chevron-down"></i></span>
+                                </span>
+                            </button>
+                            <div class="panel-body" id="panel-padel-body">
+                                <div class="pt-4">
+                                    <p class="text-sm text-slate-600 leading-relaxed mb-3">Padel ist die am schnellsten wachsende Sportart Europas: ein Mix aus Tennis und Squash, gespielt zu viert auf einem Court mit Glaswänden. In wenigen Minuten erlernbar &ndash; die Wände gehören zum Spiel, der Ball bleibt länger im Spiel.</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="text-xs font-medium bg-[#FFF2EC] text-[#D64200] px-2.5 py-1 rounded-full">Cupra &amp; Sunset Court</span>
+                                        <span class="text-xs font-medium bg-[#FFF2EC] text-[#D64200] px-2.5 py-1 rounded-full">Flutlicht</span>
+                                        <span class="text-xs font-medium bg-[#FFF2EC] text-[#D64200] px-2.5 py-1 rounded-full">Schläger vor Ort</span>
+                                        <span class="text-xs font-medium bg-[#FFF2EC] text-[#D64200] px-2.5 py-1 rounded-full">Ideal für Einsteiger</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
