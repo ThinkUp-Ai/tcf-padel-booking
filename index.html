@@ -26,7 +26,10 @@
         }
         * { -webkit-tap-highlight-color: transparent; }
         html { scroll-behavior: smooth; }
+        html { overflow-x: clip; }
         body {
+            overflow-x: clip;
+            max-width: 100vw;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: #f8fafc;
             color: #0f172a;
@@ -131,6 +134,12 @@
         .brand-x { display: inline-flex; width: 16px; height: 16px; flex-shrink: 0; opacity: .8; }
         .brand-x svg { width: 100%; height: 100%; }
         @media (min-width: 768px) {
+            .brand-lockup { gap: 12px; }
+            .brand-logo-tcf   { height: 46px; }
+            .brand-logo-padel { height: 60px; }
+            .brand-x { width: 18px; height: 18px; }
+        }
+        @media (min-width: 1400px) {
             .brand-lockup { gap: 15px; }
             .brand-logo-tcf   { height: 54px; }
             .brand-logo-padel { height: 70px; }
@@ -408,7 +417,7 @@
     <!-- ================= NAV ================= -->
     <nav class="bg-white/95 backdrop-blur-md brand-edge sticky top-0 z-50 shadow-sm">
         <div class="max-w-[1600px] mx-auto px-4 h-20 md:h-24 flex justify-between items-center gap-4 md:gap-6">
-            <div class="brand-lockup cursor-pointer flex-shrink-0" onclick="switchPage('home')" title="TC Frittlingen &amp; Sunset Padel">
+            <div class="brand-lockup cursor-pointer min-w-0" onclick="switchPage('home')" title="TC Frittlingen &amp; Sunset Padel">
                 <img src="logo%20tcf.jpg" alt="TC Frittlingen e.V." class="brand-logo-tcf">
                 <span class="brand-x" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="url(#brandGrad)" stroke-width="3.2" stroke-linecap="round">
@@ -421,19 +430,19 @@
                 <img src="padel-logo.svg" onerror="this.onerror=null;this.src='padel-logo.png';" alt="TCF Sunset Padel" class="brand-logo-padel">
             </div>
 
-            <div class="hidden lg:flex gap-4 xl:gap-6 text-[12px] xl:text-[13px] font-bold text-slate-600 uppercase tracking-wider items-center">
+            <div class="hidden lg:flex gap-3 xl:gap-5 text-[11px] xl:text-[12.5px] font-bold text-slate-600 uppercase tracking-wide items-center min-w-0">
                 <a href="#" onclick="switchPage('home'); return false;" id="nav-home" class="nav-link active-nav whitespace-nowrap hover:text-[#A31D11]">Startseite</a>
                 <a href="#" onclick="switchPage('tennis'); return false;" id="nav-tennis" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Tennis</a>
-                <a href="#" onclick="switchPage('verein'); return false;" id="nav-verein" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Unser Verein</a>
+                <a href="#" onclick="switchPage('verein'); return false;" id="nav-verein" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Verein</a>
                 <a href="#" onclick="switchPage('spielbetrieb'); return false;" id="nav-spielbetrieb" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Spielbetrieb</a>
                 <a href="#" onclick="switchPage('mannschaften'); return false;" id="nav-mannschaften" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Mannschaften</a>
                 <a href="#" onclick="switchPage('aktuell'); return false;" id="nav-aktuell" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Aktuell</a>
-                <a href="#" onclick="switchPage('mitglied'); return false;" id="nav-mitglied" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Mitglied werden</a>
+                <a href="#" onclick="switchPage('mitglied'); return false;" id="nav-mitglied" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Mitglied</a>
                 <a href="#" onclick="switchPage('padel'); return false;" id="nav-padel" class="nav-link nav-padel whitespace-nowrap">Padel</a>
             </div>
 
             <div class="flex items-center gap-2">
-                <button id="nav-book-btn" onclick="switchPage('padel')" class="btn-primary hidden sm:inline-flex items-center px-4 sm:px-5 md:px-8 py-2.5 md:py-3 rounded text-xs sm:text-sm font-bold uppercase tracking-wide shadow-md whitespace-nowrap">
+                <button id="nav-book-btn" onclick="switchPage('padel')" class="btn-primary hidden sm:inline-flex items-center px-3 sm:px-4 lg:px-5 py-2.5 md:py-3 rounded text-[11px] lg:text-xs font-bold uppercase tracking-wide shadow-md whitespace-nowrap flex-shrink-0">
                     <i class="fa-solid fa-calendar-check sm:mr-2"></i><span class="hidden sm:inline">Platz buchen</span>
                 </button>
                 <button onclick="toggleDrawer()" aria-label="Menü öffnen" class="lg:hidden w-11 h-11 rounded-lg flex items-center justify-center text-slate-700 hover:bg-slate-100 transition">
