@@ -123,6 +123,73 @@
             position: relative;
         }
         .slot:hover:not(.occupied):not(.selected):not(.past) { background: var(--padel-soft); }
+        /* === MARKEN-LOCKUP: TCF x SUNSET PADEL === */
+        .brand-lockup { display: flex; align-items: center; gap: 10px; }
+        .brand-logo-tcf   { height: 44px; width: auto; object-fit: contain; }
+        .brand-logo-padel { height: 40px; width: auto; object-fit: contain; }
+        .brand-x { display: inline-flex; width: 17px; height: 17px; flex-shrink: 0; opacity: .85; }
+        .brand-x svg { width: 100%; height: 100%; }
+        @media (min-width: 768px) {
+            .brand-lockup { gap: 14px; }
+            .brand-logo-tcf   { height: 56px; }
+            .brand-logo-padel { height: 50px; }
+            .brand-x { width: 20px; height: 20px; }
+        }
+        /* Sehr schmale Handys: Padel-Logo etwas kleiner, damit nichts drueckt */
+        @media (max-width: 380px) {
+            .brand-lockup { gap: 7px; }
+            .brand-logo-tcf   { height: 36px; }
+            .brand-logo-padel { height: 32px; }
+            .brand-x { width: 13px; height: 13px; }
+        }
+        /* Farbbruecke Rot -> Orange (verbindet Verein und Padel) */
+        .brand-edge { border-bottom: 5px solid transparent;
+            border-image: linear-gradient(90deg, #A31D11 0%, #C42D0A 35%, #FE5000 70%, #FDE047 100%) 1; }
+        .brand-rule { height: 3px; border-radius: 3px;
+            background: linear-gradient(90deg, #A31D11 0%, #E23A05 50%, #FE5000 100%); }
+
+        /* === INFO-BUTTONS + POPUP === */
+        .info-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 20px; height: 20px; border-radius: 50%;
+            background: var(--padel-soft); color: var(--padel);
+            border: 1px solid #FFD0B8; font-size: 11px; font-weight: 700;
+            cursor: pointer; flex-shrink: 0; margin-left: 6px;
+            transition: background .15s, color .15s, transform .1s;
+            line-height: 1;
+        }
+        .info-btn:hover { background: var(--padel); color: #fff; }
+        .info-btn:active { transform: scale(.92); }
+        .info-btn:focus-visible { outline: 2px solid var(--padel); outline-offset: 2px; }
+        @media (max-width: 640px) {
+            .info-btn { width: 24px; height: 24px; font-size: 12px; }
+            .padel-hero { padding: 14px 14px; border-radius: 14px; }
+            .padel-hero::after { margin-top: 12px; }
+            .info-pop-card { border-radius: 16px; }
+        }
+
+        .info-pop {
+            position: fixed; inset: 0; z-index: 10000;
+            background: rgba(15,23,42,.55); backdrop-filter: blur(3px);
+            display: none; align-items: center; justify-content: center; padding: 18px;
+        }
+        .info-pop.open { display: flex; }
+        .info-pop-card {
+            background: #fff; border-radius: 18px; max-width: 420px; width: 100%;
+            box-shadow: 0 22px 50px -12px rgba(0,0,0,.35);
+            overflow: hidden; animation: infoIn .18s ease-out;
+        }
+        @keyframes infoIn { from { opacity:0; transform: translateY(10px) scale(.98); } to { opacity:1; transform:none; } }
+        .info-pop-head {
+            background: linear-gradient(135deg, #FE5000 0%, #FF8F5E 100%);
+            color: #fff; padding: 16px 20px; display: flex; align-items: center; gap: 10px;
+        }
+        .info-pop-head h4 { margin: 0; font-weight: 800; font-size: 1.02rem; }
+        .info-pop-body { padding: 18px 20px; color: #475569; font-size: .95rem; line-height: 1.6; }
+        .info-pop-body ul { margin: 10px 0 0; padding-left: 18px; }
+        .info-pop-body li { margin-bottom: 5px; }
+        .info-pop-foot { padding: 0 20px 18px; }
+
         /* === SUNSET PADEL === */
         .padel-hero {
             background: linear-gradient(180deg, var(--padel-soft) 0%, #ffffff 100%);
@@ -131,8 +198,8 @@
             padding: 18px 20px;
         }
         .padel-hero::after {
-            content: ''; display: block; height: 3px; margin-top: 16px;
-            background: var(--padel-sun); border-radius: 3px;
+            content: ''; display: block; height: 3px; margin-top: 16px; border-radius: 3px;
+            background: linear-gradient(90deg, #A31D11 0%, #E23A05 45%, #FE5000 100%);
         }
         .btn-padel {
             background: var(--padel); color: #fff; transition: all .25s;
@@ -311,7 +378,7 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         .hero-overlay {
-            background: linear-gradient(135deg, rgba(15,23,42,0.85) 0%, rgba(163,29,17,0.55) 100%);
+            background: linear-gradient(135deg, rgba(15,23,42,0.88) 0%, rgba(163,29,17,0.6) 55%, rgba(254,80,0,0.45) 100%);
         }
 
         a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
@@ -329,14 +396,19 @@
 <body class="antialiased selection:bg-[#FDE047] selection:text-[#A31D11]">
 
     <!-- ================= NAV ================= -->
-    <nav class="bg-white/95 backdrop-blur-md border-b-[5px] border-[#FDE047] sticky top-0 z-50 shadow-sm">
+    <nav class="bg-white/95 backdrop-blur-md brand-edge sticky top-0 z-50 shadow-sm">
         <div class="max-w-[1600px] mx-auto px-4 h-20 md:h-24 flex justify-between items-center gap-3">
-            <div class="flex items-center cursor-pointer flex-shrink-0" onclick="switchPage('home')">
-                <img src="logo%20tcf.jpg" alt="Logo TC Frittlingen" class="h-12 md:h-16 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="hidden flex-col justify-center border-l-4 border-[#FDE047] pl-3">
-                    <span class="font-black text-lg md:text-xl text-[#A31D11] leading-none">TENNISCLUB</span>
-                    <span class="text-xs md:text-sm font-bold text-gray-500 mt-1">FRITTLINGEN E.V.</span>
-                </div>
+            <div class="brand-lockup cursor-pointer flex-shrink-0" onclick="switchPage('home')" title="TC Frittlingen &amp; Sunset Padel">
+                <img src="logo%20tcf.jpg" alt="TC Frittlingen e.V." class="brand-logo-tcf">
+                <span class="brand-x" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="url(#brandGrad)" stroke-width="3.2" stroke-linecap="round">
+                        <defs><linearGradient id="brandGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#A31D11"/><stop offset="55%" stop-color="#E23A05"/><stop offset="100%" stop-color="#FE5000"/>
+                        </linearGradient></defs>
+                        <path d="M6 6 L18 18 M18 6 L6 18"/>
+                    </svg>
+                </span>
+                <img src="padel-logo.svg" onerror="this.onerror=null;this.src='padel-logo.png';" alt="TCF Sunset Padel" class="brand-logo-padel">
             </div>
 
             <div class="hidden lg:flex gap-4 xl:gap-6 text-[12px] xl:text-[13px] font-bold text-slate-600 uppercase tracking-wider items-center">
@@ -858,12 +930,12 @@
         <div class="max-w-[1600px] mx-auto px-4">
             <div class="padel-hero mb-6 sm:mb-8">
                 <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
-                    <div class="flex items-center gap-4 sm:gap-6">
+                    <div class="flex items-center gap-3 sm:gap-6 min-w-0">
                         <img src="padel-logo.svg" onerror="this.onerror=null;this.src='padel-logo.png';"
                              alt="TCF Sunset Padel" class="h-16 sm:h-20 md:h-24 lg:h-28 w-auto flex-shrink-0">
                         <div class="hidden sm:block border-l border-slate-200 pl-5">
                             <h2 class="text-xl md:text-2xl font-black text-slate-900 leading-tight">Court buchen</h2>
-                            <p class="text-sm text-slate-500 mt-0.5">Zwei Courts, im Stundentakt &ndash; bis 14 Tage im Voraus.</p>
+                            <p class="text-sm text-slate-500 mt-0.5 inline-flex items-center">Zwei Courts, im Stundentakt <button type="button" class="info-btn" onclick="openInfo('buchung')" aria-label="Mehr Infos"><i class="fa-solid fa-info"></i></button></p>
                         </div>
                     </div>
                     <div class="flex items-center gap-3 flex-wrap">
@@ -871,6 +943,7 @@
                         <button type="button" onclick="openStorno()" class="inline-flex items-center gap-2 border-2 border-[#FE5000] text-[#FE5000] hover:bg-[#FE5000] hover:text-white font-bold text-sm px-4 py-2.5 rounded-lg transition">
                             <i class="fa-solid fa-rotate-left"></i> Buchung stornieren
                         </button>
+                        <button type="button" class="info-btn" onclick="openInfo('storno')" aria-label="Mehr Infos"><i class="fa-solid fa-info"></i></button>
                     </div>
                 </div>
                 <p class="sm:hidden text-sm text-slate-500 mt-3">Zwei Courts, im Stundentakt &ndash; bis 14 Tage im Voraus.</p>
@@ -972,11 +1045,11 @@
                                     <span class="font-bold text-slate-900">26,00 €</span>
                                 </div>
                                 <div class="flex justify-between items-center py-2 border-b border-slate-100">
-                                    <span class="text-slate-700">Rabatt je Mitglied <span class="text-slate-400">(pro Stunde)</span></span>
+                                    <span class="text-slate-700 inline-flex items-center">Rabatt je Mitglied <button type="button" class="info-btn" onclick="openInfo('rabatt')" aria-label="Mehr Infos"><i class="fa-solid fa-info"></i></button></span>
                                     <span class="font-bold text-green-600">− 4,00 €</span>
                                 </div>
                                 <div class="flex justify-between items-center py-2">
-                                    <span class="text-slate-700">Schlägerverleih <span class="text-slate-400">(pro Schläger)</span></span>
+                                    <span class="text-slate-700 inline-flex items-center">Schlägerverleih <button type="button" class="info-btn" onclick="openInfo('schlaeger')" aria-label="Mehr Infos"><i class="fa-solid fa-info"></i></button></span>
                                     <span class="font-bold text-slate-900">2,00 €</span>
                                 </div>
                             </div>
@@ -988,7 +1061,7 @@
                                     <div class="flex justify-between"><span class="text-slate-600">4 Mitglieder</span><span class="font-bold text-[#FE5000]">10,00 €</span></div>
                                 </div>
                             </div>
-                            <p class="text-xs text-slate-500 mt-3 leading-relaxed"><i class="fa-solid fa-circle-info mr-1"></i> Der Preis gilt pro Platz und Stunde. Jedes mitspielende Mitglied reduziert den Stundenpreis um 4 € – zzgl. optionalem Schlägerverleih.</p>
+                            <p class="text-xs text-slate-500 mt-3">Preis gilt pro Platz und Stunde &ndash; für bis zu 4 Personen.</p>
                             <div class="mt-4 bg-[#A31D11]/5 border border-[#A31D11]/20 rounded-xl p-4">
                                 <p class="text-sm font-bold text-slate-800 mb-1">Noch kein Mitglied?</p>
                                 <p class="text-xs text-slate-600 mb-3">Als Mitglied spielst du dauerhaft günstiger – 4 € Rabatt pro Person und Stunde.</p>
@@ -998,8 +1071,8 @@
                             </div>
                         </div>
                         <div class="card p-5 sm:p-6 border-l-4 border-[#FE5000]" style="background:linear-gradient(135deg,#FFF2EC 0%,#ffffff 60%);">
-                            <h4 class="font-black text-lg mb-1 flex items-center gap-2"><i class="fa-solid fa-gift text-[#FE5000]"></i> Gutschein verschenken</h4>
-                            <p class="text-sm text-slate-600 leading-relaxed mb-4">Das perfekte Geschenk: Padel-Guthaben für den ganzen Court (4 Personen). Der Code kommt sofort per E-Mail und ist frei einlösbar – auch in Teilbeträgen.</p>
+                            <h4 class="font-black text-lg mb-1 flex items-center gap-2"><i class="fa-solid fa-gift text-[#FE5000]"></i> Gutschein verschenken <button type="button" class="info-btn" onclick="openInfo('gutschein')" aria-label="Mehr Infos"><i class="fa-solid fa-info"></i></button></h4>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-4">Padel-Guthaben verschenken &ndash; für den ganzen Court.</p>
                             <label class="block text-xs font-medium text-slate-500 mb-1">Umfang</label>
                             <select id="gs-hours" onchange="updateVoucherPrice()" class="field-input font-medium mb-3">
                                 <option value="1">1 Stunde Padel – 26,00 €</option>
@@ -1022,8 +1095,8 @@
                             <p class="text-[11px] text-slate-400 mt-2 text-center">Guthaben verfällt nicht · Restbeträge bleiben erhalten</p>
                         </div>
                         <div class="card p-5 sm:p-6 border-l-4 border-[#FE5000]">
-                            <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-circle-info text-[#FE5000]"></i> Was ist Padel?</h4>
-                            <p class="text-sm text-slate-600 leading-relaxed mb-3">Padel ist die am schnellsten wachsende Sportart Europas: ein Mix aus Tennis und Squash, gespielt zu viert auf einem Court mit Glaswänden. Schnell erlernbar, riesiger Spaßfaktor.</p>
+                            <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-circle-info text-[#FE5000]"></i> Was ist Padel? <button type="button" class="info-btn" onclick="openInfo('padel')" aria-label="Mehr Infos"><i class="fa-solid fa-info"></i></button></h4>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3">Tennis trifft Squash &ndash; zu viert auf einem Court mit Glaswänden. In Minuten erlernt.</p>
                             <ul class="text-sm text-slate-700 space-y-1.5 mt-3">
                                 <li><i class="fa-solid fa-check text-[#FE5000] mr-2"></i>Cupra Court &amp; Frittlingen Court</li>
                                 <li><i class="fa-solid fa-check text-[#FE5000] mr-2"></i>Flutlicht für Abend-Spiele</li>
@@ -1078,7 +1151,7 @@
                     <!-- Mitglieder im Team -->
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
                         <h4 class="font-bold text-slate-700 mb-1 text-sm uppercase tracking-wide">Mitglieder im Team</h4>
-                        <p class="text-xs text-slate-500 mb-3">Jedes mitspielende Mitglied senkt den Preis um 4 € pro Stunde. Bitte gib für jedes Mitglied den Namen an – falls du selbst Mitglied bist, trag dich auch hier zusätzlich ein.</p>
+                        <p class="text-xs text-slate-500 mb-3 inline-flex items-center">Je Mitglied 4 € günstiger &ndash; bitte Namen angeben <button type="button" class="info-btn" onclick="openInfo('rabatt')" aria-label="Mehr Infos"><i class="fa-solid fa-info"></i></button></p>
                         <label for="member-count" class="block text-sm font-medium text-slate-700 mb-1">Anzahl Mitglieder (0–4)</label>
                         <select id="member-count" onchange="onMembersChange()" class="field-input font-medium">
                             <option value="0">0 – alle Gäste</option>
@@ -1098,7 +1171,7 @@
                             </div>
                             <div>
                                 <h4 class="font-bold text-slate-800 text-sm">Schlägerverleih</h4>
-                                <p class="text-xs text-slate-500">Kein eigener Schläger? Leih dir welche für je 2,00 €.</p>
+                                <p class="text-xs text-slate-500 inline-flex items-center">Je 2,00 € <button type="button" class="info-btn" onclick="openInfo('schlaeger')" aria-label="Mehr Infos"><i class="fa-solid fa-info"></i></button></p>
                             </div>
                         </div>
                         <label for="racket-count" class="block text-sm font-medium text-slate-700 mb-1">Anzahl Schläger</label>
@@ -1372,8 +1445,22 @@
         </div>
     </div>
 
+    <!-- ================= INFO-POPUP ================= -->
+    <div id="info-pop" class="info-pop" onclick="if(event.target===this) closeInfo()">
+        <div class="info-pop-card" role="dialog" aria-modal="true" aria-labelledby="info-pop-title">
+            <div class="info-pop-head">
+                <i id="info-pop-icon" class="fa-solid fa-circle-info"></i>
+                <h4 id="info-pop-title">Info</h4>
+            </div>
+            <div id="info-pop-body" class="info-pop-body"></div>
+            <div class="info-pop-foot">
+                <button onclick="closeInfo()" class="w-full btn-padel py-2.5 rounded-lg font-bold text-sm">Verstanden</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ================= FOOTER ================= -->
-    <footer class="bg-slate-900 text-slate-300 pt-12 sm:pt-16 pb-8 mt-auto border-t-[5px] border-[#A31D11]">
+    <footer class="bg-slate-900 text-slate-300 pt-12 sm:pt-16 pb-8 mt-auto" style="border-top:5px solid transparent;border-image:linear-gradient(90deg,#A31D11 0%,#E23A05 50%,#FE5000 100%) 1;">
         <div class="max-w-7xl mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
                 <div class="lg:col-span-2">
@@ -2054,6 +2141,46 @@
             const od = document.getElementById('ort_datum');
             if (od) od.value = 'Frittlingen, ' + new Date().toLocaleDateString('de-DE');
         }
+
+        // ===== INFO-POPUPS =====
+        const INFOS = {
+            rabatt: { icon: 'fa-solid fa-user-group', title: 'Mitglieder-Rabatt', body:
+                '<p>Der Preis gilt <strong>pro Platz und Stunde</strong> &ndash; egal, wie viele mitspielen. Für jedes Vereinsmitglied im Team gehen <strong>4&nbsp;€ pro Stunde</strong> ab.</p>'
+                + '<ul><li>Nur Gäste: <strong>26,00&nbsp;€</strong></li><li>2 Mitglieder + 2 Gäste: <strong>18,00&nbsp;€</strong></li><li>4 Mitglieder: <strong>10,00&nbsp;€</strong></li></ul>'
+                + '<p style="margin-top:10px">Beim Buchen gibst du einfach die Anzahl der Mitglieder und deren Namen an.</p>' },
+            schlaeger: { icon: 'fa-solid fa-table-tennis-paddle-ball', title: 'Schlägerverleih', body:
+                '<p>Kein eigener Schläger? Kein Problem &ndash; wir haben welche vor Ort.</p>'
+                + '<ul><li><strong>2,00&nbsp;€</strong> pro Schläger</li><li>1 bis 4 Schläger möglich</li><li>Direkt bei der Buchung dazuwählen</li></ul>'
+                + '<p style="margin-top:10px">Die Schläger liegen für dich bereit, wenn du kommst.</p>' },
+            gutschein: { icon: 'fa-solid fa-gift', title: 'Gutscheine', body:
+                '<p>Ein Padel-Gutschein ist das perfekte Geschenk &ndash; für den ganzen Court, also bis zu vier Personen.</p>'
+                + '<ul><li>1 bis 4 Stunden wählbar</li><li>Code kommt sofort per E-Mail</li><li>Frei übertragbar</li><li>Auch in Teilbeträgen einlösbar &ndash; <strong>Restguthaben bleibt erhalten</strong></li></ul>' },
+            storno: { icon: 'fa-solid fa-rotate-left', title: 'Stornieren', body:
+                '<p>Pläne geändert? Du kannst deine Buchung <strong>bis 24 Stunden vor Spielbeginn</strong> selbst stornieren.</p>'
+                + '<ul><li>Buchungsnummer und E-Mail eingeben</li><li>Der Betrag wird automatisch erstattet</li><li>Gutschein-Guthaben kommt zurück</li><li>Der Platz wird sofort wieder freigegeben</li></ul>' },
+            padel: { icon: 'fa-solid fa-circle-question', title: 'Was ist Padel?', body:
+                '<p>Padel ist die am schnellsten wachsende Sportart Europas &ndash; ein Mix aus Tennis und Squash, gespielt zu viert auf einem Court mit Glaswänden.</p>'
+                + '<ul><li>In wenigen Minuten erlernbar</li><li>Zwei Courts mit Flutlicht</li><li>Schläger können geliehen werden</li></ul>'
+                + '<p style="margin-top:10px">Ideal für Einsteiger &ndash; die Wände gehören zum Spiel, der Ball bleibt länger im Spiel.</p>' },
+            buchung: { icon: 'fa-regular fa-clock', title: 'So funktioniert die Buchung', body:
+                '<ul><li>Gebucht wird in <strong>vollen Stunden</strong></li><li>Mehrere Stunden nur <strong>zusammenhängend</strong></li><li>Bis zu <strong>14 Tage im Voraus</strong></li><li>Am Computer lässt sich die Dauer mit gedrückter Maus ziehen</li></ul>'
+                + '<p style="margin-top:10px">Nach der Zahlung bekommst du sofort eine Bestätigung mit deinem persönlichen Zugangscode für das Schloss.</p>' }
+        };
+        function openInfo(key) {
+            const d = INFOS[key]; if (!d) return;
+            document.getElementById('info-pop-icon').className = d.icon;
+            document.getElementById('info-pop-title').innerText = d.title;
+            document.getElementById('info-pop-body').innerHTML = d.body;
+            document.getElementById('info-pop').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeInfo() {
+            document.getElementById('info-pop').classList.remove('open');
+            const anyOpen = ['booking-modal','agb-modal','impressum-modal','datenschutz-modal','storno-modal']
+                .some(m => { const e = document.getElementById(m); return e && e.classList.contains('open'); });
+            if (!anyOpen) document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeInfo(); });
 
         // ===== INIT =====
         document.getElementById('footer-year').innerText = new Date().getFullYear();
