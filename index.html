@@ -165,7 +165,10 @@
         @media (max-width: 640px) {
             .info-btn { width: 24px; height: 24px; font-size: 12px; }
             .padel-hero { padding: 14px 14px; border-radius: 14px; }
-            .padel-hero::after { margin-top: 12px; }
+            .padel-hero-logo { height: 52px; width: auto; }
+        @media (min-width: 640px) { .padel-hero-logo { height: 66px; } }
+        @media (min-width: 1024px) { .padel-hero-logo { height: 80px; } }
+        .padel-hero::after { margin-top: 12px; }
             .info-pop-card { border-radius: 16px; }
         }
 
@@ -425,7 +428,7 @@
 
             <div class="flex items-center gap-2">
                 <button id="nav-book-btn" onclick="switchPage('padel')" class="btn-primary px-4 sm:px-6 md:px-8 py-2.5 md:py-3 rounded text-xs sm:text-sm font-bold uppercase tracking-wide shadow-md whitespace-nowrap">
-                    <i class="fa-solid fa-calendar-check mr-1.5 sm:mr-2"></i>Platz buchen
+                    <i class="fa-solid fa-calendar-check sm:mr-2"></i><span class="hidden sm:inline">Platz buchen</span>
                 </button>
                 <button onclick="toggleDrawer()" aria-label="Menü öffnen" class="lg:hidden w-11 h-11 rounded-lg flex items-center justify-center text-slate-700 hover:bg-slate-100 transition">
                     <i class="fa-solid fa-bars text-xl"></i>
@@ -927,24 +930,22 @@
     <main id="page-padel" class="page-section bg-white min-h-screen py-8 sm:py-10">
         <div class="max-w-[1600px] mx-auto px-4">
             <div class="padel-hero mb-6 sm:mb-8">
-                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
-                    <div class="flex items-center gap-3 sm:gap-6 min-w-0">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div class="flex items-center gap-3 sm:gap-5 min-w-0">
                         <img src="padel-logo.svg" onerror="this.onerror=null;this.src='padel-logo.png';"
-                             alt="TCF Sunset Padel" class="h-16 sm:h-20 md:h-24 lg:h-28 w-auto flex-shrink-0">
-                        <div class="hidden sm:block border-l border-slate-200 pl-5">
-                            <h2 class="text-xl md:text-2xl font-black text-slate-900 leading-tight">Court buchen</h2>
-                            <p class="text-sm text-slate-500 mt-0.5 inline-flex items-center">Zwei Courts, im Stundentakt <button type="button" class="info-btn" onclick="openInfo('buchung')" aria-label="Mehr Infos"><i class="fa-solid fa-info"></i></button></p>
+                             alt="TCF Sunset Padel" class="padel-hero-logo flex-shrink-0">
+                        <div class="min-w-0 border-l border-[#FFD9C7] pl-3 sm:pl-5">
+                            <h2 class="text-lg sm:text-xl md:text-2xl font-black text-slate-900 leading-tight">Court buchen</h2>
+                            <p class="text-xs sm:text-sm text-slate-500 mt-0.5 inline-flex items-center">Im Stundentakt <button type="button" class="info-btn" onclick="openInfo('buchung')" aria-label="Mehr Infos"><i class="fa-solid fa-info"></i></button></p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3 flex-wrap">
+                    <div class="flex items-center justify-between lg:justify-end gap-3 flex-wrap">
                         <span class="inline-flex items-center gap-2 text-sm text-slate-600"><span class="live-dot"></span> Live-Verfügbarkeit</span>
-                        <button type="button" onclick="openStorno()" class="inline-flex items-center gap-2 border-2 border-[#FE5000] text-[#FE5000] hover:bg-[#FE5000] hover:text-white font-bold text-sm px-4 py-2.5 rounded-lg transition">
-                            <i class="fa-solid fa-rotate-left"></i> Buchung stornieren
+                        <button type="button" onclick="openStorno()" class="inline-flex items-center gap-2 border-2 border-[#FE5000] text-[#FE5000] hover:bg-[#FE5000] hover:text-white font-bold text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg transition whitespace-nowrap">
+                            <i class="fa-solid fa-rotate-left"></i> Stornieren
                         </button>
-                        <button type="button" class="info-btn" onclick="openInfo('storno')" aria-label="Mehr Infos"><i class="fa-solid fa-info"></i></button>
                     </div>
                 </div>
-                <p class="sm:hidden text-sm text-slate-500 mt-3">Zwei Courts, im Stundentakt &ndash; bis 14 Tage im Voraus.</p>
             </div>
 
             <div class="w-full">
