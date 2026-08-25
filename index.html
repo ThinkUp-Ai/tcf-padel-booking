@@ -176,6 +176,33 @@
         .brand-rule { height: 3px; border-radius: 3px;
             background: linear-gradient(90deg, #A31D11 0%, #E23A05 50%, #FE5000 100%); }
 
+        /* === AUFKLAPPBARE BALKEN === */
+        .panel { border: 1px solid #FFD9C7; border-radius: 14px; background: #fff; overflow: hidden; }
+        .panel-head {
+            width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+            padding: 15px 18px; background: linear-gradient(135deg, var(--padel-soft) 0%, #ffffff 70%);
+            border: 0; cursor: pointer; text-align: left; font-family: inherit;
+            transition: background .18s;
+        }
+        .panel-head:hover { background: var(--padel-soft); }
+        .panel-head:focus-visible { outline: 3px solid rgba(254,80,0,.35); outline-offset: -3px; }
+        .panel-title {
+            display: inline-flex; align-items: center; gap: 9px;
+            font-weight: 800; font-size: 1.02rem; color: #0f172a; white-space: nowrap;
+        }
+        .panel-chevron {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 26px; height: 26px; border-radius: 50%;
+            background: var(--padel); color: #fff; font-size: 12px; flex-shrink: 0;
+            transition: transform .22s ease;
+        }
+        .panel.open .panel-chevron { transform: rotate(180deg); }
+        .panel-body { display: none; padding: 0 18px 18px; border-top: 1px solid #FFEADF; }
+        .panel.open .panel-body { display: block; animation: panelIn .18s ease-out; }
+        @keyframes panelIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+        .panel-hint { font-size: .8rem; color: var(--muted, #78716C); font-weight: 500; white-space: nowrap; }
+        @media (max-width: 420px) { .panel-hint { display: none; } }
+
         /* === INFO-BUTTONS + POPUP === */
         .info-btn {
             display: inline-flex; align-items: center; justify-content: center;
@@ -1071,8 +1098,16 @@
 
                     <!-- Padel Info Section -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-2">
-                        <div class="card p-5 sm:p-6 border-l-4 border-[#FE5000]">
-                            <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-tag text-[#FE5000]"></i> Preise pro Platz</h4>
+                        <div class="panel" id="panel-preise">
+                            <button type="button" class="panel-head" onclick="togglePanel('preise')" aria-expanded="false" aria-controls="panel-preise-body">
+                                <span class="panel-title"><i class="fa-solid fa-tag text-[#FE5000]"></i> Preise pro Platz</span>
+                                <span class="flex items-center gap-2">
+                                    <span class="panel-hint">ab 10,00 €</span>
+                                    <span class="panel-chevron"><i class="fa-solid fa-chevron-down"></i></span>
+                                </span>
+                            </button>
+                            <div class="panel-body" id="panel-preise-body">
+                                <div class="pt-4">
                             <div class="space-y-2 text-sm">
                                 <div class="flex justify-between items-center py-2 border-b border-slate-100">
                                     <span class="text-slate-700">Platzmiete <span class="text-slate-400">(pro Stunde)</span></span>
@@ -1098,9 +1133,19 @@
                                     <i class="fa-solid fa-user-plus"></i> Jetzt Mitglied werden
                                 </a>
                             </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card p-5 sm:p-6 border-l-4 border-[#FE5000]" style="background:linear-gradient(135deg,#FFF2EC 0%,#ffffff 60%);">
-                            <h4 class="font-black text-lg mb-1 flex items-center gap-2"><i class="fa-solid fa-gift text-[#FE5000]"></i> Gutschein verschenken <button type="button" class="info-btn" onclick="openInfo('gutschein')" aria-label="Mehr Infos"><i class="fa-solid fa-info"></i></button></h4>
+                        <div class="panel" id="panel-gutschein" style="background:linear-gradient(135deg,#FFF2EC 0%,#ffffff 60%);">
+                            <button type="button" class="panel-head" onclick="togglePanel('gutschein')" aria-expanded="false" aria-controls="panel-gutschein-body">
+                                <span class="panel-title"><i class="fa-solid fa-gift text-[#FE5000]"></i> Gutschein verschenken</span>
+                                <span class="flex items-center gap-2">
+                                    <span class="panel-hint">1–4 Stunden</span>
+                                    <span class="panel-chevron"><i class="fa-solid fa-chevron-down"></i></span>
+                                </span>
+                            </button>
+                            <div class="panel-body" id="panel-gutschein-body">
+                                <div class="pt-4">
                             <p class="text-sm text-slate-600 leading-relaxed mb-4">Padel-Guthaben verschenken &ndash; für den ganzen Court.</p>
                             <label class="block text-xs font-medium text-slate-500 mb-1">Umfang</label>
                             <select id="gs-hours" onchange="updateVoucherPrice()" class="field-input font-medium mb-3">
@@ -1122,6 +1167,8 @@
                             </button>
                             <div id="gs-result" class="mt-2"></div>
                             <p class="text-[11px] text-slate-400 mt-2 text-center">Guthaben verfällt nicht · Restbeträge bleiben erhalten</p>
+                                </div>
+                            </div>
                         </div>
                         <div class="card p-5 sm:p-6 border-l-4 border-[#FE5000]">
                             <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-circle-info text-[#FE5000]"></i> Was ist Padel? <button type="button" class="info-btn" onclick="openInfo('padel')" aria-label="Mehr Infos"><i class="fa-solid fa-info"></i></button></h4>
@@ -2340,6 +2387,15 @@
         function prefillOrtDatum() {
             const od = document.getElementById('ort_datum');
             if (od) od.value = 'Frittlingen, ' + new Date().toLocaleDateString('de-DE');
+        }
+
+        // ===== AUFKLAPPBARE BALKEN =====
+        function togglePanel(key) {
+            const panel = document.getElementById('panel-' + key);
+            if (!panel) return;
+            const offen = panel.classList.toggle('open');
+            const head = panel.querySelector('.panel-head');
+            if (head) head.setAttribute('aria-expanded', offen ? 'true' : 'false');
         }
 
         // ===== INFO-POPUPS =====
