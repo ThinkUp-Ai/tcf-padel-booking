@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#A31D11">
     <title>TC Frittlingen e.V. – Padel & Tennis</title>
+    <meta name="description" content="Tennis und Padel beim TC Frittlingen: Padel-Court online buchen, Mitglied werden und alles rund um Spielbetrieb, Mannschaften und Verein.">
+    <link rel="icon" href="logo%20tcf.jpg">
+    <!-- Absolute URLs: Messenger-Crawler loesen relative Pfade nicht auf. Bei eigener Domain hier anpassen. -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="TC Frittlingen e.V.">
+    <meta property="og:title" content="TC Frittlingen e.V. – Padel & Tennis">
+    <meta property="og:description" content="Padel-Court online buchen – 26 € pro Stunde, 4 € Rabatt je mitspielendem Mitglied.">
+    <meta property="og:url" content="https://thinkup-ai.github.io/tcf-padel-booking/">
+    <meta property="og:image" content="https://thinkup-ai.github.io/tcf-padel-booking/padel-logo.png">
+    <meta name="twitter:card" content="summary_large_image">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -123,6 +133,7 @@
             position: relative;
         }
         .slot:hover:not(.occupied):not(.selected):not(.past) { background: var(--padel-soft); }
+        .slot:focus-visible, .mslot:focus-visible { outline: 3px solid var(--padel); outline-offset: 2px; }
         /* === SUNSET PADEL === */
         .padel-hero {
             background: linear-gradient(180deg, var(--padel-soft) 0%, #ffffff 100%);
@@ -818,7 +829,9 @@
                     <h3 class="font-black text-lg mb-1">Bankverbindung (SEPA)</h3>
                     <p class="text-xs text-slate-500 mb-4">Für den Einzug des Jahresbeitrags.</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <input id="iban" required placeholder="IBAN" class="field-input sm:col-span-2">
+                        <input id="iban" required placeholder="IBAN (z. B. DE12 3456 7890 1234 5678 90)" class="field-input sm:col-span-2"
+                               autocomplete="off" spellcheck="false" inputmode="latin"
+                               oninput="this.value = this.value.toUpperCase(); this.setCustomValidity('');">
                         <input id="bic" placeholder="BIC" class="field-input">
                         <input id="bank" placeholder="Bank" class="field-input">
                         <input id="inhaber" placeholder="Kontoinhaber (falls abweichend)" class="field-input sm:col-span-2">
@@ -1439,7 +1452,7 @@
         let voucherValid = false, voucherCode = '', voucherCentAvailable = 0;
 
         // ===== PAGE SWITCHING =====
-        function switchPage(pageId) {
+        function switchPage(pageId, fromHistory) {
             document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(el => el.classList.remove('active-nav'));
             const target = document.getElementById('page-' + pageId);
@@ -1455,8 +1468,10 @@
                 bookBtn.style.setProperty('--btn-bg-hover', padelMode ? '#D64200' : '');
                 bookBtn.style.setProperty('--btn-glow', padelMode ? 'rgba(254,80,0,.3)' : '');
             }
+            if (!fromHistory && location.hash.slice(1) !== pageId) history.pushState(null, '', '#' + pageId);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        window.addEventListener('popstate', () => switchPage(location.hash.slice(1) || 'home', true));
 
         // ===== MOBILE DRAWER =====
         function toggleDrawer() {
@@ -1535,6 +1550,11 @@
                     slot.className = 'slot';
                     slot.dataset.court = court.id;
                     slot.dataset.hour = h;
+                    slot.tabIndex = 0;                       // mit Tab erreichbar
+                    slot.setAttribute('role', 'button');
+                    slot.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSlot(slot); }
+                    });
                     slot.addEventListener('click', () => { if (suppressClick) { suppressClick = false; return; } toggleSlot(slot); });
                     slot.addEventListener('mousedown', (e) => { e.preventDefault(); startDrag(slot); });
                     slot.addEventListener('mouseenter', () => dragEnter(slot));
@@ -1573,8 +1593,21 @@
             }
         }
 
-        function hourStart(iso){ const m = /T(\d{2}):/.exec(iso || ''); return m ? parseInt(m[1],10) : null; }
-        function hourEndCeil(iso){ const m = /T(\d{2}):(\d{2})/.exec(iso || ''); if(!m) return null; let h = parseInt(m[1],10); if(parseInt(m[2],10) > 0) h += 1; return h; }
+        // Belegung kommt vom Backend in UTC ("...T16:00:00+00:00"). Frueher wurde die Stunde
+        // per Regex aus dem String gelesen -> im Sommer 2 h zu frueh im Raster. Jetzt echt
+        // nach Europe/Berlin umrechnen, damit jeder Offset des Backends richtig ankommt.
+        const berlinHourFmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Berlin', hour: '2-digit', hour12: false });
+        function berlinHour(iso){
+            const d = new Date(iso || '');
+            if (isNaN(d)) return null;
+            return parseInt(berlinHourFmt.format(d), 10);
+        }
+        function hourStart(iso){ return berlinHour(iso); }
+        function hourEndCeil(iso){
+            const h = berlinHour(iso);
+            if (h === null) return null;
+            return new Date(iso).getUTCMinutes() > 0 ? h + 1 : h;   // angefangene Stunde blockt ganz
+        }
 
         function applyOccupancy(occupied) {
             document.querySelectorAll('.slot').forEach(slot => {
@@ -1700,7 +1733,18 @@
             return { court, hours: hrs, startH: hrs[0], endH: hrs[hrs.length-1] + 1, count: hrs.length };
         }
 
+        // aria-Beschriftung aus den Klassen ableiten (laeuft nach jeder Rasteraenderung)
+        function labelSlots() {
+            document.querySelectorAll('.slot').forEach(s => {
+                const belegt = s.classList.contains('occupied'), vorbei = s.classList.contains('past');
+                const status = vorbei ? 'vorbei' : (belegt ? 'belegt' : (s.classList.contains('selected') ? 'gewaehlt' : 'frei'));
+                s.setAttribute('aria-label', courtName(s.dataset.court) + ', ' + pad(s.dataset.hour) + ':00 Uhr, ' + status);
+                s.setAttribute('aria-disabled', String(belegt || vorbei));
+            });
+        }
+
         function updateSelectionBar() {
+            labelSlots();
             const bar = document.getElementById('selection-bar');
             const sel = getSelection();
             if (!sel) { bar.classList.remove('show'); return; }
@@ -1877,13 +1921,15 @@
         }
 
         function collectPlayers() {
-            const members = membersCountVal();
-            // Hauptbucher = Mitglied 1 (falls Mitglieder > 0), sonst Gast
-            const players = [{ name: hauptbucherName(), status: members >= 1 ? 'member' : 'guest' }];
-            document.querySelectorAll('#member-names .member-name').forEach(inp => {
-                const nm = (inp.value || '').trim();
-                if (nm) players.push({ name: nm, status: 'member' });
-            });
+            // Der Hauftbucher traegt sich laut Hinweistext bei den Mitgliedern nochmal ein.
+            // Steht er dort, ist er Mitglied - und darf nicht zweimal in der Liste landen.
+            const norm = n => n.toLowerCase().replace(/\s+/g, ' ').trim();
+            const haupt = hauptbucherName();
+            const namen = [...document.querySelectorAll('#member-names .member-name')]
+                .map(inp => (inp.value || '').trim()).filter(Boolean);
+            const istHauptbucher = n => norm(n) === norm(haupt);
+            const players = [{ name: haupt, status: namen.some(istHauptbucher) ? 'member' : 'guest' }];
+            namen.filter(n => !istHauptbucher(n)).forEach(n => players.push({ name: n, status: 'member' }));
             return players;
         }
 
@@ -2003,6 +2049,7 @@
                     result.innerHTML = '<div class="bg-green-50 border border-green-200 text-green-800 text-sm rounded-lg p-4"><i class="fa-solid fa-circle-check mr-1"></i> ' +
                         (data.message || 'Buchung storniert. Die Erstattung wurde veranlasst.') + '</div>';
                     label.innerText = 'Erledigt';
+                    loadAvailability();                       // frei gewordenen Slot sofort zeigen
                 } else {
                     result.innerHTML = '<div class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3"><i class="fa-solid fa-triangle-exclamation mr-1"></i> ' +
                         ((data && data.reason) || 'Stornierung nicht möglich. Bitte kontaktiere den Verein.') + '</div>';
@@ -2031,6 +2078,14 @@
             payload.einwilligung_aufnahme = chk('einwilligung_aufnahme');
             payload.einwilligung_sepa = chk('einwilligung_sepa');
             payload.einwilligung_datenschutz = chk('einwilligung_datenschutz');
+            payload.iban = payload.iban.replace(/\s+/g, '').toUpperCase();
+
+            const ibanFeld = document.getElementById('iban');
+            if (!ibanGueltig(payload.iban)) {
+                ibanFeld.setCustomValidity('Diese IBAN stimmt nicht. Bitte pruefe die Eingabe.');
+                ibanFeld.reportValidity();
+                return;
+            }
 
             btn.disabled = true; label.innerText = 'Wird gesendet…'; result.innerHTML = '';
             try {
@@ -2050,6 +2105,19 @@
                 btn.disabled = false; label.innerText = 'Erneut senden';
             }
         }
+        // IBAN-Pruefziffer nach ISO 7064 (mod 97). Faengt Tippfehler ab, bevor der Einzug platzt.
+        function ibanGueltig(v) {
+            const iban = (v || '').replace(/\s+/g, '').toUpperCase();
+            if (!/^[A-Z]{2}\d{2}[A-Z0-9]{10,30}$/.test(iban)) return false;
+            const umgestellt = iban.slice(4) + iban.slice(0, 4);
+            let rest = 0;
+            for (const ch of umgestellt) {
+                const buchstabe = ch >= 'A';
+                rest = (rest * (buchstabe ? 100 : 10) + (buchstabe ? ch.charCodeAt(0) - 55 : +ch)) % 97;
+            }
+            return rest === 1;
+        }
+
         function prefillOrtDatum() {
             const od = document.getElementById('ort_datum');
             if (od) od.value = 'Frittlingen, ' + new Date().toLocaleDateString('de-DE');
@@ -2057,6 +2125,8 @@
 
         // ===== INIT =====
         document.getElementById('footer-year').innerText = new Date().getFullYear();
+        const startPage = location.hash.slice(1);
+        if (startPage && document.getElementById('page-' + startPage)) switchPage(startPage, true);
         buildDateSelector();
         buildBookingGrid();
         renderMobile();
