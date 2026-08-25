@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#A31D11">
     <title>TC Frittlingen e.V. – Padel & Tennis</title>
+    <meta name="description" content="Tennis und Padel beim TC Frittlingen: Padel-Court online buchen, Mitglied werden und alles rund um Spielbetrieb, Mannschaften und Verein.">
+    <link rel="icon" href="logo%20tcf.jpg">
+    <!-- Absolute URLs: Messenger-Crawler loesen relative Pfade nicht auf. Bei eigener Domain hier anpassen. -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="TC Frittlingen e.V.">
+    <meta property="og:title" content="TC Frittlingen e.V. – Padel & Tennis">
+    <meta property="og:description" content="Padel-Court online buchen – 26 € pro Stunde, 4 € Rabatt je mitspielendem Mitglied.">
+    <meta property="og:url" content="https://thinkup-ai.github.io/tcf-padel-booking/">
+    <meta property="og:image" content="https://thinkup-ai.github.io/tcf-padel-booking/padel-logo.png">
+    <meta name="twitter:card" content="summary_large_image">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -123,6 +133,7 @@
             position: relative;
         }
         .slot:hover:not(.occupied):not(.selected):not(.past) { background: var(--padel-soft); }
+        .slot:focus-visible, .mslot:focus-visible { outline: 3px solid var(--padel); outline-offset: 2px; }
         /* === MARKEN-LOCKUP: TCF x SUNSET PADEL === */
         .brand-lockup { display: flex; align-items: center; gap: 10px; }
         /* TCF ist 4,1:1, Padel 2,1:1 -> Padel braucht mehr Hoehe fuer gleiche optische Groesse */
@@ -401,6 +412,8 @@
         .legal p, .legal li { color: #475569; font-size: 0.9rem; line-height: 1.6; }
         .legal ul { list-style: disc; padding-left: 20px; margin: 6px 0; }
         .legal .muted { color: #94a3b8; font-size: 0.8rem; }
+        .legal .ph { background: #fef08a; color: #713f12; padding: 0 3px; border-radius: 3px; font-weight: 600; }
+        .legal code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 0.82rem; }
     </style>
 </head>
 <body class="antialiased selection:bg-[#FDE047] selection:text-[#A31D11]">
@@ -897,7 +910,9 @@
                     <h3 class="font-black text-lg mb-1">Bankverbindung (SEPA)</h3>
                     <p class="text-xs text-slate-500 mb-4">Für den Einzug des Jahresbeitrags.</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <input id="iban" required placeholder="IBAN" class="field-input sm:col-span-2">
+                        <input id="iban" required placeholder="IBAN (z. B. DE12 3456 7890 1234 5678 90)" class="field-input sm:col-span-2"
+                               autocomplete="off" spellcheck="false" inputmode="latin"
+                               oninput="this.value = this.value.toUpperCase(); this.setCustomValidity('');">
                         <input id="bic" placeholder="BIC" class="field-input">
                         <input id="bank" placeholder="Bank" class="field-input">
                         <input id="inhaber" placeholder="Kontoinhaber (falls abweichend)" class="field-input sm:col-span-2">
@@ -1161,6 +1176,7 @@
                             <option value="4">4 Mitglieder</option>
                         </select>
                         <div id="member-names" class="mt-3 space-y-3"></div>
+                        <p class="text-[11px] text-slate-400 mt-2 leading-snug">Bitte nur Namen von Personen angeben, die damit einverstanden sind, und sie über unsere <a href="#" onclick="openLegal('datenschutz-modal'); return false;" class="underline hover:text-slate-600">Datenschutzerklärung</a> informieren.</p>
                     </div>
 
                     <!-- Schlägerverleih -->
@@ -1334,7 +1350,7 @@
             </button>
             <div class="modal-body legal">
                 <h3 class="text-xl sm:text-2xl font-black text-slate-900 mb-1 pr-10">Impressum</h3>
-                <p class="muted mb-4">Angaben gemäß § 5 TMG</p>
+                <p class="muted mb-4">Angaben gemäß § 5 DDG</p>
                 <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800 mb-4">
                     <i class="fa-solid fa-triangle-exclamation mr-1"></i> <strong>Entwurf</strong> – bitte Platzhalter [ … ] durch die echten Vereinsdaten ersetzen und rechtlich prüfen lassen.
                 </div>
@@ -1376,42 +1392,158 @@
             </button>
             <div class="modal-body legal">
                 <h3 class="text-xl sm:text-2xl font-black text-slate-900 mb-1 pr-10">Datenschutzerklärung</h3>
-                <p class="muted mb-4">Informationen gemäß Art. 13 DSGVO · Stand: Saison 2026</p>
+                <p class="muted mb-4">Vereinswebsite und Online-Padel-Buchung · Informationen nach Art. 13 und 14 DSGVO</p>
                 <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800 mb-4">
-                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> <strong>Entwurf</strong> – bitte vor Veröffentlichung rechtlich prüfen und Platzhalter ergänzen.
+                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> <strong>Entwurf.</strong> Alle <span class="ph">gelb markierten</span> Stellen muss der Verein noch ausfüllen. Vor der Veröffentlichung anwaltlich prüfen lassen – insbesondere Nr. 7.5, 10 und 12.
                 </div>
 
                 <h4>1. Verantwortlicher</h4>
-                <p>Tennisclub Frittlingen e.V., Ecke Römerstraße / Schildeckstraße, 78665 Frittlingen, E-Mail: padel@tc-frittlingen.de.</p>
+                <p>Verantwortlicher für die Verarbeitung personenbezogener Daten auf dieser Website ist:</p>
+                <p><strong>Tennisclub Frittlingen e.V.</strong><br>
+                Ecke Römerstraße / Schildeckstraße, 78665 Frittlingen<br>
+                E-Mail: padel@tc-frittlingen.de<br>
+                Telefon: <span class="ph">[Telefonnummer]</span><br>
+                Vertreten durch den Vorstand: <span class="ph">[Name(n) nach § 26 BGB]</span><br>
+                Registergericht: <span class="ph">[Amtsgericht]</span>, Vereinsregister-Nr. <span class="ph">[VR-Nummer]</span></p>
+                <p>Für Fragen zum Datenschutz und zur Ausübung der in Nr. 15 genannten Rechte steht die vorstehende E-Mail-Adresse zur Verfügung.</p>
 
-                <h4>2. Welche Daten wir verarbeiten</h4>
+                <h4>2. Datenschutzbeauftragter</h4>
+                <p>Ein Datenschutzbeauftragter wurde nicht benannt, da hierzu keine Verpflichtung besteht: Es sind weniger als 20 Personen ständig mit der automatisierten Verarbeitung personenbezogener Daten beschäftigt (§ 38 Abs. 1 BDSG), und die Voraussetzungen des Art. 37 Abs. 1 DSGVO liegen nicht vor. Ansprechpartner in allen Datenschutzfragen ist der Vorstand unter der in Nr. 1 genannten Anschrift.</p>
+
+                <h4>3. Keine Cookies, kein Tracking</h4>
                 <ul>
-                    <li>Namen der mitspielenden Personen (Hauptbucher &amp; angegebene Mitglieder)</li>
-                    <li>E-Mail-Adresse des Hauptbuchers</li>
-                    <li>Buchungsdaten (Platz, Datum, Uhrzeit, Betrag)</li>
-                    <li>Zahlungsdaten (verarbeitet durch unseren Zahlungsdienstleister – wir erhalten keine vollständigen Kartendaten)</li>
+                    <li>Es werden <strong>keine eigenen Cookies</strong> gesetzt und keine Daten im Browser der Nutzer gespeichert.</li>
+                    <li>Es kommen <strong>keine Analyse- oder Statistikdienste</strong> zum Einsatz (kein Google Analytics, kein Matomo, keine Zählpixel).</li>
+                    <li>Es findet <strong>kein Tracking</strong>, kein Retargeting und keine Einbindung von Werbenetzwerken statt.</li>
+                    <li>Personenbezogene Daten werden <strong>nicht verkauft</strong> und nicht zu Werbezwecken weitergegeben.</li>
+                </ul>
+                <p>Beim Aufruf der Seite werden allerdings Schriftarten, Symbole und die Kartenansicht von Servern Dritter nachgeladen. Dabei erhält der jeweilige Anbieter die IP-Adresse des Nutzers. Nr. 5 und 6 erläutern dies im Einzelnen, einschließlich des Umstands, dass dies derzeit ohne vorherige Einwilligung geschieht.</p>
+
+                <h4>4. Aufruf der Website (Hosting)</h4>
+                <p>Diese Website ist eine einzelne statische Seite. Der Verein betreibt hierfür keinen eigenen Server, sondern nutzt <strong>GitHub Pages</strong>, einen Dienst der GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA (Microsoft-Konzern). Beim Aufruf verarbeitet GitHub technisch notwendige Verbindungsdaten: IP-Adresse, Datum und Uhrzeit des Abrufs, die abgerufene Datei, Browsertyp, Betriebssystem und die zuvor besuchte Seite (Referrer).</p>
+                <p><strong>Zweck:</strong> Auslieferung der Website, Sicherstellung des technischen Betriebs, Abwehr von Angriffen und Überlastung. <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO; das berechtigte Interesse liegt in der zuverlässigen Bereitstellung der Seite ohne eigenen Serverbetrieb.</p>
+                <p><strong>Speicherdauer:</strong> Diese Protokolle entstehen bei GitHub, nicht beim Verein. Ein Zugriff darauf besteht nicht; sie können weder eingesehen noch gelöscht werden. Die Speicherdauer richtet sich nach den Vorgaben von GitHub.</p>
+                <p><strong>Drittland:</strong> GitHub, Inc. ist unter dem EU-U.S. Data Privacy Framework zertifiziert; insoweit besteht ein Angemessenheitsbeschluss der EU-Kommission (Art. 45 DSGVO). Ergänzend gelten die Standardvertragsklauseln der EU-Kommission (Art. 46 Abs. 2 lit. c DSGVO).</p>
+
+                <h4>5. Schriftarten und Gestaltungsbausteine von Drittanbietern</h4>
+                <p>Beim Aufruf der Seite werden automatisch Dateien von Servern Dritter geladen, und zwar <strong>ohne vorherige Einwilligung der Nutzer</strong>. Dabei wird die IP-Adresse an den jeweiligen Anbieter übertragen, außerdem technische Angaben wie Browsertyp und aufrufende Seite. Im Einzelnen:</p>
+                <ul>
+                    <li><strong>Google Fonts</strong> über <code>fonts.googleapis.com</code> und <code>fonts.gstatic.com</code> – Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland; die Auslieferung kann auch über Server der Google LLC, USA erfolgen (unter dem EU-U.S. Data Privacy Framework zertifiziert).</li>
+                    <li><strong>Font Awesome</strong> (Symbole) über <code>cdnjs.cloudflare.com</code> – Cloudflare, Inc., 101 Townsend Street, San Francisco, CA 94107, USA (unter dem EU-U.S. Data Privacy Framework zertifiziert).</li>
+                    <li><strong>Tailwind CSS</strong> über <code>cdn.tailwindcss.com</code> – Tailwind Labs, Inc., USA. <span class="ph">[Transfergrundlage noch zu prüfen]</span></li>
+                </ul>
+                <p><strong>Zweck:</strong> einheitliche und geräteunabhängige Darstellung von Schrift, Symbolen und Layout. <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO. Es wird ausdrücklich darauf hingewiesen, dass diese Einbindung ohne vorherige Einwilligung erfolgt und von Gerichten und Aufsichtsbehörden als datenschutzrechtlich problematisch bewertet wird. Eine Umstellung auf die Auslieferung über das eigene Hosting ist vorgesehen; bis dahin beschreibt dieser Abschnitt den tatsächlichen Zustand.</p>
+                <p><strong>Speicherdauer:</strong> Ob und wie lange die genannten Anbieter die übermittelten Daten speichern, entscheiden diese selbst. Ein Einfluss oder Zugriff des Vereins besteht nicht.</p>
+                <p><strong>Vermeidung dieser Verbindungen:</strong> Ein Aufruf der Seite ohne diese Verbindungen ist derzeit technisch nicht möglich. Sie lassen sich mit einem Skript- oder Inhaltsblocker unterbinden; Teile der Seite werden dann abweichend dargestellt.</p>
+
+                <h4>6. Google Maps auf der Kontakt-Seite</h4>
+                <p>Im Kontaktbereich wird die Vereinsanlage auf einer Karte von Google Maps dargestellt. Die Karte ist als iframe eingebunden und <strong>lädt unmittelbar beim Aufruf der Seite mit</strong>; eine vorgeschaltete Klick- oder Einwilligungslösung besteht derzeit nicht. Dabei wird die IP-Adresse an Google übertragen; zudem können Informationen auf dem Endgerät gespeichert oder ausgelesen werden. Bei gleichzeitiger Anmeldung in einem Google-Konto kann Google den Aufruf diesem Konto zuordnen.</p>
+                <p><strong>Anbieter:</strong> Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland; beteiligt ist auch die Google LLC, USA (unter dem EU-U.S. Data Privacy Framework zertifiziert). <strong>Zweck:</strong> Anzeige des Standorts und Anfahrtshilfe. <strong>Rechtsgrundlage:</strong> derzeit Art. 6 Abs. 1 lit. f DSGVO.</p>
+                <p><strong>Hinweis:</strong> Für das Speichern von oder den Zugriff auf Informationen im Endgerät verlangt § 25 Abs. 1 TDDDG grundsätzlich eine Einwilligung. Diese wird derzeit nicht eingeholt. Eine Umstellung auf eine Lösung, bei der die Karte erst nach ausdrücklicher Zustimmung geladen wird, ist vorgesehen.</p>
+                <p><strong>Speicherdauer:</strong> bestimmt Google; ein Zugriff des Vereins auf diese Daten besteht nicht.</p>
+                <p><strong>Vermeidung:</strong> Aufruf der Seite mit einem Skript- oder Cookie-Blocker oder vorherige Abmeldung aus dem Google-Konto. Die Anschrift ist auf der Seite auch als reiner Text verfügbar.</p>
+
+                <h4>7. Online-Buchung eines Padelplatzes</h4>
+                <p><strong>7.1 Verarbeitete Daten:</strong> Vor- und Nachname des Hauptbuchers, dessen E-Mail-Adresse, Namen und Anzahl der mitspielenden Vereinsmitglieder, Buchungsdaten (Platz, Datum, Uhrzeit, Spieldauer), Angabe zum Schlägerverleih, Rechnungsbetrag, gegebenenfalls Gutscheincode sowie Buchungszeitpunkt und Buchungsnummer.</p>
+                <p><strong>7.2 Zweck und Rechtsgrundlage:</strong> Prüfung der Platzverfügbarkeit, Reservierung, Abwicklung der Zahlung, Erzeugung des Zugangscodes, Versand der Buchungsbestätigung, Klärung von Rückfragen sowie Nachvollziehbarkeit der Platznutzung. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Erfüllung des Nutzungsvertrags und Durchführung vorvertraglicher Maßnahmen), für die Aufbewahrung der Zahlungsbelege zusätzlich Art. 6 Abs. 1 lit. c DSGVO i. V. m. § 147 AO.</p>
+                <p><strong>7.3 Namen der Mitspieler:</strong> Mit der Angabe der Namen mitspielender Vereinsmitglieder werden Daten von Personen verarbeitet, die diese nicht selbst mitgeteilt haben. Zweck ist die Nachvollziehbarkeit der Platznutzung für Platzordnung, Hausrecht, Versicherungsschutz sowie die Prüfung der Mitglieds- und Gastspieler-Konditionen; Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Dieser Abschnitt dient zugleich der Information nach Art. 14 DSGVO gegenüber den genannten Mitspielern; diese können der Verarbeitung nach Art. 21 DSGVO widersprechen (Nr. 15). Buchende werden gebeten, ausschließlich Namen von Personen anzugeben, die hiermit einverstanden sind, und diese über die vorliegende Erklärung zu informieren.</p>
+                <p><strong>7.4 Zahlung über Mollie:</strong> Für die Bezahlung erfolgt eine Weiterleitung zu <strong>Mollie B.V.</strong>, Keizersgracht 126, 1015 CW Amsterdam, Niederlande. Übermittelt werden Buchungsnummer, Betrag und Verwendungszweck; die Zahlungsdaten werden unmittelbar bei Mollie eingegeben. <strong>Vollständige Zahlungsmitteldaten erhält der Verein nicht</strong> – zurückgemeldet werden lediglich der Zahlungsstatus, eine Zahlungskennung und der Betrag. Mollie ist ein durch die niederländische Zentralbank beaufsichtigtes Zahlungsinstitut und verarbeitet die Zahlungsdaten insoweit als <strong>eigener Verantwortlicher</strong>, insbesondere zur Erfüllung eigener aufsichts-, geldwäsche- und steuerrechtlicher Pflichten; es gilt die Datenschutzerklärung von Mollie. Eine Übermittlung außerhalb der EU findet durch den Verein dabei nicht statt.</p>
+                <p><strong>7.5 Zugangscode für die Anlage:</strong> Für den gebuchten Zeitraum wird ein persönlicher, zeitlich begrenzter Zugangscode erzeugt. Technisch erfolgt dies über das Schließsystem <strong>Mathfel</strong> auf Basis der Plattform <strong>Tuya</strong> (Konzernsitz Volksrepublik China). Übermittelt werden der Zugangscode und der Gültigkeitszeitraum <span class="ph">[zu prüfen: werden zusätzlich Name oder E-Mail-Adresse übermittelt?]</span>. Rechtsgrundlage sind Art. 6 Abs. 1 lit. b DSGVO (ohne Zugangscode kein Zutritt) sowie Art. 6 Abs. 1 lit. f DSGVO (Sicherung der Anlage). Das System kann protokollieren, wann ein Code verwendet wurde; diese Protokolle werden ausschließlich zur Aufklärung von Schäden, Störungen oder unbefugter Nutzung ausgewertet, nicht zur Verhaltenskontrolle. Für die Volksrepublik China besteht <strong>kein Angemessenheitsbeschluss</strong>; die Übermittlung wird auf die Standardvertragsklauseln der EU-Kommission gestützt (Art. 46 Abs. 2 lit. c DSGVO) <span class="ph">[Vertragslage mit Mathfel/Tuya prüfen]</span>.</p>
+                <p><strong>7.6 Bestätigungs-E-Mail:</strong> Nach erfolgreicher Zahlung werden Buchungsdaten und Zugangscode an die angegebene E-Mail-Adresse versandt. Versanddienst: <span class="ph">[Anbieter, Anschrift, Serverstandort]</span>. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO; es handelt sich um eine reine Transaktionsnachricht und <strong>nicht um Werbung</strong>.</p>
+                <p><strong>7.7 Speicherdauer:</strong></p>
+                <ul>
+                    <li>Buchungsdatensatz (Name, E-Mail-Adresse, Mitspieler, Platz, Zeit, Schlägerverleih): <span class="ph">[Frist – Vorschlag 12 Monate]</span> nach dem gebuchten Spieltermin, anschließend Löschung.</li>
+                    <li>Zahlungs- und Rechnungsbelege: 8 beziehungsweise 10 Jahre nach § 147 Abs. 3 AO, gerechnet ab dem Ende des Kalenderjahres der Entstehung. Während dieser Zeit sind die Daten für den laufenden Betrieb gesperrt.</li>
+                    <li>Zugangscodes: verlieren mit Ablauf des gebuchten Zeitfensters ihre Gültigkeit und werden anschließend entfernt.</li>
+                    <li>Zugriffsprotokolle des Schließsystems: <span class="ph">[Frist]</span>.</li>
                 </ul>
 
-                <h4>3. Zwecke &amp; Rechtsgrundlage</h4>
-                <p>Die Verarbeitung erfolgt zur Durchführung der Platzbuchung, zur Zahlungsabwicklung und zur Zutrittsverwaltung (Erstellung eines persönlichen Zugangscodes). Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung).</p>
+                <h4>8. Stornierung einer Buchung</h4>
+                <p>Über das Stornoformular werden <strong>Buchungsnummer</strong> und <strong>E-Mail-Adresse</strong> verarbeitet, um die Buchung eindeutig zuzuordnen und die Berechtigung zu prüfen (Art. 6 Abs. 1 lit. b DSGVO). Die Stornofrist ergibt sich aus den Buchungsbedingungen (derzeit 24 Stunden vor Spielbeginn). Die Erstattung erfolgt über Mollie; hierzu werden Zahlungskennung und Erstattungsbetrag übermittelt. Für die Speicherung gilt Nr. 7.7 entsprechend.</p>
 
-                <h4>4. Empfänger / eingesetzte Dienste</h4>
+                <h4>9. Kauf eines Gutscheins</h4>
+                <p>Verarbeitet werden die <strong>E-Mail-Adresse</strong> (Pflichtangabe, da der Gutscheincode dorthin versandt wird) und optional der <strong>Name</strong>, ferner Betrag, Gutscheincode und Kaufzeitpunkt. Zweck sind Erstellung, Versand und spätere Einlösung des Gutscheins; Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO. Die Zahlung erfolgt wie unter Nr. 7.4 über Mollie. Die Speicherung erfolgt bis zur vollständigen Einlösung beziehungsweise bis zum Ablauf der Gültigkeit, anschließend im Rahmen der steuerlichen Aufbewahrungsfristen. Eine Nutzung der E-Mail-Adresse für Newsletter oder sonstige Werbung findet <strong>nicht</strong> statt.</p>
+
+                <h4>10. Online-Antrag auf Mitgliedschaft</h4>
+                <p><strong>10.1 Erhobene Daten:</strong> Vorname, Nachname und Geburtsdatum von Erst- und Zweitmitglied sowie von bis zu zwei Kindern; Anschrift (Straße, Hausnummer, Postleitzahl, Ort); E-Mail-Adresse und Telefonnummern; <strong>Bankverbindung (IBAN, BIC, Bank, Kontoinhaber)</strong>; Ort und Datum der Antragstellung; drei Bestätigungen (Aufnahmeantrag, SEPA-Lastschriftmandat, Kenntnisnahme dieser Erklärung).</p>
+                <p><strong>10.2 Zweck und Rechtsgrundlage:</strong></p>
                 <ul>
-                    <li><strong>Mollie</strong> – Zahlungsabwicklung</li>
-                    <li><strong>Google</strong> – Kalender (Belegungsverwaltung) &amp; E-Mail-Versand der Bestätigung</li>
-                    <li><strong>Tuya / Mathfel</strong> – elektronisches Schließsystem (Erzeugung des Zugangscodes)</li>
-                    <li><strong>n8n</strong> – Ablauf-Automatisierung im Hintergrund</li>
-                    <li><strong>GitHub Pages</strong> – Hosting dieser Website</li>
+                    <li>Name, Geburtsdatum, Anschrift und Kontaktdaten – Begründung und Verwaltung der Mitgliedschaft, Zuordnung des zutreffenden Beitragssatzes, Einladungen zur Mitgliederversammlung, vereinsinterne Kommunikation: Art. 6 Abs. 1 lit. b DSGVO.</li>
+                    <li>IBAN, BIC, Bank, Kontoinhaber – Einzug des Mitgliedsbeitrags im SEPA-Lastschriftverfahren sowie Erteilung und Nachweis des Mandats: Art. 6 Abs. 1 lit. b DSGVO, für die Nachweisführung ergänzend Art. 6 Abs. 1 lit. f DSGVO.</li>
+                    <li>Buchhaltung, Beitragskonto und Belege – Erfüllung steuer- und vereinsrechtlicher Aufzeichnungspflichten sowie Nachweis der Gemeinnützigkeit: Art. 6 Abs. 1 lit. c DSGVO i. V. m. §§ 140 ff., 147 AO.</li>
+                    <li>Daten der Kinder – Mitgliedschaft, Zuordnung zu Jugend- und Trainingsgruppen, Beitragsberechnung: Art. 6 Abs. 1 lit. b DSGVO.</li>
                 </ul>
-                <p class="muted">Hinweis: Einzelne Dienste können Daten außerhalb der EU verarbeiten; entsprechende Garantien (z. B. Standardvertragsklauseln) sind zu prüfen/zu ergänzen.</p>
+                <p>Eine Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO wird für diese Verarbeitungen <strong>nicht</strong> eingeholt und ist auch nicht erforderlich, da die Daten zur Durchführung der Mitgliedschaft benötigt werden. Die Bestätigung „Datenschutz“ im Formular stellt eine <strong>Kenntnisnahme</strong> dieser Erklärung dar, keine widerrufliche Einwilligung.</p>
+                <p><strong>10.3 Minderjährige:</strong> Kinder und Jugendliche können ausschließlich durch ihre <strong>Sorgeberechtigten</strong> angemeldet werden; der Antrag darf daher nur von einer sorgeberechtigten Person ausgefüllt und abgesendet werden, die dabei rechtlich für das Kind handelt (§§ 106 ff., 1629 BGB). Auch das SEPA-Lastschriftmandat kann nur eine sorgeberechtigte oder sonst kontoverfügungsberechtigte Person erteilen. Mit dem Absenden bestätigt die sorgeberechtigte Person ihre Berechtigung zur Anmeldung des Kindes. Die Rechte des Kindes nach Nr. 15 werden bis zur Volljährigkeit durch die sorgeberechtigte Person ausgeübt; ältere Jugendliche können sie in dem Umfang selbst wahrnehmen, in dem sie deren Bedeutung erfassen können. Von Kindern werden ausschließlich die vorgenannten Stammdaten verarbeitet. Angaben zur Gesundheit oder zu anderen besonderen Kategorien nach Art. 9 DSGVO werden über dieses Formular nicht erhoben und sollten auch nicht in Freitextfelder eingetragen werden.</p>
+                <p><strong>10.4 Empfänger des Antrags:</strong> Der Antrag wird über die unter Nr. 11 beschriebene Automatisierungsstrecke an den <strong>Vorstand</strong> unter padel@tc-frittlingen.de weitergeleitet und dort bearbeitet. Innerhalb des Vereins haben ausschließlich Vorstandsmitglieder sowie die mit Mitgliederverwaltung und Kassenführung betrauten Personen Zugriff, und dies nur, soweit sie die Daten für ihre Aufgabe benötigen; die Bankdaten sind ausschließlich für die Kassenführung bestimmt. Eine Weitergabe an Dritte erfolgt nur an die Bank des Vereins, soweit für den Beitragseinzug erforderlich, an den zuständigen Sportverband, soweit eine Meldung vorgeschrieben ist <span class="ph">[zu konkretisieren: welcher Verband, welche Daten]</span>, sowie an Behörden im Rahmen gesetzlicher Verpflichtungen.</p>
+                <p><strong>10.5 Speicherdauer:</strong></p>
+                <ul>
+                    <li>Stammdaten der Mitglieder: für die Dauer der Mitgliedschaft; nach deren Beendigung Löschung, sobald keine Ansprüche mehr bestehen und keine Aufbewahrungspflicht entgegensteht – spätestens nach Ablauf der regelmäßigen Verjährungsfrist von drei Jahren zum Jahresende (§§ 195, 199 BGB).</li>
+                    <li>SEPA-Lastschriftmandat (IBAN, BIC, Kontoinhaber, Mandatsdatum): bis <strong>14 Monate nach der letzten Nutzung</strong> des Mandats, da eine Lastschrift innerhalb von 13 Monaten beanstandet werden kann (§ 675x BGB).</li>
+                    <li>Buchhaltungs- und Beitragsbelege: 8 beziehungsweise 10 Jahre nach § 147 AO.</li>
+                    <li>Abgelehnte oder zurückgezogene Aufnahmeanträge einschließlich Bankverbindung: Löschung innerhalb von <span class="ph">[Frist – Vorschlag 3 Monate]</span>.</li>
+                </ul>
 
-                <h4>5. Speicherdauer</h4>
-                <p>Buchungs- und Zugangsdaten werden nur so lange gespeichert, wie es für die Abwicklung und gesetzliche Aufbewahrungspflichten erforderlich ist. Zugangscodes verlieren nach dem gebuchten Zeitraum ihre Gültigkeit.</p>
+                <h4>11. Auftragsverarbeiter</h4>
+                <p>Die Buchungsstrecke wird nicht selbst betrieben, sondern mit Hilfe von Dienstleistern, die nach Art. 28 DSGVO als <strong>Auftragsverarbeiter</strong> gebunden sind. Diese verarbeiten die Daten ausschließlich nach Weisung des Vereins:</p>
+                <ul>
+                    <li><strong><span class="ph">[Firmierung ThinkUp-AI laut Auftragsverarbeitungsvertrag]</span></strong>, <span class="ph">[Anschrift]</span>, admin@thinkupai.de – Betrieb und Wartung der Automatisierungsstrecke (n8n) unter <code>thinkupaiautomatisierung.de</code>, die Buchungs-, Storno-, Gutschein- und Mitgliedsanträge entgegennimmt und weiterverarbeitet. Serverstandort Deutschland, Hosting durch <span class="ph">[Hoster]</span>.</li>
+                    <li><strong>Supabase Inc.</strong> (Singapur / San Francisco, USA) – Datenbank für Buchungen, Platzbelegung und Gutscheine. Die Verarbeitung erfolgt ausschließlich in der Region <strong>eu-central-1, Frankfurt am Main</strong>. Für Konstellationen, in denen im Rahmen von Support oder Wartung ein Zugriff aus einem Drittland möglich ist, gelten die <strong>Standardvertragsklauseln</strong> der EU-Kommission (Art. 46 Abs. 2 lit. c DSGVO); eine Zertifizierung unter dem EU-U.S. Data Privacy Framework besteht nicht.</li>
+                    <li><span class="ph">[E-Mail-Versanddienst]</span> – Versand der Bestätigungs- und Benachrichtigungs-E-Mails.</li>
+                    <li>Schließsystem Mathfel / Tuya – Erzeugung und Verwaltung der Zugangscodes (siehe Nr. 7.5).</li>
+                </ul>
+                <p><strong>Keine</strong> Auftragsverarbeiter in diesem Sinne sind Mollie (eigener Verantwortlicher, siehe Nr. 7.4) sowie die unter Nr. 5 und 6 genannten Anbieter; diese entscheiden über die bei ihnen anfallenden Daten selbst.</p>
+                <p class="muted">Nicht mehr im Einsatz: Die Platzbelegung wurde früher über einen Google-Kalender verwaltet. Dies ist nicht mehr der Fall; die Belegung liegt ausschließlich in der vorgenannten Datenbank.</p>
 
-                <h4>6. Deine Rechte</h4>
-                <p>Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit sowie Widerspruch. Zudem besteht ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde. Wende dich dazu an padel@tc-frittlingen.de.</p>
+                <h4>12. Übermittlung in Länder außerhalb der EU</h4>
+                <ul>
+                    <li><strong>GitHub, Inc.</strong> (Hosting), USA – Angemessenheitsbeschluss EU-U.S. Data Privacy Framework, ergänzend Standardvertragsklauseln.</li>
+                    <li><strong>Google LLC</strong> (Fonts, Maps), USA – Angemessenheitsbeschluss EU-U.S. Data Privacy Framework.</li>
+                    <li><strong>Cloudflare, Inc.</strong> (Font Awesome), USA – Angemessenheitsbeschluss EU-U.S. Data Privacy Framework.</li>
+                    <li><strong>Tailwind Labs, Inc.</strong>, USA – <span class="ph">[zu prüfen]</span>.</li>
+                    <li><strong>Supabase Inc.</strong>, USA/Singapur (Verarbeitung in Frankfurt am Main) – Standardvertragsklauseln.</li>
+                    <li><strong>Tuya</strong> (Schließsystem), Volksrepublik China – kein Angemessenheitsbeschluss, Standardvertragsklauseln <span class="ph">[Vertragslage prüfen]</span>.</li>
+                </ul>
+                <p>Für die USA hat die EU-Kommission am 10. Juli 2023 einen Angemessenheitsbeschluss für zertifizierte Unternehmen erlassen. Für die Volksrepublik China besteht kein solcher Beschluss; die Übermittlung wird auf vertragliche Garantien gestützt. Trotz dieser Garantien lässt sich ein Zugriff durch Behörden dieser Länder nicht vollständig ausschließen. Eine Kopie der jeweiligen Garantien kann beim Verein angefordert werden.</p>
 
-                <p class="muted mt-6">TC Frittlingen e.V. · 78665 Frittlingen</p>
+                <h4>13. Erforderlichkeit der Angaben</h4>
+                <ul>
+                    <li><strong>Aufruf der Website:</strong> Es sind keine Angaben erforderlich; die unter Nr. 4, 5 und 6 beschriebenen technischen Daten fallen jedoch automatisch an.</li>
+                    <li><strong>Platzbuchung:</strong> Name, E-Mail-Adresse und Buchungsdaten sind erforderlich. Ohne sie können keine Reservierung angelegt, keine Zahlung zugeordnet und kein Zugangscode versandt werden; eine Buchung ist dann nicht möglich. Die Angabe der Mitspielernamen ist für die Zuordnung der Konditionen und die Platzordnung erforderlich.</li>
+                    <li><strong>Gutscheinkauf:</strong> Die E-Mail-Adresse ist erforderlich, die Namensangabe freiwillig.</li>
+                    <li><strong>Stornierung:</strong> Buchungsnummer und E-Mail-Adresse sind erforderlich.</li>
+                    <li><strong>Mitgliedsantrag:</strong> Sämtliche als Pflichtfeld gekennzeichneten Angaben einschließlich der Bankverbindung sind für Aufnahme und Beitragseinzug erforderlich. Eine gesetzliche Verpflichtung zur Bereitstellung besteht nicht; ohne diese Angaben ist eine Online-Anmeldung jedoch nicht möglich. Für eine Anmeldung in Papierform oder ohne Lastschriftverfahren steht der Verein zur Verfügung.</li>
+                </ul>
+
+                <h4>14. Keine automatisierte Entscheidungsfindung</h4>
+                <p>Es finden keine ausschließlich auf einer automatisierten Verarbeitung beruhenden Entscheidungen statt, die gegenüber betroffenen Personen rechtliche Wirkung entfalten oder sie in ähnlicher Weise erheblich beeinträchtigen (Art. 22 DSGVO). Ein <strong>Profiling</strong> findet nicht statt. Die automatische Prüfung, ob ein Platz zu einem bestimmten Zeitpunkt frei ist, stellt eine reine Verfügbarkeitsabfrage und keine Entscheidung über eine Person dar.</p>
+
+                <h4>15. Rechte der betroffenen Personen</h4>
+                <p>Betroffene Personen haben gegenüber dem Verein folgende Rechte:</p>
+                <ul>
+                    <li><strong>Auskunft</strong> (Art. 15 DSGVO) darüber, ob und welche Daten verarbeitet werden, einschließlich einer Kopie.</li>
+                    <li><strong>Berichtigung</strong> unrichtiger und Vervollständigung unvollständiger Daten (Art. 16 DSGVO).</li>
+                    <li><strong>Löschung</strong> (Art. 17 DSGVO), soweit die Daten nicht mehr benötigt werden und keine gesetzliche Aufbewahrungspflicht entgegensteht.</li>
+                    <li><strong>Einschränkung der Verarbeitung</strong> (Art. 18 DSGVO), etwa während der Prüfung der Richtigkeit.</li>
+                    <li><strong>Datenübertragbarkeit</strong> (Art. 20 DSGVO) in einem gängigen, maschinenlesbaren Format.</li>
+                    <li><strong>Widerruf einer Einwilligung</strong> (Art. 7 Abs. 3 DSGVO) mit Wirkung für die Zukunft; die Rechtmäßigkeit der bis dahin erfolgten Verarbeitung bleibt unberührt.</li>
+                </ul>
+                <p><strong>Widerspruchsrecht nach Art. 21 DSGVO:</strong> Betroffene Personen haben das Recht, aus Gründen, die sich aus ihrer besonderen Situation ergeben, jederzeit gegen die Verarbeitung Widerspruch einzulegen, soweit diese auf Art. 6 Abs. 1 lit. f DSGVO gestützt wird; dies betrifft insbesondere die Verarbeitungen nach Nr. 4, 5, 6 und 7.3. Im Fall des Widerspruchs werden die Daten nicht weiterverarbeitet, es sei denn, es bestehen zwingende schutzwürdige Gründe, die die Interessen der betroffenen Person überwiegen, oder die Verarbeitung dient der Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen. Ein formloser Widerspruch an padel@tc-frittlingen.de genügt.</p>
+
+                <h4>16. Beschwerderecht bei der Aufsichtsbehörde</h4>
+                <p>Betroffene Personen können sich jederzeit bei einer Datenschutz-Aufsichtsbehörde beschweren (Art. 77 DSGVO). Zuständig ist:</p>
+                <p><strong>Der Landesbeauftragte für den Datenschutz und die Informationsfreiheit Baden-Württemberg</strong><br>
+                Lautenschlagerstraße 20, 70173 Stuttgart<br>
+                Telefon: 0711 615541-0 · E-Mail: poststelle@lfdi.bwl.de · www.baden-wuerttemberg.datenschutz.de</p>
+                <p>Daneben besteht die Möglichkeit, sich an die Aufsichtsbehörde des gewöhnlichen Aufenthaltsorts oder des Arbeitsplatzes zu wenden.</p>
+
+                <h4>17. Datensicherheit</h4>
+                <p>Die Übertragung der Formulareingaben erfolgt verschlüsselt über HTTPS (TLS). Der Zugriff auf Buchungs- und Mitgliedsdaten ist auf die Personen beschränkt, die diese für ihre Aufgabe im Verein benötigen. Die eingesetzten Systeme sind durch technische und organisatorische Maßnahmen nach Art. 32 DSGVO gegen Verlust, Zerstörung und unbefugten Zugriff gesichert.</p>
+                <p>Es wird darauf hingewiesen, dass unverschlüsselte E-Mails auf dem Transportweg mitgelesen werden können. Bankdaten und andere sensible Angaben sollten daher nicht per einfacher E-Mail übermittelt, sondern über die bereitgestellten Formulare eingegeben werden.</p>
+
+                <h4>18. Änderungen dieser Erklärung</h4>
+                <p>Diese Datenschutzerklärung wird angepasst, wenn sich die Website, die eingesetzten Dienste oder die Rechtslage ändern. Es gilt jeweils die hier abrufbare Fassung.</p>
+                <p class="muted mt-6">TC Frittlingen e.V. · 78665 Frittlingen · Stand: <span class="ph">[Datum der Veröffentlichung]</span></p>
             </div>
             <div class="modal-footer">
                 <button onclick="closeLegal('datenschutz-modal')" class="w-full bg-[#A31D11] hover:bg-[#8a180e] text-white py-3.5 rounded-xl font-bold text-base sm:text-lg transition shadow-md">Schließen</button>
@@ -1519,14 +1651,13 @@
         const fmtEuro = (v) => v.toFixed(2).replace('.', ',') + ' €';
 
         let selectedDateISO = null;   // 'YYYY-MM-DD' des gewählten Tages
-        let currentAmount = 0;        // aktueller Gesamtbetrag (Zahl)
         let availabilityOk = true;    // false, wenn Verfügbarkeit nicht geladen werden konnte
         let mobileCourt = '1';        // aktiver Court in der Handy-Ansicht
         let dragging = false, dragMoved = false, dragAnchorHour = null, dragCourt = null, suppressClick = false;
         let voucherValid = false, voucherCode = '', voucherCentAvailable = 0;
 
         // ===== PAGE SWITCHING =====
-        function switchPage(pageId) {
+        function switchPage(pageId, fromHistory) {
             document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(el => el.classList.remove('active-nav'));
             const target = document.getElementById('page-' + pageId);
@@ -1542,8 +1673,10 @@
                 bookBtn.style.setProperty('--btn-bg-hover', padelMode ? '#D64200' : '');
                 bookBtn.style.setProperty('--btn-glow', padelMode ? 'rgba(254,80,0,.3)' : '');
             }
+            if (!fromHistory && location.hash.slice(1) !== pageId) history.pushState(null, '', '#' + pageId);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        window.addEventListener('popstate', () => switchPage(location.hash.slice(1) || 'home', true));
 
         // ===== MOBILE DRAWER =====
         function toggleDrawer() {
@@ -1622,6 +1755,11 @@
                     slot.className = 'slot';
                     slot.dataset.court = court.id;
                     slot.dataset.hour = h;
+                    slot.tabIndex = 0;                       // mit Tab erreichbar
+                    slot.setAttribute('role', 'button');
+                    slot.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSlot(slot); }
+                    });
                     slot.addEventListener('click', () => { if (suppressClick) { suppressClick = false; return; } toggleSlot(slot); });
                     slot.addEventListener('mousedown', (e) => { e.preventDefault(); startDrag(slot); });
                     slot.addEventListener('mouseenter', () => dragEnter(slot));
@@ -1660,8 +1798,21 @@
             }
         }
 
-        function hourStart(iso){ const m = /T(\d{2}):/.exec(iso || ''); return m ? parseInt(m[1],10) : null; }
-        function hourEndCeil(iso){ const m = /T(\d{2}):(\d{2})/.exec(iso || ''); if(!m) return null; let h = parseInt(m[1],10); if(parseInt(m[2],10) > 0) h += 1; return h; }
+        // Belegung kommt vom Backend in UTC ("...T16:00:00+00:00"). Frueher wurde die Stunde
+        // per Regex aus dem String gelesen -> im Sommer 2 h zu frueh im Raster. Jetzt echt
+        // nach Europe/Berlin umrechnen, damit jeder Offset des Backends richtig ankommt.
+        const berlinHourFmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Berlin', hour: '2-digit', hour12: false });
+        function berlinHour(iso){
+            const d = new Date(iso || '');
+            if (isNaN(d)) return null;
+            return parseInt(berlinHourFmt.format(d), 10);
+        }
+        function hourStart(iso){ return berlinHour(iso); }
+        function hourEndCeil(iso){
+            const h = berlinHour(iso);
+            if (h === null) return null;
+            return new Date(iso).getUTCMinutes() > 0 ? h + 1 : h;   // angefangene Stunde blockt ganz
+        }
 
         function applyOccupancy(occupied) {
             document.querySelectorAll('.slot').forEach(slot => {
@@ -1787,7 +1938,18 @@
             return { court, hours: hrs, startH: hrs[0], endH: hrs[hrs.length-1] + 1, count: hrs.length };
         }
 
+        // aria-Beschriftung aus den Klassen ableiten (laeuft nach jeder Rasteraenderung)
+        function labelSlots() {
+            document.querySelectorAll('.slot').forEach(s => {
+                const belegt = s.classList.contains('occupied'), vorbei = s.classList.contains('past');
+                const status = vorbei ? 'vorbei' : (belegt ? 'belegt' : (s.classList.contains('selected') ? 'gewaehlt' : 'frei'));
+                s.setAttribute('aria-label', courtName(s.dataset.court) + ', ' + pad(s.dataset.hour) + ':00 Uhr, ' + status);
+                s.setAttribute('aria-disabled', String(belegt || vorbei));
+            });
+        }
+
         function updateSelectionBar() {
+            labelSlots();
             const bar = document.getElementById('selection-bar');
             const sel = getSelection();
             if (!sel) { bar.classList.remove('show'); return; }
@@ -1863,7 +2025,6 @@
             const vAvail = voucherValid ? (voucherCentAvailable / 100) : 0;
             const vUsed = Math.min(vAvail, brutto);
             const finalTotal = Math.max(0, brutto - vUsed);
-            currentAmount = finalTotal;
 
             document.getElementById('summary-time').innerText = hours + ' h';
             document.getElementById('summary-rate').innerText = fmtEuro(pricePerHour);
@@ -1964,13 +2125,15 @@
         }
 
         function collectPlayers() {
-            const members = membersCountVal();
-            // Hauptbucher = Mitglied 1 (falls Mitglieder > 0), sonst Gast
-            const players = [{ name: hauptbucherName(), status: members >= 1 ? 'member' : 'guest' }];
-            document.querySelectorAll('#member-names .member-name').forEach(inp => {
-                const nm = (inp.value || '').trim();
-                if (nm) players.push({ name: nm, status: 'member' });
-            });
+            // Der Hauftbucher traegt sich laut Hinweistext bei den Mitgliedern nochmal ein.
+            // Steht er dort, ist er Mitglied - und darf nicht zweimal in der Liste landen.
+            const norm = n => n.toLowerCase().replace(/\s+/g, ' ').trim();
+            const haupt = hauptbucherName();
+            const namen = [...document.querySelectorAll('#member-names .member-name')]
+                .map(inp => (inp.value || '').trim()).filter(Boolean);
+            const istHauptbucher = n => norm(n) === norm(haupt);
+            const players = [{ name: haupt, status: namen.some(istHauptbucher) ? 'member' : 'guest' }];
+            namen.filter(n => !istHauptbucher(n)).forEach(n => players.push({ name: n, status: 'member' }));
             return players;
         }
 
@@ -1983,11 +2146,12 @@
             if (!sel) { showError('Bitte wähle mindestens eine Stunde aus.'); return; }
 
             const off = berlinOffset(selectedDateISO);
+            // Kein Betrag im Payload: den rechnet create_booking serverseitig aus
+            // der settings-Tabelle. Die Anzeige oben ist reine Vorschau.
             const payload = {
                 court: sel.court,
                 start: selectedDateISO + 'T' + pad(sel.startH) + ':00:00' + off,
                 end:   selectedDateISO + 'T' + pad(sel.endH) + ':00:00' + off,
-                amount: currentAmount,
                 email: document.getElementById('p1-email').value.trim(),
                 name: hauptbucherName(),
                 members: membersCountVal(),
@@ -2090,6 +2254,7 @@
                     result.innerHTML = '<div class="bg-green-50 border border-green-200 text-green-800 text-sm rounded-lg p-4"><i class="fa-solid fa-circle-check mr-1"></i> ' +
                         (data.message || 'Buchung storniert. Die Erstattung wurde veranlasst.') + '</div>';
                     label.innerText = 'Erledigt';
+                    loadAvailability();                       // frei gewordenen Slot sofort zeigen
                 } else {
                     result.innerHTML = '<div class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3"><i class="fa-solid fa-triangle-exclamation mr-1"></i> ' +
                         ((data && data.reason) || 'Stornierung nicht möglich. Bitte kontaktiere den Verein.') + '</div>';
@@ -2118,6 +2283,14 @@
             payload.einwilligung_aufnahme = chk('einwilligung_aufnahme');
             payload.einwilligung_sepa = chk('einwilligung_sepa');
             payload.einwilligung_datenschutz = chk('einwilligung_datenschutz');
+            payload.iban = payload.iban.replace(/\s+/g, '').toUpperCase();
+
+            const ibanFeld = document.getElementById('iban');
+            if (!ibanGueltig(payload.iban)) {
+                ibanFeld.setCustomValidity('Diese IBAN stimmt nicht. Bitte pruefe die Eingabe.');
+                ibanFeld.reportValidity();
+                return;
+            }
 
             btn.disabled = true; label.innerText = 'Wird gesendet…'; result.innerHTML = '';
             try {
@@ -2137,6 +2310,19 @@
                 btn.disabled = false; label.innerText = 'Erneut senden';
             }
         }
+        // IBAN-Pruefziffer nach ISO 7064 (mod 97). Faengt Tippfehler ab, bevor der Einzug platzt.
+        function ibanGueltig(v) {
+            const iban = (v || '').replace(/\s+/g, '').toUpperCase();
+            if (!/^[A-Z]{2}\d{2}[A-Z0-9]{10,30}$/.test(iban)) return false;
+            const umgestellt = iban.slice(4) + iban.slice(0, 4);
+            let rest = 0;
+            for (const ch of umgestellt) {
+                const buchstabe = ch >= 'A';
+                rest = (rest * (buchstabe ? 100 : 10) + (buchstabe ? ch.charCodeAt(0) - 55 : +ch)) % 97;
+            }
+            return rest === 1;
+        }
+
         function prefillOrtDatum() {
             const od = document.getElementById('ort_datum');
             if (od) od.value = 'Frittlingen, ' + new Date().toLocaleDateString('de-DE');
@@ -2184,6 +2370,8 @@
 
         // ===== INIT =====
         document.getElementById('footer-year').innerText = new Date().getFullYear();
+        const startPage = location.hash.slice(1);
+        if (startPage && document.getElementById('page-' + startPage)) switchPage(startPage, true);
         buildDateSelector();
         buildBookingGrid();
         renderMobile();
