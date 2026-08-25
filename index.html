@@ -125,21 +125,22 @@
         .slot:hover:not(.occupied):not(.selected):not(.past) { background: var(--padel-soft); }
         /* === MARKEN-LOCKUP: TCF x SUNSET PADEL === */
         .brand-lockup { display: flex; align-items: center; gap: 10px; }
-        .brand-logo-tcf   { height: 44px; width: auto; object-fit: contain; }
-        .brand-logo-padel { height: 40px; width: auto; object-fit: contain; }
-        .brand-x { display: inline-flex; width: 17px; height: 17px; flex-shrink: 0; opacity: .85; }
+        /* TCF ist 4,1:1, Padel 2,1:1 -> Padel braucht mehr Hoehe fuer gleiche optische Groesse */
+        .brand-logo-tcf   { height: 42px; width: auto; object-fit: contain; }
+        .brand-logo-padel { height: 54px; width: auto; object-fit: contain; }
+        .brand-x { display: inline-flex; width: 16px; height: 16px; flex-shrink: 0; opacity: .8; }
         .brand-x svg { width: 100%; height: 100%; }
         @media (min-width: 768px) {
-            .brand-lockup { gap: 14px; }
-            .brand-logo-tcf   { height: 56px; }
-            .brand-logo-padel { height: 50px; }
-            .brand-x { width: 20px; height: 20px; }
+            .brand-lockup { gap: 15px; }
+            .brand-logo-tcf   { height: 54px; }
+            .brand-logo-padel { height: 70px; }
+            .brand-x { width: 21px; height: 21px; }
         }
-        /* Sehr schmale Handys: Padel-Logo etwas kleiner, damit nichts drueckt */
-        @media (max-width: 380px) {
+        /* Sehr schmale Handys: beide kleiner, Verhaeltnis bleibt */
+        @media (max-width: 400px) {
             .brand-lockup { gap: 7px; }
-            .brand-logo-tcf   { height: 36px; }
-            .brand-logo-padel { height: 32px; }
+            .brand-logo-tcf   { height: 34px; }
+            .brand-logo-padel { height: 44px; }
             .brand-x { width: 13px; height: 13px; }
         }
         /* Farbbruecke Rot -> Orange (verbindet Verein und Padel) */
@@ -397,7 +398,7 @@
 
     <!-- ================= NAV ================= -->
     <nav class="bg-white/95 backdrop-blur-md brand-edge sticky top-0 z-50 shadow-sm">
-        <div class="max-w-[1600px] mx-auto px-4 h-20 md:h-24 flex justify-between items-center gap-3">
+        <div class="max-w-[1600px] mx-auto px-4 h-20 md:h-24 flex justify-between items-center gap-4 md:gap-6">
             <div class="brand-lockup cursor-pointer flex-shrink-0" onclick="switchPage('home')" title="TC Frittlingen &amp; Sunset Padel">
                 <img src="logo%20tcf.jpg" alt="TC Frittlingen e.V." class="brand-logo-tcf">
                 <span class="brand-x" aria-hidden="true">
@@ -419,10 +420,7 @@
                 <a href="#" onclick="switchPage('mannschaften'); return false;" id="nav-mannschaften" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Mannschaften</a>
                 <a href="#" onclick="switchPage('aktuell'); return false;" id="nav-aktuell" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Aktuell</a>
                 <a href="#" onclick="switchPage('mitglied'); return false;" id="nav-mitglied" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Mitglied werden</a>
-                <a href="#" onclick="switchPage('padel'); return false;" id="nav-padel" class="nav-link nav-padel relative whitespace-nowrap">
-                    Padel
-                    <span class="absolute -top-3 -right-7 text-white text-[9px] px-1.5 py-0.5 rounded-full animate-pulse" style="background:#FE5000;">NEU</span>
-                </a>
+                <a href="#" onclick="switchPage('padel'); return false;" id="nav-padel" class="nav-link nav-padel whitespace-nowrap">Padel</a>
             </div>
 
             <div class="flex items-center gap-2">
