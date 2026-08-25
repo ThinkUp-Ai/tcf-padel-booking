@@ -16,6 +16,12 @@
             --tcf-red-dark: #8a180e;
             --tcf-yellow: #FDE047;
             --tcf-grey: #6B7280;
+            /* Sunset Padel – Pantone Bright Orange 021 C */
+            --padel: #FE5000;
+            --padel-deep: #D64200;
+            --padel-light: #FF8F5E;
+            --padel-soft: #FFF2EC;
+            --padel-sun: linear-gradient(135deg, #FE5000 0%, #FF8F5E 100%);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
         * { -webkit-tap-highlight-color: transparent; }
@@ -42,6 +48,9 @@
         }
         .nav-link:hover::after, .nav-link.active-nav::after { width: 100%; }
         .nav-link.active-nav { color: var(--tcf-red); }
+        .nav-link.nav-padel { color: var(--padel); }
+        .nav-link.nav-padel::after { background-color: var(--padel); }
+        .nav-link.nav-padel.active-nav { color: var(--padel); }
         .btn-primary { background: var(--tcf-red); color: white; transition: all 0.25s; }
         .btn-primary:hover { background: var(--tcf-red-dark); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(163, 29, 17, 0.28); }
         .btn-primary:active { transform: translateY(0); }
@@ -105,7 +114,7 @@
         }
         .grid-row-header .court-dot {
             width: 8px; height: 8px; border-radius: 50%;
-            background: var(--tcf-red); flex-shrink: 0;
+            background: var(--padel); flex-shrink: 0;
         }
         .slot {
             background: white; height: 46px;
@@ -113,7 +122,22 @@
             border-top: 1px solid #e2e8f0;
             position: relative;
         }
-        .slot:hover:not(.occupied):not(.selected) { background: #fef9c3; }
+        .slot:hover:not(.occupied):not(.selected):not(.past) { background: var(--padel-soft); }
+        /* === SUNSET PADEL === */
+        .padel-hero {
+            background: linear-gradient(180deg, var(--padel-soft) 0%, #ffffff 100%);
+            border: 1px solid #FFD9C7;
+            border-radius: 16px;
+            padding: 18px 20px;
+        }
+        .padel-hero::after {
+            content: ''; display: block; height: 3px; margin-top: 16px;
+            background: var(--padel-sun); border-radius: 3px;
+        }
+        .btn-padel {
+            background: var(--padel); color: #fff; transition: all .25s;
+        }
+        .btn-padel:hover { background: var(--padel-deep); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(254,80,0,.3); }
         .slot.past {
             background: #f1f5f9;
             cursor: not-allowed;
@@ -125,16 +149,16 @@
             cursor: not-allowed;
         }
         .slot.selected {
-            background: var(--tcf-red);
+            background: var(--padel);
             box-shadow: inset 0 0 0 2px #fff;
         }
-        .slot.selected:hover { background: var(--tcf-red-dark); }
+        .slot.selected:hover { background: var(--padel-deep); }
         .booking-grid.loading .slot { opacity: 0.5; pointer-events: none; }
         .booking-grid.disabled .slot { opacity: 0.4; pointer-events: none; }
 
         /* Handy-Buchungsansicht (vertikale Kacheln) */
         .mcourt-btn { border-color: #e2e8f0; color: #475569; background: #fff; }
-        .mcourt-btn.active { background: var(--tcf-red); color: #fff; border-color: var(--tcf-red); }
+        .mcourt-btn.active { background: var(--padel); color: #fff; border-color: var(--padel); }
         .mslot {
             border: 1px solid #e2e8f0; border-radius: 10px;
             padding: 10px 2px; text-align: center;
@@ -147,7 +171,7 @@
             background: repeating-linear-gradient(45deg, #e2e8f0 0, #e2e8f0 5px, #cbd5e1 5px, #cbd5e1 10px);
             color: #94a3b8; cursor: not-allowed;
         }
-        .mslot.selected { background: var(--tcf-red); color: #fff; border-color: var(--tcf-red); }
+        .mslot.selected { background: var(--padel); color: #fff; border-color: var(--padel); }
         .mslot .mslot-sub { display: block; font-size: 10px; font-weight: 500; margin-top: 2px; opacity: 0.85; }
 
         /* Scroll-Hinweis Mobile */
@@ -266,18 +290,18 @@
             cursor: pointer; transition: all 0.2s; white-space: nowrap;
             display: inline-flex; align-items: center; gap: 6px;
         }
-        .date-pill:hover { border-color: var(--tcf-red); color: var(--tcf-red); }
-        .date-pill.active { background: var(--tcf-red); color: white; border-color: var(--tcf-red); }
+        .date-pill:hover { border-color: var(--padel); color: var(--padel); }
+        .date-pill.active { background: var(--padel); color: white; border-color: var(--padel); }
         .date-pill.active .date-sub { color: rgba(255,255,255,0.85); }
         .date-sub { font-size: 11px; font-weight: 500; color: #94a3b8; }
 
         /* Selection summary bar */
         .selection-bar {
-            background: linear-gradient(135deg, var(--tcf-red) 0%, var(--tcf-red-dark) 100%);
+            background: var(--padel-sun);
             color: white; border-radius: 14px;
             padding: 16px 20px;
             display: none;
-            box-shadow: 0 10px 24px rgba(163,29,17,0.25);
+            box-shadow: 0 10px 24px rgba(254,80,0,0.28);
             animation: slideUp 0.25s ease-out;
         }
         .selection-bar.show { display: flex; }
@@ -323,9 +347,9 @@
                 <a href="#" onclick="switchPage('mannschaften'); return false;" id="nav-mannschaften" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Mannschaften</a>
                 <a href="#" onclick="switchPage('aktuell'); return false;" id="nav-aktuell" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Aktuell</a>
                 <a href="#" onclick="switchPage('mitglied'); return false;" id="nav-mitglied" class="nav-link whitespace-nowrap hover:text-[#A31D11]">Mitglied werden</a>
-                <a href="#" onclick="switchPage('padel'); return false;" id="nav-padel" class="nav-link text-[#A31D11] relative whitespace-nowrap">
+                <a href="#" onclick="switchPage('padel'); return false;" id="nav-padel" class="nav-link nav-padel relative whitespace-nowrap">
                     Padel
-                    <span class="absolute -top-3 -right-7 bg-red-600 text-white text-[9px] px-1.5 py-0.5 rounded-full animate-pulse">NEU</span>
+                    <span class="absolute -top-3 -right-7 text-white text-[9px] px-1.5 py-0.5 rounded-full animate-pulse" style="background:#FE5000;">NEU</span>
                 </a>
             </div>
 
@@ -355,7 +379,7 @@
                     <i class="fa-solid fa-chevron-right text-slate-300 text-sm"></i>
                 </a>
                 <a href="#" onclick="switchPage('padel'); toggleDrawer(); return false;" id="mnav-padel" class="mobile-nav-link">
-                    <span><i class="fa-solid fa-bolt w-6 text-[#A31D11]"></i> Padel <span class="ml-2 bg-red-600 text-white text-[9px] px-1.5 py-0.5 rounded-full">NEU</span></span>
+                    <span><i class="fa-solid fa-bolt w-6" style="color:#FE5000;"></i> Padel <span class="ml-2 text-white text-[9px] px-1.5 py-0.5 rounded-full" style="background:#FE5000;">NEU</span></span>
                     <i class="fa-solid fa-chevron-right text-slate-300 text-sm"></i>
                 </a>
                 <a href="#" onclick="switchPage('tennis'); toggleDrawer(); return false;" id="mnav-tennis" class="mobile-nav-link">
@@ -399,7 +423,7 @@
 
             <div class="relative z-10 px-4 max-w-7xl mx-auto w-full">
                 <span class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/30 text-white text-xs sm:text-sm font-bold uppercase tracking-wider px-3 py-1.5 rounded-full mb-5">
-                    <span class="live-dot"></span> Padel-Courts jetzt online buchbar
+                    <span class="live-dot"></span> Sunset Padel &ndash; jetzt online buchbar
                 </span>
                 <h1 class="text-4xl sm:text-5xl md:text-7xl font-black text-white mb-4 tracking-tight uppercase italic leading-[1.05]">
                     Mehr als nur <span class="text-[#FDE047]">Tennis.</span>
@@ -427,11 +451,11 @@
                         <p class="text-slate-500 text-sm">Für Training & Spielbetrieb</p>
                     </div>
                 </div>
-                <div onclick="switchPage('padel')" class="cursor-pointer bg-[#A31D11] p-6 sm:p-8 rounded-2xl shadow-xl flex items-center gap-5 transform transition hover:-translate-y-1 text-white border-b-4 border-[#FDE047]">
-                    <div class="text-4xl text-[#FDE047] flex-shrink-0"><i class="fa-solid fa-bolt"></i></div>
+                <div onclick="switchPage('padel')" class="cursor-pointer p-6 sm:p-8 rounded-2xl shadow-xl flex items-center gap-5 transform transition hover:-translate-y-1 text-white" style="background: linear-gradient(135deg, #FE5000 0%, #FF8F5E 100%);">
+                    <img src="padel-logo-weiss.png" alt="TCF Sunset Padel" class="h-12 sm:h-14 w-auto flex-shrink-0">
                     <div>
-                        <h3 class="font-black text-lg sm:text-xl flex items-center gap-2">Padel-Courts <span class="bg-white/20 text-xs px-2 py-0.5 rounded">NEU</span></h3>
-                        <p class="text-red-100 text-sm">Cupra Court & Frittlingen Court</p>
+                        <h3 class="font-black text-lg sm:text-xl flex items-center gap-2">Sunset Padel <span class="bg-white/25 text-xs px-2 py-0.5 rounded">NEU</span></h3>
+                        <p class="text-white/90 text-sm">Cupra Court & Frittlingen Court</p>
                     </div>
                 </div>
                 <div onclick="switchPage('tennis')" class="card card-hover cursor-pointer p-6 sm:p-8 flex items-center gap-5 border-b-4 border-blue-500">
@@ -832,18 +856,24 @@
 
     <main id="page-padel" class="page-section bg-white min-h-screen py-8 sm:py-10">
         <div class="max-w-[1600px] mx-auto px-4">
-            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6 sm:mb-8">
-                <div>
-                    <span class="text-xs font-bold uppercase tracking-wider text-[#A31D11]">Padel-Buchung</span>
-                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 mt-1">Verfügbare Plätze</h2>
+            <div class="padel-hero mb-6 sm:mb-8">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+                    <div class="flex items-center gap-4 sm:gap-6">
+                        <img src="padel-logo.svg" onerror="this.onerror=null;this.src='padel-logo.png';"
+                             alt="TCF Sunset Padel" class="h-16 sm:h-20 md:h-24 w-auto flex-shrink-0">
+                        <div class="hidden sm:block border-l border-slate-200 pl-5">
+                            <h2 class="text-xl md:text-2xl font-black text-slate-900 leading-tight">Court buchen</h2>
+                            <p class="text-sm text-slate-500 mt-0.5">Zwei Courts, im Stundentakt &ndash; bis 14 Tage im Voraus.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <span class="inline-flex items-center gap-2 text-sm text-slate-600"><span class="live-dot"></span> Live-Verfügbarkeit</span>
+                        <button type="button" onclick="openStorno()" class="inline-flex items-center gap-2 border-2 border-[#FE5000] text-[#FE5000] hover:bg-[#FE5000] hover:text-white font-bold text-sm px-4 py-2.5 rounded-lg transition">
+                            <i class="fa-solid fa-rotate-left"></i> Buchung stornieren
+                        </button>
+                    </div>
                 </div>
-                <div class="flex items-center gap-3 flex-wrap">
-                    <span class="inline-flex items-center gap-2 text-sm text-slate-600"><span class="live-dot"></span> Live-Verfügbarkeit</span>
-                    <span class="hidden md:inline-flex items-center gap-2 text-sm text-slate-400"><i class="fa-regular fa-clock"></i> Stundentakt</span>
-                    <button type="button" onclick="openStorno()" class="inline-flex items-center gap-2 border-2 border-[#A31D11] text-[#A31D11] hover:bg-[#A31D11] hover:text-white font-bold text-sm px-4 py-2.5 rounded-lg transition">
-                        <i class="fa-solid fa-rotate-left"></i> Buchung stornieren
-                    </button>
-                </div>
+                <p class="sm:hidden text-sm text-slate-500 mt-3">Zwei Courts, im Stundentakt &ndash; bis 14 Tage im Voraus.</p>
             </div>
 
             <div class="w-full">
@@ -867,7 +897,7 @@
                             </div>
                             <div class="flex-1 min-w-0">
                                 <h4 class="font-bold text-slate-900 text-sm">Padel-Platz Übersicht <span class="text-slate-400 font-normal">(Stundentakt)</span></h4>
-                                <p class="text-[11px] sm:text-xs text-slate-500 leading-snug">Bequem buchen & verwalten, powered by <a href="https://thinkupai.de" target="_blank" rel="noopener" class="font-bold text-[#A31D11] hover:underline">ThinkUp-AI</a></p>
+                                <p class="text-[11px] sm:text-xs text-slate-500 leading-snug">Bequem buchen & verwalten, powered by <a href="https://thinkupai.de" target="_blank" rel="noopener" class="font-bold text-[#FE5000] hover:underline">ThinkUp-AI</a></p>
                             </div>
                             <div id="avail-status" class="text-[11px] text-slate-400 whitespace-nowrap hidden sm:block"></div>
                         </div>
@@ -927,15 +957,15 @@
                                 <div id="selection-summary-text" class="font-bold text-base sm:text-lg leading-tight">–</div>
                             </div>
                         </div>
-                        <button onclick="openModal()" class="bg-white text-[#A31D11] px-6 sm:px-8 py-3 rounded-full font-bold hover:bg-slate-100 transition shadow-md flex items-center gap-2 w-full sm:w-auto justify-center whitespace-nowrap">
+                        <button onclick="openModal()" class="bg-white text-[#FE5000] px-6 sm:px-8 py-3 rounded-full font-bold hover:bg-slate-100 transition shadow-md flex items-center gap-2 w-full sm:w-auto justify-center whitespace-nowrap">
                             Platz buchen <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
 
                     <!-- Padel Info Section -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-2">
-                        <div class="card p-5 sm:p-6 border-l-4 border-[#FDE047]">
-                            <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-tag text-amber-500"></i> Preise pro Platz</h4>
+                        <div class="card p-5 sm:p-6 border-l-4 border-[#FE5000]">
+                            <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-tag text-[#FE5000]"></i> Preise pro Platz</h4>
                             <div class="space-y-2 text-sm">
                                 <div class="flex justify-between items-center py-2 border-b border-slate-100">
                                     <span class="text-slate-700">Platzmiete <span class="text-slate-400">(pro Stunde)</span></span>
@@ -955,7 +985,7 @@
                                 <div class="space-y-1 text-sm">
                                     <div class="flex justify-between"><span class="text-slate-600">Nur Gäste</span><span class="font-bold text-slate-900">26,00 €</span></div>
                                     <div class="flex justify-between"><span class="text-slate-600">2 Mitglieder + 2 Gäste</span><span class="font-bold text-slate-900">18,00 €</span></div>
-                                    <div class="flex justify-between"><span class="text-slate-600">4 Mitglieder</span><span class="font-bold text-[#A31D11]">10,00 €</span></div>
+                                    <div class="flex justify-between"><span class="text-slate-600">4 Mitglieder</span><span class="font-bold text-[#FE5000]">10,00 €</span></div>
                                 </div>
                             </div>
                             <p class="text-xs text-slate-500 mt-3 leading-relaxed"><i class="fa-solid fa-circle-info mr-1"></i> Der Preis gilt pro Platz und Stunde. Jedes mitspielende Mitglied reduziert den Stundenpreis um 4 € – zzgl. optionalem Schlägerverleih.</p>
@@ -967,8 +997,8 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="card p-5 sm:p-6 border-l-4 border-[#FDE047] bg-gradient-to-br from-[#FDE047]/10 to-white">
-                            <h4 class="font-black text-lg mb-1 flex items-center gap-2"><i class="fa-solid fa-gift text-[#A31D11]"></i> Gutschein verschenken</h4>
+                        <div class="card p-5 sm:p-6 border-l-4 border-[#FE5000]" style="background:linear-gradient(135deg,#FFF2EC 0%,#ffffff 60%);">
+                            <h4 class="font-black text-lg mb-1 flex items-center gap-2"><i class="fa-solid fa-gift text-[#FE5000]"></i> Gutschein verschenken</h4>
                             <p class="text-sm text-slate-600 leading-relaxed mb-4">Das perfekte Geschenk: Padel-Guthaben für den ganzen Court (4 Personen). Der Code kommt sofort per E-Mail und ist frei einlösbar – auch in Teilbeträgen.</p>
                             <label class="block text-xs font-medium text-slate-500 mb-1">Umfang</label>
                             <select id="gs-hours" onchange="updateVoucherPrice()" class="field-input font-medium mb-3">
@@ -985,19 +1015,19 @@
                                 <span class="font-bold text-slate-900">Preis:</span>
                                 <span id="gs-price" class="text-xl font-black text-[#A31D11]">26,00 €</span>
                             </div>
-                            <button type="button" id="gs-btn" onclick="buyVoucher()" class="w-full bg-[#A31D11] hover:bg-[#8a180e] text-white py-3 rounded-xl font-bold transition shadow-md inline-flex items-center justify-center gap-2 disabled:opacity-60">
+                            <button type="button" id="gs-btn" onclick="buyVoucher()" class="w-full btn-padel py-3 rounded-xl font-bold transition shadow-md inline-flex items-center justify-center gap-2 disabled:opacity-60">
                                 <i class="fa-solid fa-gift"></i> Gutschein kaufen
                             </button>
                             <div id="gs-result" class="mt-2"></div>
                             <p class="text-[11px] text-slate-400 mt-2 text-center">Guthaben verfällt nicht · Restbeträge bleiben erhalten</p>
                         </div>
-                        <div class="card p-5 sm:p-6 border-l-4 border-[#A31D11]">
-                            <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-circle-info text-[#A31D11]"></i> Was ist Padel?</h4>
+                        <div class="card p-5 sm:p-6 border-l-4 border-[#FE5000]">
+                            <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-circle-info text-[#FE5000]"></i> Was ist Padel?</h4>
                             <p class="text-sm text-slate-600 leading-relaxed mb-3">Padel ist die am schnellsten wachsende Sportart Europas: ein Mix aus Tennis und Squash, gespielt zu viert auf einem Court mit Glaswänden. Schnell erlernbar, riesiger Spaßfaktor.</p>
                             <ul class="text-sm text-slate-700 space-y-1.5 mt-3">
-                                <li><i class="fa-solid fa-check text-[#A31D11] mr-2"></i>Cupra Court &amp; Frittlingen Court</li>
-                                <li><i class="fa-solid fa-check text-[#A31D11] mr-2"></i>Flutlicht für Abend-Spiele</li>
-                                <li><i class="fa-solid fa-check text-[#A31D11] mr-2"></i>Schlägerverleih vor Ort</li>
+                                <li><i class="fa-solid fa-check text-[#FE5000] mr-2"></i>Cupra Court &amp; Frittlingen Court</li>
+                                <li><i class="fa-solid fa-check text-[#FE5000] mr-2"></i>Flutlicht für Abend-Spiele</li>
+                                <li><i class="fa-solid fa-check text-[#FE5000] mr-2"></i>Schlägerverleih vor Ort</li>
                             </ul>
                         </div>
                     </div>
@@ -1017,7 +1047,8 @@
             <!-- STEP 1: FORM -->
             <form id="booking-form" onsubmit="submitBooking(event)" class="modal-step">
                 <div class="modal-body bg-white">
-                    <h3 class="text-xl sm:text-2xl font-black text-slate-900 mb-2 mt-1 pr-10">Spieler eintragen</h3>
+                    <img src="padel-logo.svg" onerror="this.onerror=null;this.src='padel-logo.png';" alt="TCF Sunset Padel" class="h-10 sm:h-12 w-auto mb-3">
+                    <h3 class="text-xl sm:text-2xl font-black text-slate-900 mb-2 pr-10">Spieler eintragen</h3>
                     <p class="text-sm text-slate-500 mb-4">Padel wird zu viert gespielt. Gib an, wer Mitglied ist – jedes Mitglied senkt den Platzpreis um 4 € pro Stunde.</p>
 
                     <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-4 rounded-xl mb-5 shadow">
@@ -1060,9 +1091,9 @@
                     </div>
 
                     <!-- Schlägerverleih -->
-                    <div class="bg-[#FDE047]/15 p-4 rounded-xl border border-[#FDE047]/60 mb-4">
+                    <div class="bg-[#FFF2EC] p-4 rounded-xl border border-[#FFD9C7] mb-4">
                         <div class="flex items-start gap-3 mb-3">
-                            <div class="w-10 h-10 bg-[#FDE047] rounded-lg flex items-center justify-center text-slate-900 text-lg flex-shrink-0">
+                            <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white text-lg flex-shrink-0" style="background:#FE5000;">
                                 <i class="fa-solid fa-table-tennis-paddle-ball"></i>
                             </div>
                             <div>
@@ -1128,9 +1159,9 @@
                     </div>
                     <div class="flex justify-between items-center mb-3 pt-2 border-t border-slate-200">
                         <span class="text-base sm:text-lg font-bold text-slate-900">Gesamtbetrag:</span>
-                        <span id="summary-price" class="text-2xl font-black text-[#A31D11]">0,00 €</span>
+                        <span id="summary-price" class="text-2xl font-black text-[#FE5000]">0,00 €</span>
                     </div>
-                    <button type="submit" id="pay-btn" class="w-full bg-[#A31D11] hover:bg-[#8a180e] text-white py-3.5 rounded-xl font-bold text-base sm:text-lg transition shadow-md flex items-center justify-center gap-2 disabled:opacity-60">
+                    <button type="submit" id="pay-btn" class="w-full btn-padel py-3.5 rounded-xl font-bold text-base sm:text-lg shadow-md flex items-center justify-center gap-2 disabled:opacity-60">
                         <span id="pay-btn-label">Zur Zahlung</span> <i class="fa-solid fa-arrow-right text-sm"></i>
                     </button>
                     <p class="text-[11px] text-slate-400 text-center mt-2"><i class="fa-solid fa-lock mr-1"></i> Sichere Zahlung – PayPal, Karte & SEPA</p>
@@ -1146,7 +1177,7 @@
                 <p class="text-slate-600 leading-relaxed mb-6 max-w-sm text-base sm:text-lg">
                     Deine Zahlung wird geprüft. Sobald sie bestätigt ist, erhältst du eine <strong class="text-slate-900">Bestätigungsmail mit deinem persönlichen Zugangscode</strong> für das Schloss – gültig nur im gebuchten Zeitraum.
                 </p>
-                <button onclick="closeModal()" class="w-full sm:w-auto sm:px-12 bg-[#A31D11] text-white py-3.5 rounded-xl font-bold text-base sm:text-lg hover:bg-[#8a180e] transition shadow-md">
+                <button onclick="closeModal()" class="w-full sm:w-auto sm:px-12 btn-padel py-3.5 rounded-xl font-bold text-base sm:text-lg shadow-md">
                     Zurück zur Übersicht
                 </button>
             </div>
@@ -1334,7 +1365,7 @@
                 <div id="storno-result" class="mt-4"></div>
             </div>
             <div class="modal-footer">
-                <button id="storno-btn" type="button" onclick="submitStorno()" class="w-full bg-[#A31D11] hover:bg-[#8a180e] text-white py-3.5 rounded-xl font-bold text-base sm:text-lg transition shadow-md flex items-center justify-center gap-2 disabled:opacity-60">
+                <button id="storno-btn" type="button" onclick="submitStorno()" class="w-full btn-padel py-3.5 rounded-xl font-bold text-base sm:text-lg shadow-md flex items-center justify-center gap-2 disabled:opacity-60">
                     <span id="storno-btn-label">Buchung stornieren</span>
                 </button>
             </div>
