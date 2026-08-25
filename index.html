@@ -525,7 +525,7 @@
                     <img src="padel-logo-weiss.png" alt="TCF Sunset Padel" class="h-12 sm:h-14 w-auto flex-shrink-0">
                     <div>
                         <h3 class="font-black text-lg sm:text-xl flex items-center gap-2">Sunset Padel <span class="bg-white/25 text-xs px-2 py-0.5 rounded">NEU</span></h3>
-                        <p class="text-white/90 text-sm">Cupra Court & Frittlingen Court</p>
+                        <p class="text-white/90 text-sm">Cupra Court & Sunset Court</p>
                     </div>
                 </div>
                 <div onclick="switchPage('tennis')" class="card card-hover cursor-pointer p-6 sm:p-8 flex items-center gap-5 border-b-4 border-blue-500">
@@ -993,7 +993,7 @@
                         <div class="md:hidden">
                             <div class="flex gap-2 p-3 bg-white border-b border-slate-200">
                                 <button type="button" id="mcourt-1" onclick="setMobileCourt('1')" class="mcourt-btn flex-1 py-2.5 rounded-lg text-sm font-bold border transition">Cupra Court</button>
-                                <button type="button" id="mcourt-2" onclick="setMobileCourt('2')" class="mcourt-btn flex-1 py-2.5 rounded-lg text-sm font-bold border transition">Frittlingen Court</button>
+                                <button type="button" id="mcourt-2" onclick="setMobileCourt('2')" class="mcourt-btn flex-1 py-2.5 rounded-lg text-sm font-bold border transition">Sunset Court</button>
                             </div>
                             <div id="mobile-slots" class="p-3 grid grid-cols-3 gap-2"></div>
                         </div>
@@ -1051,18 +1051,13 @@
                                     <span class="font-bold text-slate-900">2,00 €</span>
                                 </div>
                             </div>
-                            <div class="mt-3 pt-3 border-t border-slate-100">
-                                <div class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Beispiele pro Stunde</div>
-                                <div class="space-y-1 text-sm">
-                                    <div class="flex justify-between"><span class="text-slate-600">Nur Gäste</span><span class="font-bold text-slate-900">26,00 €</span></div>
-                                    <div class="flex justify-between"><span class="text-slate-600">2 Mitglieder + 2 Gäste</span><span class="font-bold text-slate-900">18,00 €</span></div>
-                                    <div class="flex justify-between"><span class="text-slate-600">4 Mitglieder</span><span class="font-bold text-[#FE5000]">10,00 €</span></div>
-                                </div>
+                            <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+                                <span class="text-sm text-slate-600 inline-flex items-center">Zu viert als Mitglieder <button type="button" class="info-btn" onclick="openInfo('rabatt')" aria-label="Mehr Infos"><i class="fa-solid fa-info"></i></button></span>
+                                <span class="font-bold text-[#FE5000] text-lg">10,00 €</span>
                             </div>
                             <p class="text-xs text-slate-500 mt-3">Preis gilt pro Platz und Stunde &ndash; für bis zu 4 Personen.</p>
                             <div class="mt-4 bg-[#A31D11]/5 border border-[#A31D11]/20 rounded-xl p-4">
-                                <p class="text-sm font-bold text-slate-800 mb-1">Noch kein Mitglied?</p>
-                                <p class="text-xs text-slate-600 mb-3">Als Mitglied spielst du dauerhaft günstiger – 4 € Rabatt pro Person und Stunde.</p>
+                                <p class="text-sm font-bold text-slate-800 mb-2">Noch kein Mitglied?</p>
                                 <a href="#" onclick="switchPage('mitglied'); return false;" class="inline-flex items-center gap-2 bg-[#A31D11] hover:bg-[#8a180e] text-white text-sm font-bold px-4 py-2.5 rounded-lg transition shadow-sm">
                                     <i class="fa-solid fa-user-plus"></i> Jetzt Mitglied werden
                                 </a>
@@ -1095,11 +1090,11 @@
                         <div class="card p-5 sm:p-6 border-l-4 border-[#FE5000]">
                             <h4 class="font-black text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-circle-info text-[#FE5000]"></i> Was ist Padel? <button type="button" class="info-btn" onclick="openInfo('padel')" aria-label="Mehr Infos"><i class="fa-solid fa-info"></i></button></h4>
                             <p class="text-sm text-slate-600 leading-relaxed mb-3">Tennis trifft Squash &ndash; zu viert auf einem Court mit Glaswänden. In Minuten erlernt.</p>
-                            <ul class="text-sm text-slate-700 space-y-1.5 mt-3">
-                                <li><i class="fa-solid fa-check text-[#FE5000] mr-2"></i>Cupra Court &amp; Frittlingen Court</li>
-                                <li><i class="fa-solid fa-check text-[#FE5000] mr-2"></i>Flutlicht für Abend-Spiele</li>
-                                <li><i class="fa-solid fa-check text-[#FE5000] mr-2"></i>Schlägerverleih vor Ort</li>
-                            </ul>
+                            <div class="flex flex-wrap gap-2 mt-3">
+                                <span class="text-xs font-medium bg-[#FFF2EC] text-[#D64200] px-2.5 py-1 rounded-full">2 Courts</span>
+                                <span class="text-xs font-medium bg-[#FFF2EC] text-[#D64200] px-2.5 py-1 rounded-full">Flutlicht</span>
+                                <span class="text-xs font-medium bg-[#FFF2EC] text-[#D64200] px-2.5 py-1 rounded-full">Schläger vor Ort</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1270,7 +1265,7 @@
                 </div>
 
                 <h4>1. Geltungsbereich</h4>
-                <p>Diese Bedingungen gelten für die Online-Buchung und Nutzung der Padel-Courts „Cupra Court" und „Frittlingen Court" des TC Frittlingen e.V. („Verein"). Mit Abschluss einer Buchung erkennt der Bucher diese Bedingungen als verbindlich an.</p>
+                <p>Diese Bedingungen gelten für die Online-Buchung und Nutzung der Padel-Courts „Cupra Court" und „Sunset Court" des TC Frittlingen e.V. („Verein"). Mit Abschluss einer Buchung erkennt der Bucher diese Bedingungen als verbindlich an.</p>
 
                 <h4>2. Buchung &amp; Zahlung</h4>
                 <ul>
@@ -1508,7 +1503,7 @@
         // Court-Definition: id -> Anzeigename (Backend nutzt weiterhin die id 1/2)
         const COURTS = [
             { id: '1', name: 'Cupra Court' },
-            { id: '2', name: 'Frittlingen Court' }
+            { id: '2', name: 'Sunset Court' }
         ];
         function courtName(id){ const c = COURTS.find(c => c.id === String(id)); return c ? c.name : ('Platz ' + id); }
 
@@ -2158,7 +2153,7 @@
                 + '<ul><li>Buchungsnummer und E-Mail eingeben</li><li>Der Betrag wird automatisch erstattet</li><li>Gutschein-Guthaben kommt zurück</li><li>Der Platz wird sofort wieder freigegeben</li></ul>' },
             padel: { icon: 'fa-solid fa-circle-question', title: 'Was ist Padel?', body:
                 '<p>Padel ist die am schnellsten wachsende Sportart Europas &ndash; ein Mix aus Tennis und Squash, gespielt zu viert auf einem Court mit Glaswänden.</p>'
-                + '<ul><li>In wenigen Minuten erlernbar</li><li>Zwei Courts mit Flutlicht</li><li>Schläger können geliehen werden</li></ul>'
+                + '<ul><li>In wenigen Minuten erlernbar</li><li>Cupra Court &amp; Sunset Court &ndash; beide mit Flutlicht</li><li>Schläger können geliehen werden</li></ul>'
                 + '<p style="margin-top:10px">Ideal für Einsteiger &ndash; die Wände gehören zum Spiel, der Ball bleibt länger im Spiel.</p>' },
             buchung: { icon: 'fa-regular fa-clock', title: 'So funktioniert die Buchung', body:
                 '<ul><li>Gebucht wird in <strong>vollen Stunden</strong></li><li>Mehrere Stunden nur <strong>zusammenhängend</strong></li><li>Bis zu <strong>14 Tage im Voraus</strong></li><li>Am Computer lässt sich die Dauer mit gedrückter Maus ziehen</li></ul>'
