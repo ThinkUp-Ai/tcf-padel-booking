@@ -904,34 +904,46 @@
 
                     <div class="mb-5">
                         <div class="text-sm font-bold text-[#A31D11] mb-2">Erstmitglied (aktiv) *</div>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
                             <input id="erst_name" required placeholder="Nachname" class="field-input">
                             <input id="erst_vorname" required placeholder="Vorname" class="field-input">
-                            <input id="erst_gebdatum" type="date" required class="field-input" aria-label="Geburtsdatum Erstmitglied">
+                            <div>
+                                <label for="erst_gebdatum" class="block text-xs font-medium text-slate-500 mb-1">Geburtsdatum *</label>
+                                <input id="erst_gebdatum" type="date" required class="field-input">
+                            </div>
                         </div>
                     </div>
                     <div class="mb-5">
                         <div class="text-sm font-bold text-slate-600 mb-2">Zweitmitglied (aktiv – Ehe-/Lebenspartner)</div>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
                             <input id="zweit_name" placeholder="Nachname" class="field-input">
                             <input id="zweit_vorname" placeholder="Vorname" class="field-input">
-                            <input id="zweit_gebdatum" type="date" class="field-input" aria-label="Geburtsdatum Zweitmitglied">
+                            <div>
+                                <label for="zweit_gebdatum" class="block text-xs font-medium text-slate-500 mb-1">Geburtsdatum</label>
+                                <input id="zweit_gebdatum" type="date" class="field-input">
+                            </div>
                         </div>
                     </div>
                     <div class="mb-5">
                         <div class="text-sm font-bold text-slate-600 mb-2">Kind / Jugendlicher</div>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
                             <input id="kind1_name" placeholder="Nachname" class="field-input">
                             <input id="kind1_vorname" placeholder="Vorname" class="field-input">
-                            <input id="kind1_gebdatum" type="date" class="field-input" aria-label="Geburtsdatum Kind 1">
+                            <div>
+                                <label for="kind1_gebdatum" class="block text-xs font-medium text-slate-500 mb-1">Geburtsdatum</label>
+                                <input id="kind1_gebdatum" type="date" class="field-input">
+                            </div>
                         </div>
                     </div>
                     <div>
                         <div class="text-sm font-bold text-slate-600 mb-2">Kind / Jugendlicher</div>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
                             <input id="kind2_name" placeholder="Nachname" class="field-input">
                             <input id="kind2_vorname" placeholder="Vorname" class="field-input">
-                            <input id="kind2_gebdatum" type="date" class="field-input" aria-label="Geburtsdatum Kind 2">
+                            <div>
+                                <label for="kind2_gebdatum" class="block text-xs font-medium text-slate-500 mb-1">Geburtsdatum</label>
+                                <input id="kind2_gebdatum" type="date" class="field-input">
+                            </div>
                         </div>
                     </div>
                 </div>
