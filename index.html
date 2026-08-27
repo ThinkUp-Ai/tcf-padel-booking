@@ -140,34 +140,36 @@
         .slot:focus-visible, .mslot:focus-visible { outline: 3px solid var(--padel); outline-offset: 2px; }
         /* === MARKEN-LOCKUP: TCF x SUNSET PADEL === */
         .brand-lockup { display: flex; align-items: center; gap: 10px; }
-        /* TCF ist 4,1:1, Padel 2,1:1 -> Padel braucht mehr Hoehe fuer gleiche optische Groesse */
+        /* padel-logo.svg ist auf die echte Grafik zugeschnitten (viewBox 567,5x267,9 = 2,12:1),
+           TCF ist 4,13:1. Beide fuellen ihre Box jetzt voll aus -> Hoehen sind direkt vergleichbar.
+           Padel bekommt ~15% mehr Hoehe, weil das kompaktere Zeichen sonst kleiner wirkt. */
         .brand-logo-tcf   { height: 42px; width: auto; object-fit: contain; }
-        .brand-logo-padel { height: 54px; width: auto; object-fit: contain; }
+        .brand-logo-padel { height: 52px; width: auto; object-fit: contain; }
         .brand-x { display: inline-flex; width: 16px; height: 16px; flex-shrink: 0; opacity: .8; }
         .brand-x svg { width: 100%; height: 100%; }
         @media (min-width: 768px) {
             .brand-lockup { gap: 12px; }
             .brand-logo-tcf   { height: 46px; }
-            .brand-logo-padel { height: 60px; }
+            .brand-logo-padel { height: 57px; }
             .brand-x { width: 18px; height: 18px; }
         }
         @media (min-width: 1400px) {
             .brand-lockup { gap: 15px; }
             .brand-logo-tcf   { height: 54px; }
-            .brand-logo-padel { height: 70px; }
+            .brand-logo-padel { height: 66px; }
             .brand-x { width: 21px; height: 21px; }
         }
         /* Sehr schmale Handys: beide kleiner, Verhaeltnis bleibt */
         @media (max-width: 640px) {
             .brand-lockup { gap: 8px; }
             .brand-logo-tcf   { height: 38px; }
-            .brand-logo-padel { height: 48px; }
+            .brand-logo-padel { height: 47px; }
             .brand-x { width: 14px; height: 14px; }
         }
         @media (max-width: 400px) {
             .brand-lockup { gap: 6px; }
             .brand-logo-tcf   { height: 32px; }
-            .brand-logo-padel { height: 42px; }
+            .brand-logo-padel { height: 40px; }
             .brand-x { width: 12px; height: 12px; }
         }
         /* Farbbruecke Rot -> Orange (verbindet Verein und Padel) */
@@ -216,13 +218,16 @@
         .info-btn:hover { background: var(--padel); color: #fff; }
         .info-btn:active { transform: scale(.92); }
         .info-btn:focus-visible { outline: 2px solid var(--padel); outline-offset: 2px; }
+        /* Hero-Logo: immer feste Hoehe. NICHT in eine Media-Query schachteln -
+           sonst greift ueber 640px keine Hoehe und das SVG laeuft auf Containerbreite. */
+        .padel-hero-logo { height: 40px; width: auto; flex-shrink: 0; }
+        @media (min-width: 640px)  { .padel-hero-logo { height: 50px; } }
+        @media (min-width: 1024px) { .padel-hero-logo { height: 62px; } }
+
         @media (max-width: 640px) {
             .info-btn { width: 24px; height: 24px; font-size: 12px; }
             .padel-hero { padding: 14px 14px; border-radius: 14px; }
-            .padel-hero-logo { height: 52px; width: auto; }
-        @media (min-width: 640px) { .padel-hero-logo { height: 66px; } }
-        @media (min-width: 1024px) { .padel-hero-logo { height: 80px; } }
-        .padel-hero::after { margin-top: 12px; }
+            .padel-hero::after { margin-top: 12px; }
             .info-pop-card { border-radius: 16px; }
         }
 
@@ -263,16 +268,19 @@
             background: var(--padel); color: #fff; transition: all .25s;
         }
         .btn-padel:hover { background: var(--padel-deep); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(254,80,0,.3); }
+        /* Vergangen: flaeche, kein Muster - klar unterscheidbar von der Belegt-Schraffur */
         .slot.past {
-            background: #f1f5f9;
+            background: #c5cfdb;
             cursor: not-allowed;
-            opacity: 0.6;
+            opacity: 1;
         }
-        .slot.past:hover { background: #f1f5f9; }
+        /* Belegt: kraeftige Schraffur, deutlich dunkler als "frei" (weiss) */
         .slot.occupied {
-            background: repeating-linear-gradient(45deg, #cbd5e1 0, #cbd5e1 4px, #b8c2cf 4px, #b8c2cf 8px);
+            background: repeating-linear-gradient(45deg, #94a3b8 0, #94a3b8 5px, #7d8ca0 5px, #7d8ca0 10px);
             cursor: not-allowed;
         }
+        /* helle Trennlinie, damit das Raster in grauen Bloecken lesbar bleibt */
+        .slot.past, .slot.occupied { border-top-color: rgba(255,255,255,.6); }
         .slot.selected {
             background: var(--padel);
             box-shadow: inset 0 0 0 2px #fff;
@@ -293,8 +301,18 @@
         }
         .mslot:active { transform: scale(0.97); }
         .mslot.occupied {
-            background: repeating-linear-gradient(45deg, #e2e8f0 0, #e2e8f0 5px, #cbd5e1 5px, #cbd5e1 10px);
-            color: #94a3b8; cursor: not-allowed;
+            background: repeating-linear-gradient(45deg, #aab6c4 0, #aab6c4 5px, #94a3b8 5px, #94a3b8 10px);
+            color: #fff; border-color: #8b9aad; cursor: not-allowed;
+            text-shadow: 0 1px 1px rgba(15,23,42,.35);
+        }
+        /* Vergangen: flaches Grau, nur die Uhrzeit durchgestrichen (muss nach .occupied stehen) */
+        .mslot.past {
+            background: #c5cfdb; color: #475569; border-color: #a5b2c1;
+            text-shadow: none;
+        }
+        .mslot.past .mslot-time {
+            text-decoration: line-through; text-decoration-color: rgba(71,85,105,.8);
+            text-decoration-thickness: 2px;
         }
         .mslot.selected { background: var(--padel); color: #fff; border-color: var(--padel); }
         .mslot .mslot-sub { display: block; font-size: 10px; font-weight: 500; margin-top: 2px; opacity: 0.85; }
@@ -1080,8 +1098,12 @@
                                     <span class="text-slate-600 font-medium">Verfügbar</span>
                                 </div>
                                 <div class="legend-item flex items-center gap-2">
-                                    <div class="w-4 h-4 rounded-full" style="background: repeating-linear-gradient(45deg, #cbd5e1 0, #cbd5e1 2px, #b8c2cf 2px, #b8c2cf 4px);"></div>
+                                    <div class="w-4 h-4 rounded-full" style="background: repeating-linear-gradient(45deg, #94a3b8 0, #94a3b8 2px, #7d8ca0 2px, #7d8ca0 4px);"></div>
                                     <span class="text-slate-600 font-medium">Belegt</span>
+                                </div>
+                                <div class="legend-item flex items-center gap-2">
+                                    <div class="w-4 h-4 rounded-full" style="background:#c5cfdb;"></div>
+                                    <span class="text-slate-600 font-medium">Vorbei</span>
                                 </div>
                                 <div class="legend-item flex items-center gap-2">
                                     <div class="w-4 h-4 rounded-full shadow" style="background:#FE5000;"></div>
@@ -1219,7 +1241,7 @@
             <!-- STEP 1: FORM -->
             <form id="booking-form" onsubmit="submitBooking(event)" class="modal-step">
                 <div class="modal-body bg-white">
-                    <img src="padel-logo.svg" onerror="this.onerror=null;this.src='padel-logo.png';" alt="TCF Sunset Padel" class="h-10 sm:h-12 w-auto mb-3">
+                    <img src="padel-logo.svg" onerror="this.onerror=null;this.src='padel-logo.png';" alt="TCF Sunset Padel" class="h-7 sm:h-8 w-auto mb-3">
                     <h3 class="text-xl sm:text-2xl font-black text-slate-900 mb-2 pr-10">Spieler eintragen</h3>
                     <p class="text-sm text-slate-500 mb-4">Padel wird zu viert gespielt. Gib an, wer Mitglied ist – jedes Mitglied senkt den Platzpreis um 4 € pro Stunde.</p>
 
@@ -1948,8 +1970,8 @@
                 const past = slot && slot.classList.contains('past');
                 const sel = slot && slot.classList.contains('selected');
                 const tile = document.createElement('div');
-                tile.className = 'mslot' + (occ ? ' occupied' : '') + (sel ? ' selected' : '');
-                tile.innerHTML = pad(h) + ':00<span class="mslot-sub">' + (past ? 'Vorbei' : (occ ? 'Belegt' : (sel ? 'Gewählt' : 'Frei'))) + '</span>';
+                tile.className = 'mslot' + (occ ? ' occupied' : '') + (past ? ' past' : '') + (sel ? ' selected' : '');
+                tile.innerHTML = '<span class="mslot-time">' + pad(h) + ':00</span><span class="mslot-sub">' + (past ? 'Vorbei' : (occ ? 'Belegt' : (sel ? 'Gewählt' : 'Frei'))) + '</span>';
                 if (!occ && availabilityOk && slot) tile.onclick = () => toggleSlot(slot);
                 box.appendChild(tile);
             });
