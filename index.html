@@ -2369,6 +2369,20 @@
             payload.einwilligung_datenschutz = chk('einwilligung_datenschutz');
             payload.iban = payload.iban.replace(/\s+/g, '').toUpperCase();
 
+            // Steht eine Person im Formular, brauchen wir ihr Geburtsdatum - daran haengt
+            // der Beitragssatz (Kind, Jugendlicher, Erwachsener).
+            const weiterePersonen = [['zweit','das Zweitmitglied'],['kind1','das erste Kind'],['kind2','das zweite Kind']];
+            for (const [feldPraefix, bezeichnung] of weiterePersonen) {
+                const datumFeld = document.getElementById(feldPraefix + '_gebdatum');
+                datumFeld.setCustomValidity('');
+                const personEingetragen = val(feldPraefix + '_name') || val(feldPraefix + '_vorname');
+                if (personEingetragen && !val(feldPraefix + '_gebdatum')) {
+                    datumFeld.setCustomValidity('Bitte auch das Geburtsdatum für ' + bezeichnung + ' angeben – davon hängt der Beitragssatz ab.');
+                    datumFeld.reportValidity();
+                    return;
+                }
+            }
+
             const ibanFeld = document.getElementById('iban');
             if (!ibanGueltig(payload.iban)) {
                 ibanFeld.setCustomValidity('Diese IBAN stimmt nicht. Bitte pruefe die Eingabe.');
