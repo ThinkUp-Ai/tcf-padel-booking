@@ -1,0 +1,21 @@
+{
+  "redirects": [
+    { "source": "/termine",              "destination": "/#aktuell",      "permanent": true },
+    { "source": "/news",                 "destination": "/#aktuell",      "permanent": true },
+    { "source": "/mannschaften",         "destination": "/#mannschaften", "permanent": true },
+    { "source": "/spielbetrieb",         "destination": "/#spielbetrieb", "permanent": true },
+    { "source": "/training",             "destination": "/#tennis",       "permanent": true },
+    { "source": "/jugend",               "destination": "/#tennis",       "permanent": true },
+    { "source": "/jugend/:pfad*",        "destination": "/#tennis",       "permanent": true },
+    { "source": "/kontakt",              "destination": "/#verein",       "permanent": true },
+    { "source": "/vorstandschaft",       "destination": "/#verein",       "permanent": true },
+    { "source": "/sponsoren",            "destination": "/#verein",       "permanent": true },
+    { "source": "/downloads",            "destination": "/#verein",       "permanent": true },
+    { "source": "/bewirtung-tennisheim", "destination": "/#verein",       "permanent": true },
+    { "source": "/50-jahre-tcf",         "destination": "/#verein",       "permanent": true },
+    { "source": "/fotos",                "destination": "/",              "permanent": true },
+    { "source": "/links",                "destination": "/",              "permanent": true },
+    { "source": "/sitemap",              "destination": "/",              "permanent": true },
+    { "source": "/defaultsite",          "destination": "/",              "permanent": true }
+  ]
+}
