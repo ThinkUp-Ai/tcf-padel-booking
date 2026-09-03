@@ -1,4 +1,5 @@
+# Diese Adresse ist die Buchungsstrecke, nicht die oeffentliche Vereinsseite.
+# Die liegt auf https://www.tc-frittlingen.de/ - damit hier keine
+# Doppelinhalte dagegen konkurrieren, wird diese Kopie nicht indexiert.
 User-agent: *
-Allow: /
-
-Sitemap: https://tc-frittlingen.de/sitemap.xml
+Disallow: /
